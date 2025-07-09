@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -67,8 +70,20 @@ final class Club extends Model
         'updated_at' => 'immutable_datetime',
     ];
 
-    public function adminInvitations()
+    public function adminInvitations(): HasMany
     {
         return $this->hasMany(AdminInvitation::class);
+    }
+
+    public function admins(): BelongsToMany
+    {
+        return $this->members()->wherePivot('role', Role::ADMIN->value);
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'club_user', 'club_id', 'user_id')
+            ->withPivot('role')
+            ->withTimestamps();
     }
 }
