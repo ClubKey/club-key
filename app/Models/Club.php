@@ -7,6 +7,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property string|null $logo_path
+ * @property string|null $description
+ * @property string|null $website
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string|null $street_address
+ * @property string|null $city
+ * @property string|null $state
+ * @property string|null $zip
+ * @property string|null $facebook
+ * @property string|null $instagram
+ * @property string|null $twitter
+ * @property string|null $youtube
+ * @property string|null $tiktok
+ * @property string|null $linkedin
+ * @property string|null $pinterest
+ * @property string|null $snapchat
+ * @property \Carbon\CarbonImmutable $created_at
+ * @property \Carbon\CarbonImmutable $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club query()
@@ -16,4 +39,36 @@ use Illuminate\Database\Eloquent\Model;
 final class Club extends Model
 {
     protected $guarded = [];
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'logo_path',
+        'description',
+        'website',
+        'email',
+        'phone',
+        'street_address',
+        'city',
+        'state',
+        'zip',
+        'facebook',
+        'instagram',
+        'twitter',
+        'youtube',
+        'tiktok',
+        'linkedin',
+        'pinterest',
+        'snapchat',
+    ];
+
+    protected $casts = [
+        'created_at' => 'immutable_datetime',
+        'updated_at' => 'immutable_datetime',
+    ];
+
+    public function adminInvitations()
+    {
+        return $this->hasMany(AdminInvitation::class);
+    }
 }
