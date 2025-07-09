@@ -86,4 +86,9 @@ final class Club extends Model
             ->withPivot('role')
             ->withTimestamps();
     }
+
+    public function locations(): HasMany
+    {
+        return $this->hasMany(ClubLocation::class);
+    }
 }
