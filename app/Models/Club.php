@@ -39,6 +39,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $members
  * @property-read int|null $members_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $admins
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, RewardLevel> $rewardLevels
+ * @property-read int|null $reward_levels_count
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newQuery()
@@ -100,5 +102,10 @@ final class Club extends Model
     public function visits(): HasMany
     {
         return $this->hasMany(Visit::class);
+    }
+
+    public function rewardLevels(): HasMany
+    {
+        return $this->hasMany(RewardLevel::class);
     }
 }
