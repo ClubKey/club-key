@@ -32,6 +32,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $snapchat
  * @property \Carbon\CarbonImmutable $created_at
  * @property \Carbon\CarbonImmutable $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Visit> $visits
+ * @property-read int|null $visits_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, ClubLocation> $locations
+ * @property-read int|null $locations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $members
+ * @property-read int|null $members_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, User> $admins
  *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Club newQuery()
@@ -41,8 +48,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 final class Club extends Model
 {
-    protected $guarded = [];
-
     protected $fillable = [
         'name',
         'slug',
@@ -90,5 +95,10 @@ final class Club extends Model
     public function locations(): HasMany
     {
         return $this->hasMany(ClubLocation::class);
+    }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
     }
 }
