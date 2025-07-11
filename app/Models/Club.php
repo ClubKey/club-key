@@ -106,6 +106,6 @@ final class Club extends Model
 
     public function rewardLevels(): HasMany
     {
-        return $this->hasMany(RewardLevel::class);
+        return $this->hasMany(RewardLevel::class)->orderBy('order');
     }
 }
