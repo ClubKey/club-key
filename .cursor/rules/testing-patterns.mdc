@@ -1,0 +1,154 @@
+# Testing Patterns
+
+## Overview
+
+This project uses a dual testing strategy:
+
+- **Backend**: Pest PHP for Laravel testing
+- **Frontend**: Vitest with Vue Test Utils for Vue component testing
+
+## Backend Testing with Pest PHP
+
+### Test Structure
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use App\Actions\CreateClubAction;
+use App\Models\Club;
+use App\Models\User;
+
+test('action creates club with valid data', function () {
+    // Arrange
+    $user = User::factory()->create();
+    $action = new CreateClubAction();
+    $data = ['name' => 'Test Club', 'owner_id' => $user->id];
+
+    // Act
+    $club = $action->handle($data);
+
+    // Assert
+    expect($club)->toBeInstanceOf(Club::class)
+        ->and($club->name)->toBe('Test Club');
+});
+```
+
+### Testing Patterns
+
+- **Actions**: Test in isolation with mocked dependencies
+- **Controllers**: Test HTTP responses and Inertia rendering
+- **Models**: Test relationships and scopes
+- **Form Requests**: Test validation rules and authorization
+
+### Database Testing
+
+```php
+test('club is stored in database', function () {
+    $club = Club::factory()->create();
+
+    $this->assertDatabaseHas('clubs', [
+        'id' => $club->id,
+        'name' => $club->name,
+    ]);
+});
+```
+
+## Frontend Testing with Vitest
+
+### Component Testing
+
+```typescript
+// tests/components/ClubCard.test.ts
+import { mount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import ClubCard from '@/components/ClubCard.vue'
+
+describe('ClubCard', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('displays club information', () => {
+    const club = { id: 1, name: 'Test Club' }
+    const wrapper = mount(ClubCard, { props: { club } })
+
+    expect(wrapper.text()).toContain('Test Club')
+  })
+})
+```
+
+### Inertia.js Testing
+
+```typescript
+// Mock Inertia dependencies
+vi.mock('@inertiajs/vue3', () => ({
+  useForm: vi.fn(() => ({
+    post: vi.fn(),
+    processing: false,
+    errors: {},
+  })),
+  usePage: vi.fn(() => ({
+    props: { auth: { user: null } },
+  })),
+}))
+```
+
+### Testing Patterns
+
+- **Components**: Test props, emits, and user interactions
+- **Composables**: Test with mocked dependencies
+- **Forms**: Test validation and submission
+- **Pages**: Test Inertia props and rendering
+
+## Test Organization
+
+### File Structure
+
+```
+tests/
+├── Feature/           # Backend feature tests
+├── Unit/             # Backend unit tests
+├── components/       # Frontend component tests
+├── composables/      # Frontend composable tests
+└── pages/           # Frontend page tests
+```
+
+### Naming Conventions
+
+- **Backend**: `{Model}Test.php` or `{Action}Test.php`
+- **Frontend**: `{Component}.test.ts` or `{Composable}.test.ts`
+- **Test names**: Descriptive behavior descriptions
+
+## Running Tests
+
+```bash
+# Backend tests
+php artisan test
+
+# Frontend tests
+npm run test
+
+# Frontend tests with UI
+npm run test:ui
+
+# Coverage reports
+php artisan test --coverage
+npm run test:coverage
+```
+
+## Best Practices
+
+1. **Test Isolation**: Each test should be independent
+2. **Descriptive Names**: Use clear test descriptions
+3. **Arrange-Act-Assert**: Structure tests consistently
+4. **Mock Dependencies**: Mock external services and APIs
+5. **Test Edge Cases**: Don't just test happy paths
+6. **Use Factories**: Create test data with factories
+7. **Coverage**: Aim for high test coverage
+description:
+globs:
+alwaysApply: false
+
+---

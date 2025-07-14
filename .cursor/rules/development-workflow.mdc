@@ -5,13 +5,16 @@
 - **PHP**: Use Laravel Pint as configured in [pint.json](mdc:pint.json)
 - **TypeScript/Vue**: Use Prettier as configured in [package.json](mdc:package.json)
 - **ESLint**: Use ESLint for TypeScript/JavaScript linting
+- **Testing**: Run `php artisan test` for backend tests and `npm run test` for frontend tests
 
 ## Testing
 
-- Use Pest PHP for testing as shown in [tests/](mdc:tests/)
+- **Backend**: Use Pest PHP for testing as shown in [tests/](mdc:tests/)
+- **Frontend**: Use Vitest with Vue Test Utils for component testing
 - Write feature tests for all user flows
 - Test Actions in isolation
 - Use database factories for test data
+- Test Vue components with proper mocking of Inertia.js dependencies
 
 ## Database
 

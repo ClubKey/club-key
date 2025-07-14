@@ -57,6 +57,39 @@ Use the UI component library in [resources/js/components/ui/](mdc:resources/js/c
 - Use proper TypeScript interfaces
 - Implement accessibility features
 - Use Tailwind CSS for styling
+
+## Testing with Vitest
+
+Test Vue components using Vitest and Vue Test Utils:
+
+- Use `describe` and `it` blocks for test organization
+- Mock Inertia.js dependencies properly
+- Test component props, emits, and user interactions
+- Use `data-testid` attributes for reliable element selection
+- Mock external dependencies with `vi.mock()`
+
+### Test Structure
+
+```typescript
+// tests/components/ComponentName.test.ts
+import { mount } from '@vue/test-utils'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+import ComponentName from '@/components/ComponentName.vue'
+
+describe('ComponentName', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('should render correctly', () => {
+    const wrapper = mount(ComponentName, {
+      props: { /* props */ }
+    })
+    expect(wrapper.exists()).toBe(true)
+  })
+})
+```
+
 description:
 globs:
 alwaysApply: false

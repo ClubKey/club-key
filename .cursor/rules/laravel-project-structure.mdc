@@ -17,6 +17,8 @@ This is a Laravel 12 project using Inertia.js with Vue 3 and TypeScript. The mai
 - [resources/js/](mdc:resources/js/): Vue 3 components and TypeScript code
 - [database/migrations/](mdc:database/migrations/): Database schema migrations
 - [routes/](mdc:routes/): Application routing
+- [tests/](mdc:tests/): Backend tests using Pest PHP
+- [tests/components/](mdc:tests/components/): Frontend component tests using Vitest
 
 ## Configuration Files
 

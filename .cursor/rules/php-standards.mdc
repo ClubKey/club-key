@@ -43,6 +43,74 @@ Use Form Requests for validation as shown in [app/Http/Requests/ClubRequest.php]
 - Implement `authorize()` and `rules()` methods
 - Use Laravel's validation features
 - Return typed validation data
+
+## Testing with Pest PHP
+
+Test PHP code using Pest PHP for expressive and readable tests:
+
+- Use `test()` function for test definitions
+- Use `expect()` for assertions
+- Test Actions in isolation
+- Use factories for test data
+- Test both happy paths and edge cases
+
+### Action Testing
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use App\Actions\CreateClubAction;
+use App\Models\Club;
+use App\Models\User;
+
+test('create club action creates club with valid data', function () {
+    $user = User::factory()->create();
+    $action = new CreateClubAction();
+
+    $data = [
+        'name' => 'Test Club',
+        'description' => 'Test Description',
+        'owner_id' => $user->id,
+    ];
+
+    $club = $action->handle($data);
+
+    expect($club)->toBeInstanceOf(Club::class)
+        ->and($club->name)->toBe('Test Club')
+        ->and($club->description)->toBe('Test Description')
+        ->and($club->owner_id)->toBe($user->id);
+});
+```
+
+### Feature Testing
+
+```php
+<?php
+
+declare(strict_types=1);
+
+use App\Models\User;
+use App\Models\Club;
+
+test('user can create a club', function () {
+    $user = User::factory()->create();
+
+    $response = $this->actingAs($user)
+        ->post('/clubs', [
+            'name' => 'Test Club',
+            'description' => 'A test club',
+        ]);
+
+    $response->assertRedirect();
+    $this->assertDatabaseHas('clubs', [
+        'name' => 'Test Club',
+        'description' => 'A test club',
+    ]);
+});
+```
+
 description:
 globs:
 alwaysApply: false
