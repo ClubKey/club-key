@@ -1,0 +1,64 @@
+# Inertia.js Integration Patterns
+
+## Controller Responses
+
+Controllers should return Inertia responses as shown in [app/Http/Controllers/ClubController.php](mdc:app/Http/Controllers/ClubController.php):
+
+```php
+use Inertia\Inertia;
+use Inertia\Response;
+
+public function index(): Response
+{
+    return Inertia::render('Clubs/Index', [
+        'clubs' => Club::all()
+    ]);
+}
+```
+
+## Frontend Setup
+
+The Inertia setup is configured in [resources/js/app.ts](mdc:resources/js/app.ts):
+
+- Inertia plugin for Vue 3
+- Ziggy integration for Laravel routes
+- Error handling and progress indicators
+
+## Page Components
+
+Page components should be in [resources/js/pages/](mdc:resources/js/pages/):
+
+- Use Vue 3 Composition API with TypeScript
+- Define props interfaces for Inertia data
+- Handle form submissions with Inertia
+
+## Shared Data
+
+Use Inertia's shared data for global state as configured in [app/Http/Middleware/HandleInertiaRequests.php](mdc:app/Http/Middleware/HandleInertiaRequests.php):
+
+- User authentication data
+- Flash messages
+- Global application state
+
+## Form Handling
+
+Forms should use Inertia for submissions:
+
+- Use Inertia's form helpers
+- Handle validation errors
+- Implement proper loading states
+- Use CSRF protection automatically
+
+## Error Handling
+
+Implement proper error handling:
+
+- Use Inertia's error handling for frontend
+- Display validation errors
+- Handle server errors gracefully
+- Implement proper error boundaries
+description:
+globs:
+alwaysApply: false
+
+---

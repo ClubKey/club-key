@@ -1,0 +1,50 @@
+# PHP Coding Standards for Laravel 12
+
+## Strict Types
+
+All PHP files must start with `declare(strict_types=1);` as shown in [app/Actions/CreateClubAction.php](mdc:app/Actions/CreateClubAction.php).
+
+## Laravel Action Pattern
+
+Business logic should be in Action classes following the pattern in [app/Actions/CreateClubAction.php](mdc:app/Actions/CreateClubAction.php):
+
+- Use `final readonly class` for Actions
+- Single `handle()` method with typed return values
+- Use dependency injection in constructors
+- Implement database transactions for actions so that when calling actions within other actions, the transaction is not committed until all actions are completed
+
+## Naming Conventions
+
+- **Classes**: PascalCase (e.g., `CreateClubAction`)
+- **Methods/Variables**: camelCase (e.g., `handle()`, `clubData`)
+- **Database Columns**: snake_case (e.g., `created_at`, `logo_path`)
+- **File names for classes**: PascalCase (e.g., `CreateClubAction.php`)
+
+## Controllers
+
+Controllers should return Inertia responses as shown in [app/Http/Controllers/ClubController.php](mdc:app/Http/Controllers/ClubController.php):
+
+- Use dependency injection for Actions
+- Return `Inertia\Response` from methods
+- Validate input using Form Requests
+
+## Models
+
+Follow the pattern in [app/Models/Club.php](mdc:app/Models/Club.php):
+
+- Use proper type hints for relationships
+- Implement `$fillable` and `$casts` properties
+- Use enums for status fields and roles
+
+## Form Requests
+
+Use Form Requests for validation as shown in [app/Http/Requests/ClubRequest.php](mdc:app/Http/Requests/ClubRequest.php):
+
+- Implement `authorize()` and `rules()` methods
+- Use Laravel's validation features
+- Return typed validation data
+description:
+globs:
+alwaysApply: false
+
+---

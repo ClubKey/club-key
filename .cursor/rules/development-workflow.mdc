@@ -1,0 +1,54 @@
+# Development Workflow & Best Practices
+
+## Code Formatting
+
+- **PHP**: Use Laravel Pint as configured in [pint.json](mdc:pint.json)
+- **TypeScript/Vue**: Use Prettier as configured in [package.json](mdc:package.json)
+- **ESLint**: Use ESLint for TypeScript/JavaScript linting
+
+## Testing
+
+- Use Pest PHP for testing as shown in [tests/](mdc:tests/)
+- Write feature tests for all user flows
+- Test Actions in isolation
+- Use database factories for test data
+
+## Database
+
+- Use migrations in [database/migrations/](mdc:database/migrations/) for schema changes
+- Follow Laravel naming conventions for tables and columns
+- Use enums for status fields as shown in [app/Enums/Role.php](mdc:app/Enums/Role.php)
+- Implement proper model factories for testing
+
+## Security
+
+- Validate all user input using Form Requests
+- Use Laravel's built-in CSRF protection
+- Implement proper authorization using Policies as shown in [app/Policies/ClubPolicy.php](mdc:app/Policies/ClubPolicy.php)
+- Sanitize data before database operations
+
+## Performance
+
+- Use Laravel's query optimization features
+- Implement proper caching strategies
+- Use eager loading to prevent N+1 queries
+- Optimize database queries and indexes
+
+## Build Process
+
+- Use Vite for frontend building as configured in [vite.config.ts](mdc:vite.config.ts)
+- Use Laravel Vite plugin for asset integration
+- Implement proper code splitting
+- Use TypeScript compilation for type safety
+
+## Error Handling
+
+- Use Laravel's exception handling
+- Implement proper error pages
+- Use Inertia's error handling for frontend
+- Log errors appropriately
+description:
+globs:
+alwaysApply: false
+
+---

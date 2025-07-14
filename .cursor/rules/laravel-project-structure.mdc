@@ -1,0 +1,31 @@
+# Laravel Club Rewards Project Structure
+
+This is a Laravel 12 project using Inertia.js with Vue 3 and TypeScript. The main entry point is [artisan](mdc:artisan), which loads configuration from [config/app.php](mdc:config/app.php).
+
+## Core Technologies
+
+- **Laravel 12**: Latest Laravel framework with strict types
+- **Inertia.js**: SPA-like experience without API complexity
+- **Vue 3 + TypeScript**: Frontend with Composition API
+- **Tailwind CSS**: Utility-first CSS framework
+
+## Key Directories
+
+- [app/Actions/](mdc:app/Actions/): Business logic using Laravel Action pattern
+- [app/Http/Controllers/](mdc:app/Http/Controllers/): HTTP controllers returning Inertia responses
+- [app/Models/](mdc:app/Models/): Eloquent models with relationships
+- [resources/js/](mdc:resources/js/): Vue 3 components and TypeScript code
+- [database/migrations/](mdc:database/migrations/): Database schema migrations
+- [routes/](mdc:routes/): Application routing
+
+## Configuration Files
+
+- [composer.json](mdc:composer.json): PHP dependencies and Laravel configuration
+- [package.json](mdc:package.json): Node.js dependencies and build scripts
+- [tsconfig.json](mdc:tsconfig.json): TypeScript configuration
+- [vite.config.ts](mdc:vite.config.ts): Vite build configuration
+description:
+globs:
+alwaysApply: false
+
+---

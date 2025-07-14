@@ -1,0 +1,64 @@
+# Vue 3 + TypeScript Standards
+
+## Vue 3 Composition API
+
+Use Vue 3 Composition API with `<script setup>` syntax as shown in [resources/js/pages/Dashboard.vue](mdc:resources/js/pages/Dashboard.vue):
+
+- Use `<script setup lang="ts">` for TypeScript support
+- Define props and emits with TypeScript interfaces
+- Use `withDefaults()` for default prop values
+
+## TypeScript Interfaces
+
+Define proper interfaces for props and emits:
+
+```typescript
+interface Props {
+  title: string
+  count?: number
+}
+
+interface Emits {
+  (e: 'update', value: string): void
+}
+```
+
+## Component Structure
+
+Follow the pattern in [resources/js/components/AppShell.vue](mdc:resources/js/components/AppShell.vue):
+
+- Use PascalCase for component names
+- Use PascalCase for component file names
+- Implement proper TypeScript typing
+- Use Tailwind CSS for styling, with shadcn/ui components
+
+## Inertia.js Integration
+
+Components should work with Inertia.js as shown in [resources/js/app.ts](mdc:resources/js/app.ts):
+
+- Use Inertia's shared data for global state
+- Handle Inertia events properly
+- Implement proper error boundaries
+
+## TypeScript Configuration
+
+Follow the configuration in [tsconfig.json](mdc:tsconfig.json):
+
+- Enable strict type checking
+- Use proper module resolution
+- Include Vue file types
+- Set up path aliases for clean imports
+
+## UI Components
+
+Use the UI component library in [resources/js/components/ui/](mdc:resources/js/components/ui/):
+
+- Follow the established component patterns
+- Use proper TypeScript interfaces
+- Implement accessibility features
+- Use Tailwind CSS for styling
+description:
+globs:
+alwaysApply: false
+
+---
