@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\ClubRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('club_id')->constrained('clubs');
             $table->string('email');
             $table->string('token');
-            $table->enum('role', [Role::ADMIN->value])->default(Role::ADMIN->value);
+            $table->enum('role', [ClubRole::ADMIN->value])->default(ClubRole::ADMIN->value);
             $table->timestamp('expires_at');
             $table->timestamps();
         });

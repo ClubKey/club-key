@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Club;
+use App\Enums\ClubRole;
 use Illuminate\Support\Facades\DB;
 
 final readonly class CreateClubAction
@@ -65,7 +66,7 @@ public function handle(array $data): Club
 {
     return DB::transaction(function () use ($data): Club {
         $club = Club::create($data);
-        $club->members()->attach(auth()->id(), ['role' => Role::ADMIN]);
+        $club->members()->attach(auth()->id(), ['role' => ClubRole::ADMIN]);
         return $club;
     });
 }
@@ -243,7 +244,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum Role: string
+enum ClubRole: string
 {
     case ADMIN = 'admin';
     case MEMBER = 'member';

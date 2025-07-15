@@ -20,7 +20,7 @@
 
 - Use migrations in [database/migrations/](mdc:database/migrations/) for schema changes
 - Follow Laravel naming conventions for tables and columns
-- Use enums for status fields as shown in [app/Enums/Role.php](mdc:app/Enums/Role.php)
+- Use enums for status fields as shown in [app/Enums/ClubRole.php](mdc:app/Enums/ClubRole.php)
 - Implement proper model factories for testing
 
 ## Security

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\AppRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,6 +16,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property AppRole $role
  * @property \Carbon\CarbonImmutable|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
@@ -56,6 +58,7 @@ final class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -73,6 +76,7 @@ final class User extends Authenticatable
         'password' => 'hashed',
         'created_at' => 'immutable_datetime',
         'updated_at' => 'immutable_datetime',
+        'role' => AppRole::class,
     ];
 
     public function clubs(): BelongsToMany
@@ -85,5 +89,26 @@ final class User extends Authenticatable
     public function visits(): HasMany
     {
         return $this->hasMany(Visit::class);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->role->isSuperAdmin();
+    }
+
+    public function hasRoleInClub(Club $club, ClubRole $role): bool
+    {
+        return $this->clubs()->where('club_id', $club->id)->where('role', $role->value)->exists();
+    }
+
+    public function getRoleInClub(Club $club): ?ClubRole
+    {
+        $pivot = $this->clubs()->where('club_id', $club->id)->first()?->pivot;
+
+        if (! $pivot) {
+            return null;
+        }
+
+        return ClubRole::from($pivot->role);
     }
 }

@@ -111,6 +111,7 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Club;
+use App\Enums\ClubRole;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -130,7 +131,7 @@ final readonly class CreateClubAction
 
             // Add creator as admin member
             $club->members()->attach(auth()->id(), [
-                'role' => Role::ADMIN->value,
+                'role' => ClubRole::ADMIN->value,
             ]);
 
             return $club;
@@ -242,7 +243,7 @@ namespace App\Policies;
 
 use App\Models\Club;
 use App\Models\User;
-use App\Enums\Role;
+use App\Enums\ClubRole;
 
 final class ClubPolicy
 {
@@ -265,7 +266,7 @@ final class ClubPolicy
     {
         return $club->members()
             ->where('user_id', $user->id)
-            ->where('role', Role::ADMIN->value)
+            ->where('role', ClubRole::ADMIN->value)
             ->exists();
     }
 
@@ -278,7 +279,7 @@ final class ClubPolicy
     {
         return $club->members()
             ->where('user_id', $user->id)
-            ->where('role', Role::ADMIN->value)
+            ->where('role', ClubRole::ADMIN->value)
             ->exists();
     }
 }
