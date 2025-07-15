@@ -26,7 +26,7 @@ enum ClubRole: string
         return in_array($this, [self::ADMIN]);
     }
 
-    public function canManageClub(): bool
+    public function canManageAClub(): bool
     {
         return in_array($this, [self::ADMIN]);
     }

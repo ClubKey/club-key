@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Role;
+use App\Enums\ClubRole;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $club_id
  * @property string $email
  * @property string $token
- * @property Role $role
+ * @property ClubRole $role
  * @property \Carbon\CarbonImmutable $expires_at
  * @property \Carbon\CarbonImmutable $created_at
  * @property \Carbon\CarbonImmutable $updated_at
@@ -40,7 +40,7 @@ final class AdminInvitation extends Model
         'expires_at' => 'immutable_datetime',
         'created_at' => 'immutable_datetime',
         'updated_at' => 'immutable_datetime',
-        'role' => Role::class,
+        'role' => ClubRole::class,
     ];
 
     public function club()

@@ -28,7 +28,7 @@ enum AppRole: string
         return in_array($this, [self::SUPER_ADMIN]);
     }
 
-    public function canManageClub(): bool
+    public function canManageAClub(): bool
     {
         return in_array($this, [self::SUPER_ADMIN, self::CLUB_ADMIN]);
     }

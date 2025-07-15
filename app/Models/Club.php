@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Role;
+use App\Enums\ClubRole;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -84,7 +84,7 @@ final class Club extends Model
 
     public function admins(): BelongsToMany
     {
-        return $this->members()->wherePivot('role', Role::ADMIN->value);
+        return $this->members()->wherePivot('role', ClubRole::ADMIN->value);
     }
 
     public function members(): BelongsToMany
