@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('club_id')->constrained('clubs');
             $table->foreignId('user_id')->constrained('users');
-            $table->enum('role', [ClubRole::ADMIN->value, ClubRole::MEMBER->value])->default(ClubRole::MEMBER->value);
+            $table->enum('role', ClubRole::values())->default(ClubRole::MEMBER->value);
             $table->timestamps();
         });
     }

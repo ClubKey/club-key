@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use App\Traits\EnumTrait;
+
 enum ClubRole: string
 {
+    use EnumTrait;
+
     case ADMIN = 'admin';
     case MEMBER = 'member';
 

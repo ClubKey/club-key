@@ -15,7 +15,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', [AppRole::SUPER_ADMIN->value, AppRole::USER->value])->default(AppRole::USER->value);
+            $table->enum('role', AppRole::values())->default(AppRole::USER->value);
         });
     }
 
