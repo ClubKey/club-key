@@ -107,10 +107,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\CreateClubAction;
-use App\Http\Requests\ClubRequest;
-use Inertia\Inertia;
-use Inertia\Response;
+use App\Actions\Clubs\CreateClubAction;use App\Http\Requests\ClubRequest;use Inertia\Inertia;use Inertia\Response;
 
 final class ClubController extends Controller
 {
@@ -332,9 +329,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Actions;
 
-use App\Actions\CreateClubAction;
-use App\Models\Club;
-use Tests\TestCase;
+use App\Actions\Clubs\CreateClubAction;use App\Models\Club;use Tests\TestCase;
 
 final class CreateClubActionTest extends TestCase
 {

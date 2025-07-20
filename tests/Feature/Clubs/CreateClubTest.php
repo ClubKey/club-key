@@ -9,17 +9,29 @@ use Illuminate\Http\UploadedFile;
 
 pest()->group('clubs', 'create-club');
 
+test('a super admin can access the page to create a club', function () {
+    $user = User::factory()->create([
+        'role' => AppRole::SUPER_ADMIN,
+    ]);
+
+    $response = $this->actingAs($user)->get('/clubs/create');
+
+    $response->assertOk();
+});
+
 test('a super admin can create a club', function () {
     $user = User::factory()->create([
         'role' => AppRole::SUPER_ADMIN,
     ]);
 
-    $response = $this->actingAs($user)->post('/clubs', [
+    $response = $this->actingAs($user)->post(route('clubs.store'), [
         'name' => 'Test Club',
         'description' => 'Test Description',
         'logo' => UploadedFile::fake()->image('test.jpg'),
         'slug' => 'test-club',
     ]);
+
+    $response->assertRedirect('dashboard');
 
     $this->assertDatabaseHas('clubs', [
         'name' => 'Test Club',
@@ -28,8 +40,8 @@ test('a super admin can create a club', function () {
     ]);
 
     $club = Club::where('name', 'Test Club')->first();
-
-    $response->assertRedirect(route('clubs.show', $club));
+    $user->refresh();
+    expect($user->currentClub->id)->toBe($club->id);
 });
 
 test('a club admin can create a club', function () {
@@ -44,6 +56,8 @@ test('a club admin can create a club', function () {
         'slug' => 'test-club',
     ]);
 
+    $response->assertRedirect('dashboard');
+
     $this->assertDatabaseHas('clubs', [
         'name' => 'Test Club',
         'description' => 'Test Description',
@@ -51,8 +65,8 @@ test('a club admin can create a club', function () {
     ]);
 
     $club = Club::where('name', 'Test Club')->first();
-
-    $response->assertRedirect(route('clubs.show', $club));
+    $user->refresh();
+    expect($user->currentClub->id)->toBe($club->id);
 });
 
 test('a regular user cannot create a club', function () {

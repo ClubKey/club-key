@@ -214,6 +214,7 @@ Common issues:
 - [Inertia Response Issues](docs/troubleshooting.md#inertia-response-issues)
 - [TypeScript Errors](docs/troubleshooting.md#typescript-errors)
 - [Database Issues](docs/troubleshooting.md#database-migration-issues)
+- [Inertia Testing Issues](docs/troubleshooting.md#inertia-testing-issues)
 
 ## 📄 License
 

@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Clubs;
 
-use App\Actions\CreateClubAction;
+use App\Actions\Clubs\CreateClubAction;
+use App\DTOs\ClubDto;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ClubRequest;
 use App\Models\Club;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
+use Throwable;
 
 final class ClubController extends Controller
 {
@@ -24,7 +29,7 @@ final class ClubController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         Gate::authorize('create', Club::class);
 
@@ -33,14 +38,16 @@ final class ClubController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * @throws Throwable
      */
-    public function store(ClubRequest $request, CreateClubAction $createClub)
+    public function store(ClubRequest $request, CreateClubAction $createClub): RedirectResponse
     {
         Gate::authorize('create', Club::class);
 
-        $club = $createClub->handle($request);
+        $club = $createClub->handle(ClubDto::fromArray($request->validated()));
 
-        return redirect()->route('clubs.show', $club);
+        return redirect()->route('dashboard');
     }
 
     /**

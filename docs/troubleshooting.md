@@ -279,6 +279,12 @@ chmod -R 755 bootstrap/cache/
 chown -R www-data:www-data storage/
 ```
 
+### Inertia Testing Issues
+
+**Problem**: Inertia testing not working
+
+**Solution**: Ensure that you are running `npm run build` before running tests. This will ensure the vite manifest is generated, and up to date.
+
 ## Debugging Tools
 
 ### Laravel Debugging

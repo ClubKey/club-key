@@ -106,9 +106,7 @@ Unit tests test individual components in isolation.
 
 declare(strict_types=1);
 
-use App\Actions\CreateClubAction;
-use App\Models\User;
-use App\Models\Club;
+use App\Actions\Clubs\CreateClubAction;use App\Models\Club;use App\Models\User;
 
 test('create club action creates club with valid data', function () {
     $user = User::factory()->create();

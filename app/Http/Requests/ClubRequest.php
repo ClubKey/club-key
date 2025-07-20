@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use App\Models\Club;
+use App\Rules\Slug;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,13 +27,13 @@ final class ClubRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:clubs,slug'],
+            'slug' => ['required', 'string', 'max:255', new Slug, 'unique:clubs,slug'],
             'logo' => ['nullable', 'image', 'max:1024'],
             'description' => ['nullable', 'string'],
             'website' => ['nullable', 'url'],

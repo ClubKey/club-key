@@ -54,6 +54,19 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+
+    /**
+     * ------------------------------------------------------------------------
+     * Application Super Admin
+     * ------------------------------------------------------------------------
+     * This configuration is used to define the super admin user of the application.
+     * The user admin is the super admin of the application. and will be seeded when first deploying the application.
+     * This user will have the role of `super_admin` and will be able to manage all aspects of the application.
+     */
+    'super_admin_email' => env('APP_SUPER_ADMIN_EMAIL', ''),
+    'super_admin_name' => env('APP_SUPER_ADMIN_NAME', ''),
+    'super_admin_password' => env('APP_SUPER_ADMIN_PASSWORD', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

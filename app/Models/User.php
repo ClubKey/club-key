@@ -7,48 +7,61 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\AppRole;
 use App\Enums\ClubRole;
+use Carbon\CarbonImmutable;
+use Database\Factories\UserFactory;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 
 /**
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property ?int $current_club_id
  * @property AppRole $role
- * @property \Carbon\CarbonImmutable|null $email_verified_at
+ * @property CarbonImmutable|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property CarbonImmutable|null $created_at
+ * @property CarbonImmutable|null $updated_at
+ * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Visit> $visits
+ * @property-read Collection<int, Visit> $visits
  * @property-read int|null $visits_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, Club> $clubs
+ * @property-read Collection<int, Club> $clubs
  * @property-read int|null $clubs_count
+ * @property-read ?Club $currentClub
  *
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereEmailVerifiedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
+ * @method static UserFactory factory($count = null, $state = [])
+ * @method static Builder<static>|User newModelQuery()
+ * @method static Builder<static>|User newQuery()
+ * @method static Builder<static>|User query()
+ * @method static Builder<static>|User whereCreatedAt($value)
+ * @method static Builder<static>|User whereEmail($value)
+ * @method static Builder<static>|User whereEmailVerifiedAt($value)
+ * @method static Builder<static>|User whereId($value)
+ * @method static Builder<static>|User whereName($value)
+ * @method static Builder<static>|User wherePassword($value)
+ * @method static Builder<static>|User whereRememberToken($value)
+ * @method static Builder<static>|User whereUpdatedAt($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 final class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $appends = ['club_role'];
 
     /**
      * The attributes that are mass assignable.
@@ -60,6 +73,7 @@ final class User extends Authenticatable
         'email',
         'password',
         'role',
+        'current_club_id',
     ];
 
     /**
@@ -80,11 +94,9 @@ final class User extends Authenticatable
         'role' => AppRole::class,
     ];
 
-    public function clubs(): BelongsToMany
+    public function currentClub(): BelongsTo
     {
-        return $this->belongsToMany(Club::class, 'club_user', 'user_id', 'club_id')
-            ->withPivot('role')
-            ->withTimestamps();
+        return $this->belongsTo(Club::class);
     }
 
     public function visits(): HasMany
@@ -99,7 +111,26 @@ final class User extends Authenticatable
 
     public function hasRoleInClub(Club $club, ClubRole $role): bool
     {
-        return $this->clubs()->where('club_id', $club->id)->where('role', $role->value)->exists();
+        return $this->clubs()->where('club_id', $club->id)->wherePivot('role', $role->value)->exists();
+    }
+
+    public function clubs(): BelongsToMany
+    {
+        return $this->belongsToMany(Club::class, 'club_user', 'user_id', 'club_id')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    public function belongsToClub(Club $club): bool
+    {
+        return $this->clubs()->where('club_id', $club->id)->exists();
+    }
+
+    public function clubRole(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->currentClub ? $this->getRoleInClub($this->currentClub) : null,
+        );
     }
 
     public function getRoleInClub(Club $club): ?ClubRole
