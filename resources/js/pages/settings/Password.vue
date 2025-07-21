@@ -1,7 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import SettingsLayout from '@/layouts/settings/Layout.vue';
+import SettingsSettingsLayout from '@/layouts/settings/SettingsLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -54,21 +54,21 @@ const updatePassword = () => {
     <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Password settings" />
 
-        <SettingsLayout>
+        <SettingsSettingsLayout>
             <div class="space-y-6">
-                <HeadingSmall title="Update password" description="Ensure your account is using a long, random password to stay secure" />
+                <HeadingSmall description="Ensure your account is using a long, random password to stay secure" title="Update password" />
 
-                <form @submit.prevent="updatePassword" class="space-y-6">
+                <form class="space-y-6" @submit.prevent="updatePassword">
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
                         <Input
                             id="current_password"
                             ref="currentPasswordInput"
                             v-model="form.current_password"
-                            type="password"
-                            class="mt-1 block w-full"
                             autocomplete="current-password"
+                            class="mt-1 block w-full"
                             placeholder="Current password"
+                            type="password"
                         />
                         <InputError :message="form.errors.current_password" />
                     </div>
@@ -79,10 +79,10 @@ const updatePassword = () => {
                             id="password"
                             ref="passwordInput"
                             v-model="form.password"
-                            type="password"
-                            class="mt-1 block w-full"
                             autocomplete="new-password"
+                            class="mt-1 block w-full"
                             placeholder="New password"
+                            type="password"
                         />
                         <InputError :message="form.errors.password" />
                     </div>
@@ -92,10 +92,10 @@ const updatePassword = () => {
                         <Input
                             id="password_confirmation"
                             v-model="form.password_confirmation"
-                            type="password"
-                            class="mt-1 block w-full"
                             autocomplete="new-password"
+                            class="mt-1 block w-full"
                             placeholder="Confirm password"
+                            type="password"
                         />
                         <InputError :message="form.errors.password_confirmation" />
                     </div>
@@ -114,6 +114,6 @@ const updatePassword = () => {
                     </div>
                 </form>
             </div>
-        </SettingsLayout>
+        </SettingsSettingsLayout>
     </AppLayout>
 </template>
