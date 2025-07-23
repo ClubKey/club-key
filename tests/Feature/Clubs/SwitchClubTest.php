@@ -16,7 +16,7 @@ test('a member of a club can switch to a club they are a member of', function ()
     $user->save();
     $this->actingAs($user);
 
-    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->id]));
+    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->slug]));
     $response->assertRedirect(route('dashboard'));
     $this->assertEquals($anotherClub->id, $user->fresh()->current_club_id);
     $this->assertTrue($user->fresh()->belongsToClub($anotherClub));
@@ -32,7 +32,7 @@ test('a member of a club cannot switch to a club they are not a member of', func
     $user->save();
     $this->actingAs($user);
 
-    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->id]));
+    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->slug]));
     $response->assertForbidden();
     $this->assertEquals($club->id, $user->fresh()->current_club_id);
 });
@@ -47,7 +47,7 @@ test('an admin of a club can switch to a club they are a member of', function ()
     $user->save();
     $this->actingAs($user);
 
-    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->id]));
+    $response = $this->post(route('clubs.switch', ['club' => $anotherClub->slug]));
     $response->assertRedirect(route('dashboard'));
     $this->assertEquals($anotherClub->id, $user->fresh()->current_club_id);
 });

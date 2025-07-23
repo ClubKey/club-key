@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Clubs;
 
 use App\Actions\Clubs\CreateClubAction;
+use App\Actions\Clubs\UpdateClubAction;
 use App\DTOs\ClubDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClubRequest;
 use App\Models\Club;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
+
+use function to_route;
 
 final class ClubController extends Controller
 {
@@ -33,7 +37,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('create', Club::class);
 
-        return Inertia::render('clubs/Create');
+        return Inertia::render('clubs/CreateClub');
     }
 
     /**
@@ -45,9 +49,10 @@ final class ClubController extends Controller
     {
         Gate::authorize('create', Club::class);
 
-        $club = $createClub->handle(ClubDto::fromArray($request->validated()));
+        $createClub->handle(ClubDto::fromArray($request->validated()));
 
-        return redirect()->route('dashboard');
+        return to_route('dashboard')
+            ->with('success', __('Club created successfully.'));
     }
 
     /**
@@ -60,18 +65,30 @@ final class ClubController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @throws AuthorizationException
      */
-    public function edit(string $id)
+    public function edit(Request $request, Club $club): Response
     {
-        //
+        Gate::authorize('update', $club);
+
+        return Inertia::render('clubs/EditClub', [
+            'club' => $club,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @throws AuthorizationException|Throwable
      */
-    public function update(Request $request, string $id)
+    public function update(ClubRequest $request, Club $club, UpdateClubAction $updateClubAction): RedirectResponse
     {
-        //
+        Gate::authorize('update', $club);
+
+        $updateClubAction->handle(ClubDto::fromArray($request->validated()), $club);
+
+        return to_route('clubs.edit', $club)->with('success', __('Club updated successfully.'));
     }
 
     /**

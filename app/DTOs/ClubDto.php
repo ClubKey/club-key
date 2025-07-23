@@ -58,11 +58,10 @@ final readonly class ClubDto implements DTO
 
     public function toArray(): array
     {
-        return [
+        $data = [
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
-            'logo_path' => $this->logo,
             'website' => $this->website,
             'email' => $this->email,
             'phone' => $this->phone,
@@ -79,5 +78,11 @@ final readonly class ClubDto implements DTO
             'pinterest' => $this->pinterest,
             'snapchat' => $this->snapchat,
         ];
+
+        if ($this->logo) {
+            $data['logo_path'] = $this->logo;
+        }
+
+        return $data;
     }
 }

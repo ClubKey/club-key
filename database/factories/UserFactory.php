@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Enums\AppRole;
+use App\Enums\ClubRole;
+use App\Models\Club;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -56,5 +58,17 @@ final class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'role' => AppRole::USER,
         ]);
+    }
+
+    public function withClub(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $club = Club::factory()->create();
+            $user->clubs()->attach($club, [
+                'role' => ClubRole::ADMIN->value,
+            ]);
+            $user->current_club_id = $club->id;
+            $user->save();
+        });
     }
 }

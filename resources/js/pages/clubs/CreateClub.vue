@@ -28,7 +28,7 @@ const form = useForm({
     name: '',
     slug: '',
     description: '',
-    logo: null,
+    logo: null as File | null,
     website: '',
     email: '',
     phone: '',
@@ -66,6 +66,13 @@ watch(
     },
 );
 
+const onLogoChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+        form.logo = target.files[0];
+    }
+};
+
 const submit = () => {
     form.post(route('clubs.store'));
 };
@@ -102,7 +109,7 @@ const submit = () => {
                     <div class="grid gap-2">
                         <Label for="logo">Logo</Label>
                         <FormInputDescription>Upload a logo for your club. This will be displayed on your club's page. </FormInputDescription>
-                        <Input id="logo" accept="image/*" class="block w-full" type="file" @change="(e) => (form.logo = e.target.files[0])" />
+                        <Input id="logo" accept="image/*" class="block w-full" type="file" @change="onLogoChange" />
                         <InputError :message="form.errors.logo" />
                     </div>
 

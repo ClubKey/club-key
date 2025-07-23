@@ -28,10 +28,10 @@ const handleSwitchClub = () => {
 </script>
 
 <template>
-    <DropdownMenu v-if="currentClub || hasOtherClubs">
+    <DropdownMenu v-if="currentClub || hasOtherClubs" class="min-w-auto">
         <DropdownMenuTrigger>
             <SidebarMenuButton class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground" size="lg">
-                <ClubInfo :club="currentClub" />
+                <ClubInfo :club="currentClub" :show-slug="true" />
                 <ChevronsUpDown class="ml-auto size-4" />
             </SidebarMenuButton>
         </DropdownMenuTrigger>
@@ -45,7 +45,7 @@ const handleSwitchClub = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     <DropdownMenuItem :as-child="true">
-                        <Link :href="route('clubs.edit', currentClub?.id)" as="button" class="flex w-full items-center" prefetch>
+                        <Link :href="route('clubs.edit', currentClub.slug)" as="button" class="flex w-full items-center" prefetch>
                             <Settings class="mr-2 h-4 w-4" />
                             Club Settings
                         </Link>
@@ -62,7 +62,7 @@ const handleSwitchClub = () => {
                 </DropdownMenuLabel>
                 <DropdownMenuItem v-for="club in clubs" :key="club.id" :as-child="true">
                     <Link
-                        :href="route('clubs.switch', club.id)"
+                        :href="route('clubs.switch', club.slug)"
                         :preserve-state="false"
                         as="button"
                         class="block w-full"

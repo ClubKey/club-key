@@ -33,8 +33,8 @@ final class ClubRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', new Slug, 'unique:clubs,slug'],
-            'logo' => ['nullable', 'image', 'max:1024'],
+            'slug' => ['required', 'string', 'max:255', new Slug, 'unique:clubs,slug'.($this->club ? ','.$this->club->id : '')],
+            'logo' => ['nullable', 'image', 'max:4000'],
             'description' => ['nullable', 'string'],
             'website' => ['nullable', 'url'],
             'email' => ['nullable', 'email'],

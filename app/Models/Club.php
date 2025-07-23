@@ -86,6 +86,11 @@ final class Club extends Model
         'updated_at' => 'immutable_datetime',
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function adminInvitations(): HasMany
     {
         return $this->hasMany(AdminInvitation::class);
