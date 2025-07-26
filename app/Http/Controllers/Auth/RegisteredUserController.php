@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Clubs\HandleInvitationAfterAuthAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -17,12 +18,18 @@ use Inertia\Response;
 
 final class RegisteredUserController extends Controller
 {
+    public function __construct(
+        private HandleInvitationAfterAuthAction $handleInvitationAfterAuthAction
+    ) {}
+
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('auth/Register');
+        return Inertia::render('auth/Register', [
+            'inviteToken' => $request->cookie('invite_token'),
+        ]);
     }
 
     /**
@@ -32,22 +39,29 @@ final class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        $inviteToken = $request->cookie('invite_token');
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            ]);
 
-        event(new Registered($user));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
-        Auth::login($user);
+            event(new Registered($user));
 
-        return to_route('dashboard');
+            Auth::login($user);
+
+            return $this->handleInvitationAfterAuthAction->handle($user, $inviteToken);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Re-throw the validation exception - the cookie will persist automatically
+            throw $e;
+        }
     }
 }

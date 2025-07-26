@@ -20,11 +20,7 @@ const props = defineProps<{
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Clubs',
-        href: '/clubs',
-    },
-    {
-        title: 'Details',
+        title: props.club.name,
         href: `/clubs/${props.club.slug}/edit`,
     },
 ];
@@ -81,8 +77,8 @@ const submit = () => {
 <template>
     <AppLayout :breadcrumbs>
         <ClubLayout :club="club">
-            <Avatar class="mb-6 h-20 w-20 overflow-hidden rounded-lg">
-                <AvatarImage v-if="club.logo_path" :src="club.logo_path" alt="Club Logo" />
+            <Avatar v-if="club.logo_path" class="mb-6 h-20 w-20 overflow-hidden rounded-lg">
+                <AvatarImage :src="club.logo_path" alt="Club Logo" />
             </Avatar>
             <Heading :title="`Edit ${club.name}`" />
             <Card class="w-full max-w-2xl p-6">

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Clubs;
 
 use App\Models\Club;
 use App\Rules\Slug;

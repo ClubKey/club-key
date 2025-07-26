@@ -8,7 +8,7 @@ use App\Actions\Clubs\CreateClubAction;
 use App\Actions\Clubs\UpdateClubAction;
 use App\DTOs\ClubDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ClubRequest;
+use App\Http\Requests\Clubs\ClubRequest;
 use App\Models\Club;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;

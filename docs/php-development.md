@@ -72,7 +72,8 @@ public function handle(array $data): Club
 }
 ```
 
-**Important**: When calling actions within other actions, the transaction is not committed until all actions are completed.
+**Important**: When calling actions within other actions, the transaction is not committed until all actions are
+completed.
 
 ## Naming Conventions
 
@@ -107,7 +108,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Clubs\CreateClubAction;use App\Http\Requests\ClubRequest;use Inertia\Inertia;use Inertia\Response;
+use App\Actions\Clubs\CreateClubAction;use App\Http\Requests\Clubs\ClubRequest;use Inertia\Inertia;use Inertia\Response;
 
 final class ClubController extends Controller
 {

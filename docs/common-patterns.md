@@ -15,7 +15,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Clubs\CreateClubAction;use App\Actions\DeleteClubAction;use App\Actions\Clubs\UpdateClubAction;use App\Http\Requests\ClubRequest;use App\Models\Club;use Inertia\Inertia;use Inertia\Response;
+use App\Actions\Clubs\CreateClubAction;use App\Actions\DeleteClubAction;use App\Actions\Clubs\UpdateClubAction;use App\Http\Requests\Clubs\ClubRequest;use App\Models\Club;use Inertia\Inertia;use Inertia\Response;
 
 final class ClubController extends Controller
 {

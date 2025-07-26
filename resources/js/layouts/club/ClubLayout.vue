@@ -15,8 +15,8 @@ const sidebarNavItems: NavItem[] = [
         href: `/clubs/${props.club.slug}/edit`,
     },
     {
-        title: 'Users',
-        href: `/clubs/${props.club.slug}/users`,
+        title: 'Admins',
+        href: `/clubs/${props.club.slug}/admins`,
     },
     {
         title: 'Danger Zone',
@@ -31,7 +31,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 
 <template>
     <div class="px-4 py-6">
-        <Heading description="Manage your club" title="Club Details" />
+        <Heading :title="props.club.name" description="Manage your club" />
 
         <div class="flex flex-col space-y-8 md:space-y-0 lg:flex-row lg:space-y-0 lg:space-x-12">
             <aside class="w-full max-w-xl lg:w-48">

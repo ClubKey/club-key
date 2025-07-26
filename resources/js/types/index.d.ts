@@ -69,4 +69,17 @@ export interface Club {
     updated_at: string;
 }
 
+export interface AdminInvitation {
+    id: number;
+    email: string;
+    club_id: number;
+    club: Club;
+    inviter_id: number;
+    inviter?: User;
+    role: ClubRole;
+    expires_at: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

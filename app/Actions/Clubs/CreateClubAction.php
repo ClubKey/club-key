@@ -6,6 +6,7 @@ namespace App\Actions\Clubs;
 
 use App\DTOs\ClubDto;
 use App\Enums\ClubRole;
+use App\Events\Clubs\ClubCreated;
 use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,9 +29,11 @@ final readonly class CreateClubAction
             $club->members()->attach(Auth::id(), ['role' => ClubRole::ADMIN->value]);
 
             $this->switchCurrentClubAction->handle(
-                Auth::user(),
+                $user = Auth::user(),
                 $club
             );
+
+            ClubCreated::dispatch($user, $club);
 
             return $club;
         });
