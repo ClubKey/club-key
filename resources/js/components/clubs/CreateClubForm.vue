@@ -1,0 +1,173 @@
+<script lang="ts" setup>
+import FormInputDescription from '@/components/FormInputDescription.vue';
+import InputError from '@/components/InputError.vue';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useForm } from '@inertiajs/vue3';
+import { watch } from 'vue';
+
+const form = useForm({
+    name: '',
+    slug: '',
+    description: '',
+    logo: null as File | null,
+    website: '',
+    email: '',
+    phone: '',
+    street_address: '',
+    city: '',
+    state: '',
+    zip: '',
+    facebook: '',
+    instagram: '',
+    x: '',
+    youtube: '',
+    tiktok: '',
+    linkedin: '',
+    pinterest: '',
+    snapchat: '',
+});
+
+watch(
+    () => form.name,
+    (newName) => {
+        form.slug = newName
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with a hyphen
+            .replace(/^-|-$/g, ''); // Remove leading and trailing hyphens
+    },
+);
+
+watch(
+    () => form.slug,
+    (newSlug) => {
+        form.slug = newSlug
+            .toLowerCase()
+            .replace(/[^a-z0-9-]+/g, '-') // Replace non-alphanumeric characters with a hyphen
+            .replace(/^-|-$/g, ''); // Remove leading and trailing hyphens
+    },
+);
+
+const onLogoChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files && target.files[0]) {
+        form.logo = target.files[0];
+    }
+};
+
+const submit = () => {
+    form.post(route('clubs.store'));
+};
+</script>
+
+<template>
+    <form class="space-y-6" @submit.prevent="submit">
+        <InputError v-if="form.hasErrors" class="mb-4" message="There are errors in your form. Please fix them before submitting." />
+
+        <div class="grid gap-2">
+            <Label for="name">Name</Label>
+            <Input id="name" v-model="form.name" autocomplete="name" class="mt-1 block w-full" placeholder="Club name" required />
+            <InputError :message="form.errors.name" class="mt-2" />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="slug">Slug</Label>
+            <FormInputDescription
+                >This is the unique url for your slug that users will go to in order to access your clubs rewards. Only lowercase letters with - in
+                between words are allowed.
+            </FormInputDescription>
+            <Input id="slug" v-model="form.slug" class="block w-full" placeholder="club-name" required />
+            <InputError :message="form.errors.slug" />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="logo">Logo</Label>
+            <FormInputDescription>Upload a logo for your club. This will be displayed on your club's page. </FormInputDescription>
+            <Input id="logo" accept="image/*" class="block w-full" type="file" @change="onLogoChange" />
+            <InputError :message="form.errors.logo" />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="description">Description</Label>
+            <Textarea id="description" v-model="form.description" class="block w-full" placeholder="A brief description of your club" />
+            <InputError :message="form.errors.description" />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="website">Website</Label>
+            <Input id="website" v-model="form.website" class="block w-full" placeholder="https://example.com" />
+            <InputError :message="form.errors.website" />
+        </div>
+        <div class="grid gap-2">
+            <Label for="email">Email</Label>
+            <Input id="email" v-model="form.email" class="block w-full" placeholder="example@club.com" required type="email" />
+            <InputError :message="form.errors.email" />
+        </div>
+        <div class="grid gap-2">
+            <Label for="phone">Phone</Label>
+            <Input id="phone" v-model="form.phone" class="block w-full" placeholder="+1 (555) 123-4567" type="tel" />
+            <InputError :message="form.errors.phone" />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="street_address">Street Address</Label>
+            <Input id="street_address" v-model="form.street_address" class="block w-full" placeholder="123 Main St" />
+            <InputError :message="form.errors.street_address" />
+        </div>
+        <div class="grid gap-4 md:grid-cols-3">
+            <div class="grid gap-2">
+                <Label for="city">City</Label>
+                <Input id="city" v-model="form.city" class="block w-full" placeholder="City" />
+                <InputError :message="form.errors.city" />
+            </div>
+
+            <div class="grid gap-2">
+                <Label for="state">State</Label>
+                <Input id="state" v-model="form.state" class="block w-full" placeholder="State" />
+                <InputError :message="form.errors.state" />
+            </div>
+
+            <div class="grid gap-2">
+                <Label for="zip">Zip Code</Label>
+                <Input id="zip" v-model="form.zip" class="block w-full" placeholder="12345" />
+                <InputError :message="form.errors.zip" />
+            </div>
+        </div>
+
+        <div class="grid gap-4 md:grid-cols-2">
+            <div class="md:col-span-2">
+                <Label>Social Media Links</Label>
+                <FormInputDescription>Provide links to your club's social media profiles. </FormInputDescription>
+            </div>
+            <Input id="facebook" v-model="form.facebook" class="block w-full" placeholder="Facebook URL" />
+            <InputError :message="form.errors.facebook" />
+
+            <Input id="instagram" v-model="form.instagram" class="block w-full" placeholder="Instagram URL" />
+            <InputError :message="form.errors.instagram" />
+
+            <Input id="x" v-model="form.x" class="block w-full" placeholder="X (Twitter) URL" />
+            <InputError :message="form.errors.x" />
+
+            <Input id="youtube" v-model="form.youtube" class="block w-full" placeholder="YouTube URL" />
+            <InputError :message="form.errors.youtube" />
+
+            <Input id="tiktok" v-model="form.tiktok" class="block w-full" placeholder="TikTok URL" />
+            <InputError :message="form.errors.tiktok" />
+
+            <Input id="linkedin" v-model="form.linkedin" class="block w-full" placeholder="LinkedIn URL" />
+            <InputError :message="form.errors.linkedin" />
+
+            <Input id="pinterest" v-model="form.pinterest" class="block w-full" placeholder="Pinterest URL" />
+            <InputError :message="form.errors.pinterest" />
+
+            <Input id="snapchat" v-model="form.snapchat" class="mb-4 block w-full" placeholder="Snapchat URL (optional)" />
+            <InputError :message="form.errors.snapchat" />
+        </div>
+
+        <div class="flex items-center gap-4">
+            <Button :disabled="form.processing">Create</Button>
+        </div>
+    </form>
+</template>
