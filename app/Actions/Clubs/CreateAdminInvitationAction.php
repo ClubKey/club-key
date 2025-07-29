@@ -22,8 +22,9 @@ final readonly class CreateAdminInvitationAction
     public function handle(AdminInvitatiionDto $adminInvitationDto, Club $club): void
     {
         DB::transaction(function () use ($adminInvitationDto, $club): void {
-            $adminInvitation = $club->adminInvitations()->create([
+            $adminInvitation = $club->adminInvitations()->updateOrCreate([
                 'email' => $adminInvitationDto->email,
+            ], [
                 'token' => Str::ulid(),
                 'inviter_id' => Auth::id(),
                 'expires_at' => now()->addDays(30),
