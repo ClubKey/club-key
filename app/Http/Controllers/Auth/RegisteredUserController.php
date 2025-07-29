@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\Clubs\HandleInvitationAfterAuthAction;
+use App\Actions\AdminInvitations\HandleInvitationAfterAuthAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,19 +24,9 @@ final class RegisteredUserController extends Controller
     ) {}
 
     /**
-     * Show the registration page.
-     */
-    public function create(Request $request): Response
-    {
-        return Inertia::render('auth/Register', [
-            'inviteToken' => $request->cookie('invite_token'),
-        ]);
-    }
-
-    /**
      * Handle an incoming registration request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
@@ -59,9 +50,19 @@ final class RegisteredUserController extends Controller
             Auth::login($user);
 
             return $this->handleInvitationAfterAuthAction->handle($user, $inviteToken);
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             // Re-throw the validation exception - the cookie will persist automatically
             throw $e;
         }
+    }
+
+    /**
+     * Show the registration page.
+     */
+    public function create(Request $request): Response
+    {
+        return Inertia::render('auth/Register', [
+            'inviteToken' => $request->cookie('invite_token'),
+        ]);
     }
 }

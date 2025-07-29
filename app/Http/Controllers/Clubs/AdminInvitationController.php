@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Clubs;
 
-use App\Actions\Clubs\CreateAdminInvitationAction;
-use App\Actions\Clubs\ProcessAdminAcceptanceAction;
+use App\Actions\AdminInvitations\CreateAdminInvitationAction;
+use App\Actions\AdminInvitations\ProcessAdminAcceptanceAction;
+use App\Actions\AdminInvitations\ResendAdminInvitationAction;
+use App\Actions\AdminInvitations\RevokeAdminInvitationAction;
 use App\DTOs\AdminInvitatiionDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\AdminInvitationRequest;
@@ -41,5 +43,27 @@ final class AdminInvitationController extends Controller
         ProcessAdminAcceptanceAction $processAdminAcceptanceAction,
     ): RedirectResponse {
         return $processAdminAcceptanceAction->handle($adminInvitation);
+    }
+
+    public function resend(Club $club, AdminInvitation $adminInvitation, ResendAdminInvitationAction $resendAdminInvitationAction): RedirectResponse
+    {
+        Gate::authorize('update', $club);
+
+        $resendAdminInvitationAction->handle($adminInvitation);
+
+        return back()->with('success', __('Admin invitation resent successfully. An email has been sent to the invited user.'));
+    }
+
+    /**
+     * @throws AuthorizationException
+     * @throws Throwable
+     */
+    public function destroy(Club $club, AdminInvitation $adminInvitation, RevokeAdminInvitationAction $revokeAdminInvitationAction): RedirectResponse
+    {
+        Gate::authorize('update', $club);
+
+        $revokeAdminInvitationAction->handle($adminInvitation);
+
+        return back()->with('success', __('Admin invitation revoked successfully.'));
     }
 }

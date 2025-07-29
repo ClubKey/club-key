@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Clubs;
+namespace App\Actions\AdminInvitations;
 
 use App\DTOs\AdminInvitatiionDto;
 use App\Events\Clubs\AdminInvitationCreated;

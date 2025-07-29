@@ -15,9 +15,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('clubs/{club}/admins', [ClubAdminController::class, 'index'])
         ->name('clubs.admins.index');
 
-    Route::post('clubs/{club}/admin-invitations', [AdminInvitationController::class, 'store'])
-        ->name('clubs.admin-invitations.store');
-
+    Route::resource('clubs.admin-invitations', AdminInvitationController::class)->only(['store', 'destroy']);
+    Route::post('clubs/{club}/admin-invitations/{adminInvitation}/resend', [AdminInvitationController::class, 'resend'])
+        ->name('clubs.admin-invitations.resend');
 });
 
 Route::get('clubs/{club}/admin-invitations/{adminInvitation}/accept', [AdminInvitationController::class, 'accept'])
