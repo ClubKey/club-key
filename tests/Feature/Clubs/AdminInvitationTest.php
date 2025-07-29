@@ -34,6 +34,36 @@ test('club admins can invite users to be admin of a club', function () {
     ]);
 });
 
+test('only one invitation is created for an email per club', function () {
+    $user = User::factory()->withClub()->create();
+    $club = $user->currentClub;
+
+    // First invitation
+    $response = $this->actingAs($user)
+        ->post(route('clubs.admin-invitations.store', $club->slug), [
+            'email' => 'test@test.com',
+            'role' => ClubRole::ADMIN->value,
+        ]);
+
+    $response->assertRedirect();
+
+    $response->assertSessionHas('success');
+    $this->assertDatabaseCount('admin_invitations', 1);
+
+    // Second invitation with the same email
+    $response = $this->actingAs($user)
+        ->post(route('clubs.admin-invitations.store', $club->slug), [
+            'email' => 'test@test.com',
+            'role' => ClubRole::ADMIN->value,
+        ]);
+
+    $response->assertRedirect();
+
+    $response->assertSessionHas('success');
+
+    $this->assertDatabaseCount('admin_invitations', 1);
+});
+
 test('non-admin users cannot invite users to be admin of a club', function () {
     $club = Club::factory()->create();
     $user = User::factory()->create();
