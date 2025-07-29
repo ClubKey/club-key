@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import ClubSwitcher from '@/components/ClubSwitcher.vue';
+import ClubSwitcher from '@/components/clubs/ClubSwitcher.vue';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItemType } from '@/types';
 

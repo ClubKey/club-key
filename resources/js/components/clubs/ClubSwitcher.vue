@@ -2,7 +2,6 @@
 import { Link, router, usePage } from '@inertiajs/vue3';
 import { ArrowRightLeftIcon, ChevronsUpDown, PlusIcon, Settings } from 'lucide-vue-next';
 import { computed } from 'vue';
-import ClubInfo from './ClubInfo.vue';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,8 +10,9 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { SidebarMenuButton } from './ui/sidebar';
+} from '../ui/dropdown-menu';
+import { SidebarMenuButton } from '../ui/sidebar';
+import ClubInfo from './ClubInfo.vue';
 
 const page = usePage();
 
@@ -73,7 +73,7 @@ const handleSwitchClub = () => {
                     </Link>
                 </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuGroup>
+            <DropdownMenuGroup v-if="page.props.auth.user.role === 'super_admin'">
                 <DropdownMenuSeparator />
                 <DropdownMenuItem :as-child="true">
                     <Link :href="route('clubs.create')" as="button" class="block w-full">

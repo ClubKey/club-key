@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Button from '@/components/ui/button/Button.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -10,6 +10,8 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
 ];
+
+const page = usePage();
 </script>
 
 <template>
@@ -18,7 +20,10 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
             <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                <div class="flex h-full flex-col items-center justify-center">
+                <div
+                    v-if="!page.props.currentClub && page.props.auth.user.role == 'super_admin'"
+                    class="flex h-full flex-col items-center justify-center"
+                >
                     <h1 class="text-2xl font-bold">Create your first club</h1>
                     <Button :as="Link" :href="route('clubs.create')" class="mt-4">Create Club</Button>
                 </div>
