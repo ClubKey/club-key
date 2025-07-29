@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Events\Clubs;
+namespace App\Events\ClubAdmins;
 
 use App\Models\AdminInvitation;
 use Illuminate\Broadcasting\Channel;

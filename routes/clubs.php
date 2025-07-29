@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Clubs\AdminInvitationController;
+use App\Http\Controllers\ClubAdmins\AdminInvitationController;
 use App\Http\Controllers\Clubs\ClubAdminController;
 use App\Http\Controllers\Clubs\ClubController;
 use App\Http\Controllers\Clubs\SwitchClubController;

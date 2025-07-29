@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\AdminInvitations;
+namespace App\Actions\ClubAdmins;
 
-use App\Events\Clubs\AdminNotificationResent;
+use App\Events\ClubAdmins\AdminNotificationResent;
 use App\Models\AdminInvitation;
 use Illuminate\Support\Facades\DB;
 

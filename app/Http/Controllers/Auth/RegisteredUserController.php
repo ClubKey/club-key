@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\AdminInvitations\HandleInvitationAfterAuthAction;
+use App\Actions\ClubAdmins\HandleInvitationAfterAuthAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;

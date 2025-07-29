@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Clubs;
+namespace App\Http\Controllers\ClubAdmins;
 
-use App\Actions\AdminInvitations\CreateAdminInvitationAction;
-use App\Actions\AdminInvitations\ProcessAdminAcceptanceAction;
-use App\Actions\AdminInvitations\ResendAdminInvitationAction;
-use App\Actions\AdminInvitations\RevokeAdminInvitationAction;
+use App\Actions\ClubAdmins\CreateAdminInvitationAction;
+use App\Actions\ClubAdmins\ProcessAdminAcceptanceAction;
+use App\Actions\ClubAdmins\ResendAdminInvitationAction;
+use App\Actions\ClubAdmins\RevokeAdminInvitationAction;
 use App\DTOs\AdminInvitatiionDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\AdminInvitationRequest;
