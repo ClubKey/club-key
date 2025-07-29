@@ -10,6 +10,6 @@ defineProps<{
 <template>
     <div class="flex flex-col gap-4">
         <Invitation v-for="invite in adminInvitations" :key="invite.id" :admin-invitation="invite" :club="club" />
-        <div v-if="adminInvitations.length === 0" class="text-muted-foreground">No pending admin invitations found for this club.</div>
+        <p v-if="adminInvitations.length === 0" class="text-sm text-muted-foreground">No pending admin invitations found for this club.</p>
     </div>
 </template>
