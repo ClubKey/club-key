@@ -22,8 +22,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 <template>
     <Head description="Create a club to start building your business." title="Create Club" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="px-4 py-6">
-            <Head title="Profile settings" />
+        <div class="mx-auto px-4 py-6">
+            <Head title="Create a Club" />
             <Heading class="mb-6" description="Create a club to start building your business." title="Create Club" />
             <Card class="max-w-9/12 p-6">
                 <HeadingSmall title="Details" />

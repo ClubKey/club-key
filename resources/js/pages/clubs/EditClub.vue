@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import ClubLayout from '@/layouts/club/ClubLayout.vue';
 import { type BreadcrumbItem, Club } from '@/types';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps<{
     club: Club;
@@ -22,6 +23,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
     <AppLayout :breadcrumbs>
+        <Head :title="`Edit ${club.name}`" />
         <ClubLayout :club="club">
             <Avatar v-if="club.logo_path" class="mb-6 h-20 w-20 overflow-hidden rounded-lg">
                 <AvatarImage :src="club.logo_path" alt="Club Logo" />

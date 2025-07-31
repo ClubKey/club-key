@@ -12,7 +12,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import ClubLayout from '@/layouts/club/ClubLayout.vue';
 import { AdminInvitation, type BreadcrumbItem, Club, User } from '@/types';
 import { page } from '@inertiajs/core/types/page';
-import { usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 
 const props = defineProps<{
     club: Club;
@@ -36,6 +36,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
     <AppLayout :breadcrumbs>
+        <Head :title="`${club.name} Admins`" />
         <ClubLayout :club="club">
             <Heading :title="`${club.name} Admins`" />
             <Card class="w-full max-w-2xl p-6">
