@@ -26,7 +26,10 @@ const breadcrumbs: BreadcrumbItem[] = [
             <Avatar v-if="club.logo_path" class="mb-6 h-20 w-20 overflow-hidden rounded-lg">
                 <AvatarImage :src="club.logo_path" alt="Club Logo" />
             </Avatar>
-            <Heading :title="`Edit ${club.name}`" />
+            <Heading
+                :title="`Edit ${club.name}`"
+                description="Edit your club information below, like your logo that appears on member reward cards, slug that users visit to join your club and more."
+            />
             <Card class="w-full max-w-2xl p-6">
                 <HeadingSmall title="Details" />
 

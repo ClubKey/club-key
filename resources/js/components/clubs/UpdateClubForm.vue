@@ -75,7 +75,7 @@ const submit = () => {
             <Label for="slug">Slug</Label>
             <FormInputDescription
                 >This is the unique url for your slug that users will go to in order to access your clubs rewards. Only lowercase letters with - in
-                between words are allowed.
+                between words are allowed. Be careful! Changing your slug will change the url for your club and may break existing links.
             </FormInputDescription>
             <Input id="slug" v-model="form.slug" class="block w-full" placeholder="club-name" required />
             <InputError :message="form.errors.slug" />
@@ -142,7 +142,7 @@ const submit = () => {
         <div class="grid gap-4 md:grid-cols-2">
             <div class="md:col-span-2">
                 <Label>Social Media Links</Label>
-                <FormInputDescription>Provide links to your club's social media profiles. </FormInputDescription>
+                <FormInputDescription>Provide links to your club's social media profiles.</FormInputDescription>
             </div>
             <Input id="facebook" v-model="form.facebook" class="block w-full" placeholder="Facebook URL" />
             <InputError :message="form.errors.facebook" />
