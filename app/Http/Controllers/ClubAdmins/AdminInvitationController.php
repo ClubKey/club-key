@@ -10,7 +10,7 @@ use App\Actions\ClubAdmins\ResendAdminInvitationAction;
 use App\Actions\ClubAdmins\RevokeAdminInvitationAction;
 use App\DTOs\AdminInvitatiionDto;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Clubs\AdminInvitationRequest;
+use App\Http\Requests\ClubAdmins\AdminInvitationRequest;
 use App\Models\AdminInvitation;
 use App\Models\Club;
 use Illuminate\Auth\Access\AuthorizationException;

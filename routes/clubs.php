@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clubs', ClubController::class)->except(['show', 'index']);
+    Route::get('clubs/{club}/danger-zone', [ClubController::class, 'dangerZone'])
+        ->name('clubs.danger-zone');
     Route::post('clubs/{club}/switch', SwitchClubController::class)
         ->name('clubs.switch');
     Route::get('clubs/{club}/admins', [ClubAdminController::class, 'index'])
