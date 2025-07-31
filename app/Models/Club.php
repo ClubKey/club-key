@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 
 /**
  * @property int $id
+ * @property int|null $owner_id
  * @property string $name
  * @property string $slug
  * @property string|null $logo_path
@@ -39,6 +41,9 @@ use Illuminate\Http\UploadedFile;
  * @property string|null $snapchat
  * @property CarbonImmutable $created_at
  * @property CarbonImmutable $updated_at
+ * @property-read User|null $owner
+ * @property-read Collection<int, AdminInvitation> $adminInvitations
+ * @property-read int|null $admin_invitations_count
  * @property-read Collection<int, Visit> $visits
  * @property-read int|null $visits_count
  * @property-read Collection<int, ClubLocation> $locations
@@ -60,6 +65,7 @@ final class Club extends Model
     use HasFactory;
 
     protected $fillable = [
+        'owner_id',
         'name',
         'slug',
         'logo_path',
@@ -106,6 +112,11 @@ final class Club extends Model
         return $this->belongsToMany(User::class, 'club_user', 'club_id', 'user_id')
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id', 'id');
     }
 
     public function locations(): HasMany

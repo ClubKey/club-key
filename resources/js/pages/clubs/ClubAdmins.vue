@@ -39,7 +39,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         <Head :title="`${club.name} Admins`" />
         <ClubLayout :club="club">
             <Heading :title="`${club.name} Admins`" />
-            <Card class="w-full max-w-2xl p-6">
+            <Card v-if="page.props.auth.user.id === club.owner_id" class="w-full max-w-2xl p-6">
                 <HeadingSmall title="Invite an admin" />
 
                 <InviteAdminForm :club="club" />
@@ -53,7 +53,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 
             <Card class="mt-6 w-full max-w-2xl p-6">
                 <HeadingSmall title="Current Admins" />
-
                 <div class="flex flex-col gap-4">
                     <div v-for="user in admins" :key="user.id">
                         <div class="flex items-center gap-2">
@@ -65,6 +64,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             </Avatar>
                             <div class="flex flex-col">
                                 <p class="text-sm font-medium">{{ user.name }} {{ user.id === page.props.auth.user.id ? '(You)' : '' }}</p>
+                                <p class="text-xs font-bold">{{ user.id === club.owner_id ? 'Club Owner' : 'Admin' }}</p>
                                 <p class="text-sm text-neutral-500">{{ user.email }}</p>
                             </div>
                         </div>

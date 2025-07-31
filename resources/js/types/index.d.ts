@@ -46,6 +46,7 @@ export interface User {
 
 export interface Club {
     id: number;
+    owner_id: number;
     name: string;
     slug: string;
     description?: string;
@@ -67,6 +68,7 @@ export interface Club {
     snapchat?: string;
     created_at: string;
     updated_at: string;
+    owner?: User;
 }
 
 export interface AdminInvitation {

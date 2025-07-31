@@ -29,7 +29,7 @@ final class AdminInvitationController extends Controller
         Club $club,
         CreateAdminInvitationAction $adminInvitationAction
     ): RedirectResponse {
-        Gate::authorize('update', $club);
+        Gate::authorize('inviteAdmins', $club);
 
         $adminInvitationAction->handle(AdminInvitatiionDto::fromArray($request->validated()), $club);
 

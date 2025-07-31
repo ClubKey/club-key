@@ -20,9 +20,19 @@ final class ClubPolicy
         return $user->hasRoleInClub($club, ClubRole::ADMIN) || $user->isSuperAdmin();
     }
 
+    public function inviteAdmins(User $user, Club $club): bool
+    {
+        return $user->hasRoleInClub($club, ClubRole::ADMIN);
+    }
+
+    public function removeAdmins(User $user, Club $club): bool
+    {
+        return $user->ownsClub($club);
+    }
+
     public function delete(User $user, Club $club): bool
     {
-        return $user->hasRoleInClub($club, ClubRole::ADMIN) || $user->isSuperAdmin();
+        return $user->ownsClub($club) || $user->isSuperAdmin();
     }
 
     public function switch(User $user, Club $club): bool

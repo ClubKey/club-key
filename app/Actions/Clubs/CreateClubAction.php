@@ -26,6 +26,10 @@ final readonly class CreateClubAction
         return DB::transaction(function () use ($dto): Club {
             $club = Club::create($dto->toArray());
 
+            $club->owner()->associate(Auth::user());
+
+            $club->save();
+
             $club->members()->attach(Auth::id(), ['role' => ClubRole::ADMIN->value]);
 
             $this->switchCurrentClubAction->handle(

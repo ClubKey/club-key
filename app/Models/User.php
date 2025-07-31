@@ -121,6 +121,16 @@ final class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function ownsClub(Club $club): bool
+    {
+        return $this->id === $club->owner_id;
+    }
+
+    public function ownedClubs(): HasMany
+    {
+        return $this->hasMany(Club::class, 'owner_id', 'id');
+    }
+
     public function belongsToClub(Club $club): bool
     {
         return $this->clubs()->where('club_id', $club->id)->exists();

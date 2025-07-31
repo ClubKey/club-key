@@ -2,27 +2,35 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Club, type NavItem } from '@/types';
+import { Club } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps<{
     club: Club;
 }>();
 
-const sidebarNavItems: NavItem[] = [
-    {
-        title: 'Details',
-        href: `/clubs/${props.club.slug}/edit`,
-    },
-    {
-        title: 'Admins',
-        href: `/clubs/${props.club.slug}/admins`,
-    },
-    {
-        title: 'Danger Zone',
-        href: `/clubs/${props.club.slug}/danger-zone`,
-    },
-];
+const sidebarNavItems = computed(() => {
+    const base = [
+        {
+            title: 'Details',
+            href: `/clubs/${props.club.slug}/edit`,
+        },
+        {
+            title: 'Admins',
+            href: `/clubs/${props.club.slug}/admins`,
+        },
+    ];
+
+    if (props.club.owner_id === usePage().props.auth.user.id) {
+        base.push({
+            title: 'Danger Zone',
+            href: `/clubs/${props.club.slug}/danger-zone`,
+        });
+    }
+
+    return base;
+});
 
 const page = usePage();
 
