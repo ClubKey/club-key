@@ -11,12 +11,16 @@ import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import ClubLayout from '@/layouts/club/ClubLayout.vue';
 import { AdminInvitation, type BreadcrumbItem, Club, User } from '@/types';
+import { page } from '@inertiajs/core/types/page';
+import { usePage } from '@inertiajs/vue3';
 
 const props = defineProps<{
     club: Club;
     admins: User[];
     adminInvitations: AdminInvitation[];
 }>();
+
+const page = usePage();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -43,7 +47,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <Card class="mt-6 w-full max-w-2xl p-6">
                 <HeadingSmall title="Admin Invitations" />
 
-                <InvitationList :club="club" :admin-invitations="adminInvitations" />
+                <InvitationList :admin-invitations="adminInvitations" :club="club" />
             </Card>
 
             <Card class="mt-6 w-full max-w-2xl p-6">
@@ -53,13 +57,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <div v-for="user in admins" :key="user.id">
                         <div class="flex items-center gap-2">
                             <Avatar class="h-10 w-10 overflow-hidden rounded-lg">
-                                <AvatarImage v-if="user.avatar" :src="user.avatar!" :alt="user.name" />
+                                <AvatarImage v-if="user.avatar" :alt="user.name" :src="user.avatar!" />
                                 <AvatarFallback class="rounded-lg text-black dark:text-white">
                                     {{ getInitials(user.name) }}
                                 </AvatarFallback>
                             </Avatar>
                             <div class="flex flex-col">
-                                <p class="text-sm font-medium">{{ user.name }}</p>
+                                <p class="text-sm font-medium">{{ user.name }} {{ user.id === page.props.auth.user.id ? '(You)' : '' }}</p>
                                 <p class="text-sm text-neutral-500">{{ user.email }}</p>
                             </div>
                         </div>
