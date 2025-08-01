@@ -17,11 +17,11 @@ final class ClubRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        if ($this->routeIs('clubs.create')) {
+        if ($this->routeIs('clubs.store')) {
             return Auth::user()->can('create', Club::class);
         }
 
-        return true;
+        return $this->user()->can('update', $this->route('club'));
     }
 
     /**

@@ -84,4 +84,18 @@ export interface AdminInvitation {
     updated_at: string;
 }
 
+export interface ClubLocation {
+    id: number;
+    club_id: number;
+    club?: Club;
+    name: string;
+    street_address: string;
+    city: string;
+    state: string;
+    zip: string;
+    phone?: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;

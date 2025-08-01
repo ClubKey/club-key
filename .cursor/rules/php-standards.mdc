@@ -10,8 +10,9 @@ Business logic should be in Action classes following the pattern in [app/Actions
 
 - Use `final readonly class` for Actions
 - Single `handle()` method with typed return values
+- Every action should be wrapped in a database transaction so that when calling actions within other actions, the transaction is not committed until all actions are completed
 - Use dependency injection in constructors
-- Implement database transactions for actions so that when calling actions within other actions, the transaction is not committed until all actions are completed
+- To create a new action use the command `php artisan make:action <action-name>`
 
 ## Naming Conventions
 
