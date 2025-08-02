@@ -36,65 +36,63 @@ const formatAddress = (location: ClubLocation) => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Locations`" />
-        <div class="px-4 py-6">
-            <div class="flex items-center justify-between">
-                <Heading :title="`${club.name} Locations`" description="Manage your club locations" />
-                <Button v-if="canCreate" as-child>
-                    <Link :href="route('locations.create')">
-                        <Plus class="mr-2 h-4 w-4" />
-                        Add Location
-                    </Link>
-                </Button>
-            </div>
+        <div class="flex items-center justify-between">
+            <Heading :title="`${club.name} Locations`" description="Manage your club locations" />
+            <Button v-if="canCreate" as-child>
+                <Link :href="route('locations.create')">
+                    <Plus class="mr-2 h-4 w-4" />
+                    Add Location
+                </Link>
+            </Button>
+        </div>
 
-            <div v-if="locations.length === 0" class="mt-8">
-                <Card>
-                    <CardContent class="flex flex-col items-center justify-center py-12">
-                        <MapPin class="mb-4 h-12 w-12 text-muted-foreground" />
-                        <h3 class="mb-2 text-lg font-semibold">No locations yet</h3>
-                        <p class="mb-4 text-center text-muted-foreground">Get started by adding your first club location.</p>
-                        <Button v-if="canCreate" as-child>
-                            <Link :href="route('locations.create')">
-                                <Plus class="mr-2 h-4 w-4" />
-                                Add Location
-                            </Link>
+        <div v-if="locations.length === 0" class="mt-8">
+            <Card>
+                <CardContent class="flex flex-col items-center justify-center py-12">
+                    <MapPin class="mb-4 h-12 w-12 text-muted-foreground" />
+                    <h3 class="mb-2 text-lg font-semibold">No locations yet</h3>
+                    <p class="mb-4 text-center text-muted-foreground">Get started by adding your first club location.</p>
+                    <Button v-if="canCreate" as-child>
+                        <Link :href="route('locations.create')">
+                            <Plus class="mr-2 h-4 w-4" />
+                            Add Location
+                        </Link>
+                    </Button>
+                </CardContent>
+            </Card>
+        </div>
+
+        <div v-else class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card v-for="location in locations" :key="location.id" class="group">
+                <CardHeader>
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <CardTitle class="text-lg">{{ location.name }}</CardTitle>
+                            <CardDescription class="mt-2">
+                                <div class="flex items-start gap-2">
+                                    <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0" />
+                                    <span>{{ formatAddress(location) }}</span>
+                                </div>
+                            </CardDescription>
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    <div v-if="location.phone" class="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+                        <Phone class="h-4 w-4" />
+                        <span>{{ location.phone }}</span>
+                    </div>
+
+                    <Separator class="my-4" />
+
+                    <div class="flex gap-2">
+                        <Button v-if="canCreate" as-child class="flex-1" size="sm" variant="outline">
+                            <Link :href="route('locations.edit', location.id)"> Edit</Link>
                         </Button>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <div v-else class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <Card v-for="location in locations" :key="location.id" class="group">
-                    <CardHeader>
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <CardTitle class="text-lg">{{ location.name }}</CardTitle>
-                                <CardDescription class="mt-2">
-                                    <div class="flex items-start gap-2">
-                                        <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0" />
-                                        <span>{{ formatAddress(location) }}</span>
-                                    </div>
-                                </CardDescription>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div v-if="location.phone" class="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-                            <Phone class="h-4 w-4" />
-                            <span>{{ location.phone }}</span>
-                        </div>
-
-                        <Separator class="my-4" />
-
-                        <div class="flex gap-2">
-                            <Button v-if="canCreate" variant="outline" size="sm" as-child class="flex-1">
-                                <Link :href="route('locations.edit', location.id)"> Edit </Link>
-                            </Button>
-                            <DeleteLocation v-if="canCreate" :location="location" />
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+                        <DeleteLocation v-if="canCreate" :location="location" />
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     </AppLayout>
 </template>

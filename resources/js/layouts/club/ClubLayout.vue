@@ -38,10 +38,10 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 </script>
 
 <template>
-    <div class="px-4 py-6">
+    <div class="flex flex-col gap-6">
         <Heading :title="props.club.name" description="Manage your club" />
 
-        <div class="flex flex-col space-y-8 md:space-y-0 lg:flex-row lg:space-y-0 lg:space-x-12">
+        <div class="flex flex-col gap-y-6 lg:flex-row lg:gap-x-12 lg:gap-y-0">
             <aside class="w-full max-w-xl lg:w-48">
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
@@ -58,9 +58,9 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                 </nav>
             </aside>
 
-            <Separator class="my-6 md:hidden" />
+            <Separator class="lg:hidden" />
 
-            <div class="max-w-2xl flex-1">
+            <div class="flex max-w-2xl flex-1 flex-col gap-6">
                 <slot />
             </div>
         </div>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -26,18 +26,18 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
 </script>
 
 <template>
-    <div class="px-4 py-6">
-        <Heading title="Settings" description="Manage your profile and account settings" />
+    <div class="flex flex-col gap-6">
+        <Heading description="Manage your profile and account settings" title="Settings" />
 
-        <div class="flex flex-col space-y-8 md:space-y-0 lg:flex-row lg:space-y-0 lg:space-x-12">
+        <div class="flex flex-col gap-y-6 lg:flex-row lg:gap-x-12 lg:gap-y-0">
             <aside class="w-full max-w-xl lg:w-48">
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
                         v-for="item in sidebarNavItems"
                         :key="item.href"
-                        variant="ghost"
                         :class="['w-full justify-start', { 'bg-muted': currentPath === item.href }]"
                         as-child
+                        variant="ghost"
                     >
                         <Link :href="item.href">
                             {{ item.title }}
@@ -46,7 +46,7 @@ const currentPath = page.props.ziggy?.location ? new URL(page.props.ziggy.locati
                 </nav>
             </aside>
 
-            <Separator class="my-6 md:hidden" />
+            <Separator class="lg:hidden" />
 
             <div class="flex-1 md:max-w-2xl">
                 <section class="max-w-xl space-y-12">

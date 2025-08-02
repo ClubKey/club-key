@@ -1,7 +1,7 @@
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`Edit Reward Level - ${club.name}`" />
-        <div class="grid gap-6 p-6">
+        <div class="grid gap-6">
             <div class="flex flex-col justify-between md:flex-row md:items-center">
                 <Heading :title="`Edit Reward Level`" description="Update reward level details" />
                 <div class="flex flex-wrap items-center gap-3">

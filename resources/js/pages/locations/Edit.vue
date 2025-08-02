@@ -41,83 +41,81 @@ const submit = () => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`Edit Location - ${club.name}`" />
-        <div class="px-4 py-6">
-            <Heading :title="`Edit Location`" description="Update location details" />
+        <Heading :title="`Edit Location`" description="Update location details" />
 
-            <Card class="mt-8 max-w-2xl">
-                <CardHeader>
-                    <CardTitle>Location Details</CardTitle>
-                    <CardDescription> Update the details for this club location. </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form @submit.prevent="submit" class="space-y-6">
+        <Card class="mt-8 max-w-2xl">
+            <CardHeader>
+                <CardTitle>Location Details</CardTitle>
+                <CardDescription> Update the details for this club location.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <form class="space-y-6" @submit.prevent="submit">
+                    <div class="space-y-2">
+                        <Label for="name">Location Name</Label>
+                        <Input id="name" v-model="form.name" :error="form.errors.name" placeholder="e.g., Downtown Branch" type="text" />
+                        <p v-if="form.errors.name" class="text-sm text-destructive">
+                            {{ form.errors.name }}
+                        </p>
+                    </div>
+
+                    <div class="space-y-2">
+                        <Label for="street_address">Street Address</Label>
+                        <Input
+                            id="street_address"
+                            v-model="form.street_address"
+                            :error="form.errors.street_address"
+                            placeholder="e.g., 123 Main St"
+                            type="text"
+                        />
+                        <p v-if="form.errors.street_address" class="text-sm text-destructive">
+                            {{ form.errors.street_address }}
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
                         <div class="space-y-2">
-                            <Label for="name">Location Name</Label>
-                            <Input id="name" v-model="form.name" type="text" placeholder="e.g., Downtown Branch" :error="form.errors.name" />
-                            <p v-if="form.errors.name" class="text-sm text-destructive">
-                                {{ form.errors.name }}
+                            <Label for="city">City</Label>
+                            <Input id="city" v-model="form.city" :error="form.errors.city" placeholder="City" type="text" />
+                            <p v-if="form.errors.city" class="text-sm text-destructive">
+                                {{ form.errors.city }}
                             </p>
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="street_address">Street Address</Label>
-                            <Input
-                                id="street_address"
-                                v-model="form.street_address"
-                                type="text"
-                                placeholder="e.g., 123 Main St"
-                                :error="form.errors.street_address"
-                            />
-                            <p v-if="form.errors.street_address" class="text-sm text-destructive">
-                                {{ form.errors.street_address }}
+                            <Label for="state">State</Label>
+                            <Input id="state" v-model="form.state" :error="form.errors.state" placeholder="State" type="text" />
+                            <p v-if="form.errors.state" class="text-sm text-destructive">
+                                {{ form.errors.state }}
                             </p>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="space-y-2">
-                                <Label for="city">City</Label>
-                                <Input id="city" v-model="form.city" type="text" placeholder="City" :error="form.errors.city" />
-                                <p v-if="form.errors.city" class="text-sm text-destructive">
-                                    {{ form.errors.city }}
-                                </p>
-                            </div>
-
-                            <div class="space-y-2">
-                                <Label for="state">State</Label>
-                                <Input id="state" v-model="form.state" type="text" placeholder="State" :error="form.errors.state" />
-                                <p v-if="form.errors.state" class="text-sm text-destructive">
-                                    {{ form.errors.state }}
-                                </p>
-                            </div>
-
-                            <div class="space-y-2">
-                                <Label for="zip">ZIP Code</Label>
-                                <Input id="zip" v-model="form.zip" type="text" placeholder="ZIP" :error="form.errors.zip" />
-                                <p v-if="form.errors.zip" class="text-sm text-destructive">
-                                    {{ form.errors.zip }}
-                                </p>
-                            </div>
                         </div>
 
                         <div class="space-y-2">
-                            <Label for="phone">Phone Number (Optional)</Label>
-                            <Input id="phone" v-model="form.phone" type="tel" placeholder="e.g., (555) 123-4567" :error="form.errors.phone" />
-                            <p v-if="form.errors.phone" class="text-sm text-destructive">
-                                {{ form.errors.phone }}
+                            <Label for="zip">ZIP Code</Label>
+                            <Input id="zip" v-model="form.zip" :error="form.errors.zip" placeholder="ZIP" type="text" />
+                            <p v-if="form.errors.zip" class="text-sm text-destructive">
+                                {{ form.errors.zip }}
                             </p>
                         </div>
+                    </div>
 
-                        <div class="flex gap-4">
-                            <Button type="submit" :disabled="form.processing">
-                                {{ form.processing ? 'Updating...' : 'Update Location' }}
-                            </Button>
-                            <Button type="button" variant="outline" as-child>
-                                <Link :href="route('locations.index')"> Cancel </Link>
-                            </Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
-        </div>
+                    <div class="space-y-2">
+                        <Label for="phone">Phone Number (Optional)</Label>
+                        <Input id="phone" v-model="form.phone" :error="form.errors.phone" placeholder="e.g., (555) 123-4567" type="tel" />
+                        <p v-if="form.errors.phone" class="text-sm text-destructive">
+                            {{ form.errors.phone }}
+                        </p>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <Button :disabled="form.processing" type="submit">
+                            {{ form.processing ? 'Updating...' : 'Update Location' }}
+                        </Button>
+                        <Button as-child type="button" variant="outline">
+                            <Link :href="route('locations.index')"> Cancel</Link>
+                        </Button>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
     </AppLayout>
 </template>

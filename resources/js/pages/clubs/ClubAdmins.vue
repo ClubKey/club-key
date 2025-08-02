@@ -39,19 +39,19 @@ const breadcrumbs: BreadcrumbItem[] = [
         <Head :title="`${club.name} Admins`" />
         <ClubLayout :club="club">
             <Heading :title="`${club.name} Admins`" />
-            <Card v-if="page.props.auth.user.id === club.owner_id" class="w-full max-w-2xl p-6">
+            <Card v-if="page.props.auth.user.id === club.owner_id" class="p-6">
                 <HeadingSmall title="Invite an admin" />
 
                 <InviteAdminForm :club="club" />
             </Card>
 
-            <Card class="mt-6 w-full max-w-2xl p-6">
+            <Card class="p-6">
                 <HeadingSmall title="Admin Invitations" />
 
                 <InvitationList :admin-invitations="adminInvitations" :club="club" />
             </Card>
 
-            <Card class="mt-6 w-full max-w-2xl p-6">
+            <Card class="p-6">
                 <HeadingSmall title="Current Admins" />
                 <div class="flex flex-col gap-4">
                     <div v-for="user in admins" :key="user.id">
