@@ -25,6 +25,12 @@ export type AppPageProps<T extends Record<string, unknown> = Record<string, unkn
     clubs: Club[];
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    flash: {
+        success?: string | null;
+        error?: string | null;
+        warning?: string | null;
+        info?: string | null;
+    };
 };
 export type AppRole = 'super_admin' | 'club_admin' | 'user';
 
@@ -96,6 +102,26 @@ export interface ClubLocation {
     phone?: string;
     created_at: string;
     updated_at: string;
+}
+
+export interface Reward {
+    id: number;
+    description: string;
+    order: number;
+    reward_level_id: number;
+    rewardLevel: RewardLevel;
+}
+
+export interface RewardLevel {
+    id: number;
+    name: string;
+    icon_name: string | null;
+    min_visits_per_month: number;
+    color: string | null;
+    description: string | null;
+    percentage_discount: number;
+    order: number;
+    rewards?: Reward[];
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

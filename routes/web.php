@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ClubRewards\RewardController;
+use App\Http\Controllers\ClubRewards\RewardLevelController;
 use App\Http\Controllers\Clubs\ClubLocationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,6 +18,12 @@ Route::get('dashboard', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('locations', ClubLocationController::class);
+
+    // Reward Levels
+    Route::resource('reward-levels', RewardLevelController::class);
+
+    // Rewards
+    Route::resource('reward-levels.rewards', RewardController::class)->except(['index', 'show']);
 });
 
 require __DIR__.'/settings.php';

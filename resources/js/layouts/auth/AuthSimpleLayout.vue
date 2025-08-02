@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import SessionBanner from '@/components/SessionBanner.vue';
 import { Link } from '@inertiajs/vue3';
 
 defineProps<{
@@ -28,4 +29,5 @@ defineProps<{
             </div>
         </div>
     </div>
+    <SessionBanner />
 </template>

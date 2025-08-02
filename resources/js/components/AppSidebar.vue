@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, MapPin } from 'lucide-vue-next';
+import { BookOpen, Folder, LayoutGrid, MapPin, Trophy } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -25,6 +25,11 @@ const mainNavItems = computed(() => {
             title: 'Locations',
             href: route('locations.index'),
             icon: MapPin,
+        });
+        items.push({
+            title: 'Reward Levels',
+            href: route('reward-levels.index'),
+            icon: Trophy,
         });
     }
 
