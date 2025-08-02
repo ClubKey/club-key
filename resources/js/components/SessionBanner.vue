@@ -1,10 +1,19 @@
-<script setup lang="ts">
-import Icon from '@/components/Icon.vue';
+<script lang="ts" setup>
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import { usePage } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { AlertCircle, Info, Rocket, TriangleAlert, X } from 'lucide-vue-next';
+import { computed } from 'vue';
 
 const page = usePage();
-const messageType = ref<'success' | 'error' | 'warning' | 'info'>('success');
+
+const messageType = computed(() => {
+    if (page.props.flash.success) return 'success';
+    if (page.props.flash.error) return 'error';
+    if (page.props.flash.warning) return 'warning';
+    if (page.props.flash.info) return 'info';
+    return '';
+});
 
 const shouldShow = computed(() => {
     return page.props.flash.success || page.props.flash.error || page.props.flash.warning || page.props.flash.info;
@@ -25,52 +34,18 @@ const message = computed(() => {
     return page.props.flash.success || page.props.flash.error || page.props.flash.warning || page.props.flash.info;
 });
 
-const bannerClasses = computed(() => {
-    const baseClasses = 'fixed bottom-4 right-4 z-50 max-w-sm rounded-lg border p-4 shadow-lg transition-all duration-300 ease-in-out';
-
+const title = computed(() => {
     switch (messageType.value) {
         case 'success':
-            return `${baseClasses} bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200`;
+            return 'Success';
         case 'error':
-            return `${baseClasses} bg-red-50 border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200`;
+            return 'Error';
         case 'warning':
-            return `${baseClasses} bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200`;
+            return 'Warning';
         case 'info':
-            return `${baseClasses} bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200`;
+            return 'Info';
         default:
-            return baseClasses;
-    }
-});
-
-const iconClasses = computed(() => {
-    const baseClasses = 'h-5 w-5';
-
-    switch (messageType.value) {
-        case 'success':
-            return `${baseClasses} text-green-600 dark:text-green-400`;
-        case 'error':
-            return `${baseClasses} text-red-600 dark:text-red-400`;
-        case 'warning':
-            return `${baseClasses} text-yellow-600 dark:text-yellow-400`;
-        case 'info':
-            return `${baseClasses} text-blue-600 dark:text-blue-400`;
-        default:
-            return baseClasses;
-    }
-});
-
-const getIcon = computed(() => {
-    switch (messageType.value) {
-        case 'success':
-            return 'check-circle';
-        case 'error':
-            return 'x-circle';
-        case 'warning':
-            return 'exclamation-triangle';
-        case 'info':
-            return 'information-circle';
-        default:
-            return 'information-circle';
+            return '';
     }
 });
 </script>
@@ -84,19 +59,19 @@ const getIcon = computed(() => {
         leave-from-class="transform translate-y-0 opacity-100"
         leave-to-class="transform translate-y-2 opacity-0"
     >
-        <div v-if="shouldShow" :class="bannerClasses">
-            <div class="flex items-start gap-3">
-                <Icon :name="getIcon" :class="iconClasses" />
-                <div class="flex-1 text-sm">
-                    {{ message }}
-                </div>
-                <button
-                    @click="hideMessage"
-                    class="flex-shrink-0 rounded-md p-1 text-gray-400 hover:text-gray-600 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none dark:hover:text-gray-300"
-                >
-                    <Icon name="x" class="h-4 w-4" />
-                </button>
-            </div>
-        </div>
+        <Alert v-if="shouldShow" :variant="messageType === 'error' ? 'destructive' : 'default'" class="fixed right-0 bottom-0 m-4 max-w-xl md:m-8">
+            <Rocket v-if="messageType === 'success'" class="size-4" />
+            <Info v-if="messageType === 'info'" class="size-4" />
+            <AlertCircle v-if="messageType === 'error'" class="size-4" />
+            <TriangleAlert v-else-if="messageType === 'warning'" class="size-4" />
+            <AlertTitle>{{ title }}</AlertTitle>
+            <AlertDescription>
+                {{ message }}
+            </AlertDescription>
+
+            <Button class="absolute top-0 right-0 m-2" size="icon" variant="outline" @click="hideMessage">
+                <X name="x" />
+            </Button>
+        </Alert>
     </Transition>
 </template>
