@@ -23,12 +23,6 @@ use function to_route;
 
 final class RewardLevelController extends Controller
 {
-    public function __construct(
-        private readonly CreateRewardLevelAction $createRewardLevelAction,
-        private readonly UpdateRewardLevelAction $updateRewardLevelAction,
-        private readonly DeleteRewardLevelAction $deleteRewardLevelAction,
-    ) {}
-
     /**
      * Display a listing of the resource.
      *
@@ -77,7 +71,7 @@ final class RewardLevelController extends Controller
      *
      * @throws Throwable
      */
-    public function store(RewardLevelRequest $request): RedirectResponse
+    public function store(RewardLevelRequest $request, CreateRewardLevelAction $createRewardLevelAction): RedirectResponse
     {
         Gate::authorize('create', RewardLevel::class);
 
@@ -89,7 +83,7 @@ final class RewardLevelController extends Controller
 
         $dto = RewardLevelDto::fromArray(array_merge($request->validated(), ['club_id' => $club->id]));
 
-        $this->createRewardLevelAction->handle($dto);
+        $createRewardLevelAction->handle($dto);
 
         return to_route('reward-levels.index')
             ->with('message', 'Reward level created successfully!');
@@ -128,7 +122,7 @@ final class RewardLevelController extends Controller
      *
      * @throws Throwable
      */
-    public function update(RewardLevelRequest $request, RewardLevel $rewardLevel): RedirectResponse
+    public function update(RewardLevelRequest $request, RewardLevel $rewardLevel, UpdateRewardLevelAction $updateRewardLevelAction): RedirectResponse
     {
         Gate::authorize('update', $rewardLevel);
 
@@ -145,7 +139,7 @@ final class RewardLevelController extends Controller
 
         $dto = RewardLevelDto::fromArray(array_merge($request->validated(), ['club_id' => $club->id]));
 
-        $this->updateRewardLevelAction->handle($dto, $rewardLevel);
+        $updateRewardLevelAction->handle($dto, $rewardLevel);
 
         return to_route('reward-levels.index')
             ->with('message', 'Reward level updated successfully!');
@@ -156,7 +150,7 @@ final class RewardLevelController extends Controller
      *
      * @throws Throwable
      */
-    public function destroy(RewardLevel $rewardLevel): RedirectResponse
+    public function destroy(RewardLevel $rewardLevel, DeleteRewardLevelAction $deleteRewardLevelAction): RedirectResponse
     {
         Gate::authorize('delete', $rewardLevel);
 
@@ -171,7 +165,7 @@ final class RewardLevelController extends Controller
             abort(404, 'Reward level not found.');
         }
 
-        $this->deleteRewardLevelAction->handle($rewardLevel);
+        $deleteRewardLevelAction->handle($rewardLevel);
 
         return to_route('reward-levels.index')
             ->with('message', 'Reward level deleted successfully!');

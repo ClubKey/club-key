@@ -24,12 +24,6 @@ use function to_route;
 
 final class RewardController extends Controller
 {
-    public function __construct(
-        private readonly CreateRewardAction $createRewardAction,
-        private readonly UpdateRewardAction $updateRewardAction,
-        private readonly DeleteRewardAction $deleteRewardAction,
-    ) {}
-
     /**
      * Show the form for creating a new resource.
      *
@@ -61,7 +55,7 @@ final class RewardController extends Controller
      *
      * @throws Throwable
      */
-    public function store(RewardRequest $request, RewardLevel $rewardLevel): RedirectResponse
+    public function store(RewardRequest $request, RewardLevel $rewardLevel, CreateRewardAction $createRewardAction): RedirectResponse
     {
         Gate::authorize('create', Reward::class);
 
@@ -78,7 +72,7 @@ final class RewardController extends Controller
 
         $dto = RewardDto::fromArray(array_merge($request->validated(), ['reward_level_id' => $rewardLevel->id]));
 
-        $this->createRewardAction->handle($dto);
+        $createRewardAction->handle($dto);
 
         return to_route('reward-levels.edit', $rewardLevel)
             ->with('message', 'Reward created successfully!');
@@ -99,18 +93,6 @@ final class RewardController extends Controller
             abort(404, 'No current club selected.');
         }
 
-        // Ensure the reward level belongs to the current club
-        if ($rewardLevel->club_id !== $club->id) {
-            abort(404, 'Reward level not found.');
-        }
-
-        // Ensure the reward belongs to the reward level
-        if ($reward->reward_level_id !== $rewardLevel->id) {
-            abort(404, 'Reward not found.');
-        }
-
-        $reward->load('rewardLevel.club');
-
         return Inertia::render('club-rewards/Rewards/Edit', [
             'reward' => $reward,
             'club' => $club,
@@ -123,29 +105,13 @@ final class RewardController extends Controller
      *
      * @throws Throwable
      */
-    public function update(RewardRequest $request, RewardLevel $rewardLevel, Reward $reward): RedirectResponse
+    public function update(RewardRequest $request, RewardLevel $rewardLevel, Reward $reward, UpdateRewardAction $updateRewardAction): RedirectResponse
     {
         Gate::authorize('update', $reward);
 
-        $club = Auth::user()->currentClub;
-
-        if (! $club) {
-            abort(404, 'No current club selected.');
-        }
-
-        // Ensure the reward level belongs to the current club
-        if ($rewardLevel->club_id !== $club->id) {
-            abort(404, 'Reward level not found.');
-        }
-
-        // Ensure the reward belongs to the reward level
-        if ($reward->reward_level_id !== $rewardLevel->id) {
-            abort(404, 'Reward not found.');
-        }
-
         $dto = RewardDto::fromArray(array_merge($request->validated(), ['reward_level_id' => $rewardLevel->id]));
 
-        $this->updateRewardAction->handle($dto, $reward);
+        $updateRewardAction->handle($dto, $reward);
 
         return to_route('reward-levels.edit', $reward->rewardLevel)
             ->with('message', 'Reward updated successfully!');
@@ -156,28 +122,11 @@ final class RewardController extends Controller
      *
      * @throws Throwable
      */
-    public function destroy(RewardLevel $rewardLevel, Reward $reward): RedirectResponse
+    public function destroy(RewardLevel $rewardLevel, Reward $reward, DeleteRewardAction $deleteRewardAction): RedirectResponse
     {
         Gate::authorize('delete', $reward);
 
-        $club = Auth::user()->currentClub;
-
-        if (! $club) {
-            abort(404, 'No current club selected.');
-        }
-
-        // Ensure the reward level belongs to the current club
-        if ($rewardLevel->club_id !== $club->id) {
-            abort(404, 'Reward level not found.');
-        }
-
-        // Ensure the reward belongs to the reward level
-        if ($reward->reward_level_id !== $rewardLevel->id) {
-            abort(404, 'Reward not found.');
-        }
-
-        $rewardLevel = $reward->rewardLevel;
-        $this->deleteRewardAction->handle($reward);
+        $deleteRewardAction->handle($reward);
 
         return to_route('reward-levels.edit', $rewardLevel)
             ->with('message', 'Reward deleted successfully!');
