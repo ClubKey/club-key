@@ -86,7 +86,7 @@ final class RewardLevelController extends Controller
         $createRewardLevelAction->handle($dto);
 
         return to_route('reward-levels.index')
-            ->with('message', 'Reward level created successfully!');
+            ->with('success', __('Reward level created successfully!'));
     }
 
     /**
@@ -142,7 +142,7 @@ final class RewardLevelController extends Controller
         $updateRewardLevelAction->handle($dto, $rewardLevel);
 
         return to_route('reward-levels.index')
-            ->with('message', 'Reward level updated successfully!');
+            ->with('success', __('Reward level updated successfully!'));
     }
 
     /**
@@ -168,6 +168,6 @@ final class RewardLevelController extends Controller
         $deleteRewardLevelAction->handle($rewardLevel);
 
         return to_route('reward-levels.index')
-            ->with('message', 'Reward level deleted successfully!');
+            ->with('success', __('Reward level deleted successfully!'));
     }
 }
