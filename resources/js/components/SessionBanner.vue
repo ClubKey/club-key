@@ -61,15 +61,15 @@ const title = computed(() => {
     >
         <Alert v-if="shouldShow" :variant="messageType === 'error' ? 'destructive' : 'default'" class="fixed right-0 bottom-0 m-4 max-w-xl md:m-8">
             <Rocket v-if="messageType === 'success'" class="size-4" />
-            <Info v-if="messageType === 'info'" class="size-4" />
-            <AlertCircle v-if="messageType === 'error'" class="size-4" />
+            <Info v-else-if="messageType === 'info'" class="size-4" />
+            <AlertCircle v-else-if="messageType === 'error'" class="size-4" />
             <TriangleAlert v-else-if="messageType === 'warning'" class="size-4" />
             <AlertTitle>{{ title }}</AlertTitle>
             <AlertDescription>
                 {{ message }}
             </AlertDescription>
 
-            <Button class="absolute top-0 right-0 m-2" size="icon" variant="outline" @click="hideMessage">
+            <Button class="absolute top-0 right-0 m-3" size="icon" variant="outline" @click="hideMessage">
                 <X name="x" />
             </Button>
         </Alert>
