@@ -4,7 +4,8 @@ This guide covers Inertia.js integration patterns and best practices for the Lar
 
 ## Overview
 
-Inertia.js allows us to build modern single-page applications using classic server-side routing and controllers, without the complexity of building APIs. It bridges the gap between Laravel and Vue.js seamlessly.
+Inertia.js allows us to build modern single-page applications using classic server-side routing and controllers, without
+the complexity of building APIs. It bridges the gap between Laravel and Vue.js seamlessly.
 
 ## Controller Responses
 
@@ -33,7 +34,7 @@ final class ClubController extends Controller
     {
         $clubs = $this->getClubsAction->handle();
 
-        return Inertia::render('Clubs/Index', [
+        return Inertia::render('admin/clubs/Index', [
             'clubs' => $clubs,
             'filters' => request()->only(['search', 'status']),
         ]);
@@ -41,7 +42,7 @@ final class ClubController extends Controller
 
     public function show(Club $club): Response
     {
-        return Inertia::render('Clubs/Show', [
+        return Inertia::render('admin/clubs/Show', [
             'club' => $club->load(['owner', 'members']),
         ]);
     }
@@ -53,7 +54,7 @@ final class ClubController extends Controller
 ```php
 public function create(): Response
 {
-    return Inertia::render('Clubs/Create', [
+    return Inertia::render('admin/clubs/Create', [
         'clubs' => Club::all(),
         'users' => User::all(),
     ])->with([
@@ -679,4 +680,5 @@ watch([search, status], updateFilters)
 </script>
 ```
 
-This guide provides comprehensive patterns for working with Inertia.js in your Laravel Club Rewards project, ensuring a smooth full-stack development experience.
+This guide provides comprehensive patterns for working with Inertia.js in your Laravel Club Rewards project, ensuring a
+smooth full-stack development experience.

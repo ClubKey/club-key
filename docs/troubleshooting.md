@@ -72,7 +72,7 @@ public function handle(array $data): Club
 
 ```php
 // Correct Inertia response
-return Inertia::render('Clubs/Index', [
+return Inertia::render('admin/clubs/Index', [
     'clubs' => $clubs,
 ]);
 
@@ -283,7 +283,8 @@ chown -R www-data:www-data storage/
 
 **Problem**: Inertia testing not working
 
-**Solution**: Ensure that you are running `npm run build` before running tests. This will ensure the vite manifest is generated, and up to date.
+**Solution**: Ensure that you are running `npm run build` before running tests. This will ensure the vite manifest is
+generated, and up to date.
 
 ## Debugging Tools
 
@@ -383,29 +384,29 @@ foreach ($clubs as $club) {
 
 ### PHP Errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `Class not found` | Missing file or namespace | Check file exists and namespace is correct |
-| `Undefined variable` | Variable not declared | Use `declare(strict_types=1);` and declare all variables |
-| `Call to undefined method` | Method doesn't exist | Check class methods and inheritance |
-| `Database connection failed` | Database config issue | Check `.env` database settings |
+| Error                        | Cause                     | Solution                                                 |
+|------------------------------|---------------------------|----------------------------------------------------------|
+| `Class not found`            | Missing file or namespace | Check file exists and namespace is correct               |
+| `Undefined variable`         | Variable not declared     | Use `declare(strict_types=1);` and declare all variables |
+| `Call to undefined method`   | Method doesn't exist      | Check class methods and inheritance                      |
+| `Database connection failed` | Database config issue     | Check `.env` database settings                           |
 
 ### TypeScript Errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
+| Error                     | Cause                      | Solution                                      |
+|---------------------------|----------------------------|-----------------------------------------------|
 | `Property does not exist` | Missing interface property | Add property to interface or use optional `?` |
-| `Type is not assignable` | Type mismatch | Check types and use proper type assertions |
-| `Cannot find module` | Missing import or file | Check import paths and file existence |
-| `Object is possibly null` | Null safety issue | Use optional chaining `?.` or null checks |
+| `Type is not assignable`  | Type mismatch              | Check types and use proper type assertions    |
+| `Cannot find module`      | Missing import or file     | Check import paths and file existence         |
+| `Object is possibly null` | Null safety issue          | Use optional chaining `?.` or null checks     |
 
 ### Inertia Errors
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `Page not found` | Missing Vue component | Check component exists in `resources/js/pages/` |
-| `Props not available` | Missing controller data | Ensure controller returns data in Inertia response |
-| `Form not submitting` | Incorrect form setup | Use `useForm` from Inertia and proper event handling |
+| Error                 | Cause                   | Solution                                             |
+|-----------------------|-------------------------|------------------------------------------------------|
+| `Page not found`      | Missing Vue component   | Check component exists in `resources/js/pages/`      |
+| `Props not available` | Missing controller data | Ensure controller returns data in Inertia response   |
+| `Form not submitting` | Incorrect form setup    | Use `useForm` from Inertia and proper event handling |
 
 ## Getting Help
 

@@ -33,7 +33,7 @@ final class ClubController extends Controller
             )
             ->paginate(15);
 
-        return Inertia::render('Clubs/Index', [
+        return Inertia::render('admin/clubs/Index', [
             'clubs' => $clubs,
             'filters' => request()->only(['search']),
         ]);
@@ -41,7 +41,7 @@ final class ClubController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('Clubs/Create', [
+        return Inertia::render('admin/clubs/Create', [
             'users' => User::all(),
         ]);
     }
@@ -58,7 +58,7 @@ final class ClubController extends Controller
     {
         $this->authorize('view', $club);
 
-        return Inertia::render('Clubs/Show', [
+        return Inertia::render('admin/clubs/Show', [
             'club' => $club->load(['owner', 'members', 'rewards']),
         ]);
     }
@@ -67,7 +67,7 @@ final class ClubController extends Controller
     {
         $this->authorize('update', $club);
 
-        return Inertia::render('Clubs/Edit', [
+        return Inertia::render('admin/clubs/Edit', [
             'club' => $club,
             'users' => User::all(),
         ]);
@@ -286,270 +286,272 @@ final class ClubPolicy
 #### Index Page with Search and Pagination
 
 ```vue
+
 <script setup lang="ts">
-import { Head, router } from '@inertiajs/vue3'
-import { ref, watch } from 'vue'
-import { debounce } from 'lodash'
-import type { Club, PaginatedData } from '@/types'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import ClubCard from '@/components/ClubCard.vue'
-import Pagination from '@/components/Pagination.vue'
+    import { Head, router } from '@inertiajs/vue3'
+    import { ref, watch } from 'vue'
+    import { debounce } from 'lodash'
+    import type { Club, PaginatedData } from '@/types'
+    import { Button } from '@/components/ui/button'
+    import { Input } from '@/components/ui/input'
+    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+    import ClubCard from '@/components/ClubCard.vue'
+    import Pagination from '@/components/Pagination.vue'
 
-interface Props {
-  clubs: PaginatedData<Club>
-  filters: {
-    search?: string
-    status?: string
-    sort?: string
-  }
-}
+    interface Props {
+        clubs: PaginatedData<Club>
+        filters: {
+            search?: string
+            status?: string
+            sort?: string
+        }
+    }
 
-const props = defineProps<Props>()
+    const props = defineProps<Props>()
 
-const search = ref(props.filters.search || '')
-const status = ref(props.filters.status || '')
-const sort = ref(props.filters.sort || 'created_at,desc')
+    const search = ref(props.filters.search || '')
+    const status = ref(props.filters.status || '')
+    const sort = ref(props.filters.sort || 'created_at,desc')
 
-const updateFilters = debounce(() => {
-  router.get(route('clubs.index'), {
-    search: search.value,
-    status: status.value,
-    sort: sort.value,
-  }, {
-    preserveState: true,
-    replace: true,
-  })
-}, 300)
+    const updateFilters = debounce(() => {
+        router.get(route('clubs.index'), {
+            search: search.value,
+            status: status.value,
+            sort: sort.value,
+        }, {
+            preserveState: true,
+            replace: true,
+        })
+    }, 300)
 
-watch([search, status, sort], updateFilters)
+    watch([search, status, sort], updateFilters)
 
-const createClub = () => {
-  router.get(route('clubs.create'))
-}
+    const createClub = () => {
+        router.get(route('clubs.create'))
+    }
 </script>
 
 <template>
-  <Head title="Clubs" />
+    <Head title="Clubs" />
 
-  <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center">
-      <h1 class="text-3xl font-bold">Clubs</h1>
-      <Button @click="createClub">Create Club</Button>
+    <div class="space-y-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Clubs</h1>
+            <Button @click="createClub">Create Club</Button>
+        </div>
+
+        <!-- Filters -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+                v-model="search"
+                placeholder="Search clubs..."
+                class="w-full"
+            />
+
+            <Select v-model="status">
+                <SelectTrigger>
+                    <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="">All Status</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <Select v-model="sort">
+                <SelectTrigger>
+                    <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="created_at,desc">Newest First</SelectItem>
+                    <SelectItem value="created_at,asc">Oldest First</SelectItem>
+                    <SelectItem value="name,asc">Name A-Z</SelectItem>
+                    <SelectItem value="name,desc">Name Z-A</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
+
+        <!-- Clubs Grid -->
+        <div v-if="clubs.data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ClubCard
+                v-for="club in clubs.data"
+                :key="club.id"
+                :club="club"
+            />
+        </div>
+
+        <!-- Empty State -->
+        <div v-else class="text-center py-12">
+            <p class="text-gray-500 text-lg">No clubs found.</p>
+            <Button @click="createClub" class="mt-4">Create your first club</Button>
+        </div>
+
+        <!-- Pagination -->
+        <Pagination
+            v-if="clubs.last_page > 1"
+            :current-page="clubs.current_page"
+            :last-page="clubs.last_page"
+            :total="clubs.total"
+        />
     </div>
-
-    <!-- Filters -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Input
-        v-model="search"
-        placeholder="Search clubs..."
-        class="w-full"
-      />
-
-      <Select v-model="status">
-        <SelectTrigger>
-          <SelectValue placeholder="All Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="">All Status</SelectItem>
-          <SelectItem value="active">Active</SelectItem>
-          <SelectItem value="inactive">Inactive</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select v-model="sort">
-        <SelectTrigger>
-          <SelectValue placeholder="Sort by" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="created_at,desc">Newest First</SelectItem>
-          <SelectItem value="created_at,asc">Oldest First</SelectItem>
-          <SelectItem value="name,asc">Name A-Z</SelectItem>
-          <SelectItem value="name,desc">Name Z-A</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
-
-    <!-- Clubs Grid -->
-    <div v-if="clubs.data.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <ClubCard
-        v-for="club in clubs.data"
-        :key="club.id"
-        :club="club"
-      />
-    </div>
-
-    <!-- Empty State -->
-    <div v-else class="text-center py-12">
-      <p class="text-gray-500 text-lg">No clubs found.</p>
-      <Button @click="createClub" class="mt-4">Create your first club</Button>
-    </div>
-
-    <!-- Pagination -->
-    <Pagination
-      v-if="clubs.last_page > 1"
-      :current-page="clubs.current_page"
-      :last-page="clubs.last_page"
-      :total="clubs.total"
-    />
-  </div>
 </template>
 ```
 
 #### Form Component with Validation
 
 ```vue
+
 <script setup lang="ts">
-import { Head, useForm } from '@inertiajs/vue3'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { Club, User } from '@/types'
+    import { Head, useForm } from '@inertiajs/vue3'
+    import { Button } from '@/components/ui/button'
+    import { Input } from '@/components/ui/input'
+    import { Textarea } from '@/components/ui/textarea'
+    import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+    import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+    import type { Club, User } from '@/types'
 
-interface Props {
-  club?: Club
-  users: User[]
-}
+    interface Props {
+        club?: Club
+        users: User[]
+    }
 
-const props = defineProps<Props>()
+    const props = defineProps<Props>()
 
-const form = useForm({
-  name: props.club?.name ?? '',
-  description: props.club?.description ?? '',
-  owner_id: props.club?.owner_id?.toString() ?? '',
-  logo: null as File | null,
-})
-
-const submit = () => {
-  if (props.club) {
-    form.put(route('clubs.update', props.club.id), {
-      onSuccess: () => {
-        // Success handling
-      },
-      onError: (errors) => {
-        // Error handling
-      },
+    const form = useForm({
+        name: props.club?.name ?? '',
+        description: props.club?.description ?? '',
+        owner_id: props.club?.owner_id?.toString() ?? '',
+        logo: null as File | null,
     })
-  } else {
-    form.post(route('clubs.store'), {
-      onSuccess: () => {
-        // Success handling
-      },
-      onError: (errors) => {
-        // Error handling
-      },
-    })
-  }
-}
 
-const handleFileChange = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  if (target.files && target.files[0]) {
-    form.logo = target.files[0]
-  }
-}
+    const submit = () => {
+        if (props.club) {
+            form.put(route('clubs.update', props.club.id), {
+                onSuccess: () => {
+                    // Success handling
+                },
+                onError: (errors) => {
+                    // Error handling
+                },
+            })
+        } else {
+            form.post(route('clubs.store'), {
+                onSuccess: () => {
+                    // Success handling
+                },
+                onError: (errors) => {
+                    // Error handling
+                },
+            })
+        }
+    }
+
+    const handleFileChange = (event: Event) => {
+        const target = event.target as HTMLInputElement
+        if (target.files && target.files[0]) {
+            form.logo = target.files[0]
+        }
+    }
 </script>
 
 <template>
-  <Head :title="club ? 'Edit Club' : 'Create Club'" />
+    <Head :title="club ? 'Edit Club' : 'Create Club'" />
 
-  <Card class="max-w-2xl mx-auto">
-    <CardHeader>
-      <CardTitle>{{ club ? 'Edit Club' : 'Create Club' }}</CardTitle>
-    </CardHeader>
-    <CardContent>
-      <form @submit.prevent="submit" class="space-y-6">
-        <!-- Name Field -->
-        <div>
-          <label for="name" class="block text-sm font-medium mb-2">Name</label>
-          <Input
-            id="name"
-            v-model="form.name"
-            :error="form.errors.name"
-            placeholder="Enter club name"
-            required
-          />
-          <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">
-            {{ form.errors.name }}
-          </p>
-        </div>
+    <Card class="max-w-2xl mx-auto">
+        <CardHeader>
+            <CardTitle>{{ club ? 'Edit Club' : 'Create Club' }}</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <form @submit.prevent="submit" class="space-y-6">
+                <!-- Name Field -->
+                <div>
+                    <label for="name" class="block text-sm font-medium mb-2">Name</label>
+                    <Input
+                        id="name"
+                        v-model="form.name"
+                        :error="form.errors.name"
+                        placeholder="Enter club name"
+                        required
+                    />
+                    <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.name }}
+                    </p>
+                </div>
 
-        <!-- Description Field -->
-        <div>
-          <label for="description" class="block text-sm font-medium mb-2">Description</label>
-          <Textarea
-            id="description"
-            v-model="form.description"
-            :error="form.errors.description"
-            placeholder="Enter club description"
-            rows="4"
-          />
-          <p v-if="form.errors.description" class="text-red-500 text-sm mt-1">
-            {{ form.errors.description }}
-          </p>
-        </div>
+                <!-- Description Field -->
+                <div>
+                    <label for="description" class="block text-sm font-medium mb-2">Description</label>
+                    <Textarea
+                        id="description"
+                        v-model="form.description"
+                        :error="form.errors.description"
+                        placeholder="Enter club description"
+                        rows="4"
+                    />
+                    <p v-if="form.errors.description" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.description }}
+                    </p>
+                </div>
 
-        <!-- Owner Field -->
-        <div>
-          <label for="owner" class="block text-sm font-medium mb-2">Owner</label>
-          <Select v-model="form.owner_id">
-            <SelectTrigger>
-              <SelectValue placeholder="Select owner" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem
-                v-for="user in users"
-                :key="user.id"
-                :value="user.id.toString()"
-              >
-                {{ user.name }}
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <p v-if="form.errors.owner_id" class="text-red-500 text-sm mt-1">
-            {{ form.errors.owner_id }}
-          </p>
-        </div>
+                <!-- Owner Field -->
+                <div>
+                    <label for="owner" class="block text-sm font-medium mb-2">Owner</label>
+                    <Select v-model="form.owner_id">
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select owner" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem
+                                v-for="user in users"
+                                :key="user.id"
+                                :value="user.id.toString()"
+                            >
+                                {{ user.name }}
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <p v-if="form.errors.owner_id" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.owner_id }}
+                    </p>
+                </div>
 
-        <!-- Logo Field -->
-        <div>
-          <label for="logo" class="block text-sm font-medium mb-2">Logo</label>
-          <Input
-            id="logo"
-            type="file"
-            @change="handleFileChange"
-            accept="image/*"
-            :error="form.errors.logo"
-          />
-          <p v-if="form.errors.logo" class="text-red-500 text-sm mt-1">
-            {{ form.errors.logo }}
-          </p>
-        </div>
+                <!-- Logo Field -->
+                <div>
+                    <label for="logo" class="block text-sm font-medium mb-2">Logo</label>
+                    <Input
+                        id="logo"
+                        type="file"
+                        @change="handleFileChange"
+                        accept="image/*"
+                        :error="form.errors.logo"
+                    />
+                    <p v-if="form.errors.logo" class="text-red-500 text-sm mt-1">
+                        {{ form.errors.logo }}
+                    </p>
+                </div>
 
-        <!-- Submit Button -->
-        <div class="flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outline"
-            @click="$inertia.visit(route('clubs.index'))"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            :disabled="form.processing"
-          >
-            <span v-if="form.processing">Saving...</span>
-            <span v-else>{{ club ? 'Update Club' : 'Create Club' }}</span>
-          </Button>
-        </div>
-      </form>
-    </CardContent>
-  </Card>
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-4">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        @click="$inertia.visit(route('clubs.index'))"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        :disabled="form.processing"
+                    >
+                        <span v-if="form.processing">Saving...</span>
+                        <span v-else>{{ club ? 'Update Club' : 'Create Club' }}</span>
+                    </Button>
+                </div>
+            </form>
+        </CardContent>
+    </Card>
 </template>
 ```
 
@@ -558,149 +560,150 @@ const handleFileChange = (event: Event) => {
 #### Data Table Component
 
 ```vue
+
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+    import { computed } from 'vue'
+    import { Button } from '@/components/ui/button'
+    import { Input } from '@/components/ui/input'
+    import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-interface Column {
-  key: string
-  label: string
-  sortable?: boolean
-  render?: (value: any, row: any) => string
-}
+    interface Column {
+        key: string
+        label: string
+        sortable?: boolean
+        render?: (value: any, row: any) => string
+    }
 
-interface Props {
-  data: any[]
-  columns: Column[]
-  sortable?: boolean
-  searchable?: boolean
-  actions?: boolean
-}
+    interface Props {
+        data: any[]
+        columns: Column[]
+        sortable?: boolean
+        searchable?: boolean
+        actions?: boolean
+    }
 
-const props = defineProps<Props>()
+    const props = defineProps<Props>()
 
-const emit = defineEmits<{
-  edit: [row: any]
-  delete: [row: any]
-  sort: [column: string, direction: string]
-}>()
+    const emit = defineEmits<{
+        edit: [row: any]
+        delete: [row: any]
+        sort: [column: string, direction: string]
+    }>()
 
-const search = ref('')
-const sortColumn = ref('')
-const sortDirection = ref('asc')
+    const search = ref('')
+    const sortColumn = ref('')
+    const sortDirection = ref('asc')
 
-const filteredData = computed(() => {
-  let result = props.data
+    const filteredData = computed(() => {
+        let result = props.data
 
-  if (search.value) {
-    result = result.filter(row =>
-      Object.values(row).some(value =>
-        String(value).toLowerCase().includes(search.value.toLowerCase())
-      )
-    )
-  }
+        if (search.value) {
+            result = result.filter(row =>
+                Object.values(row).some(value =>
+                    String(value).toLowerCase().includes(search.value.toLowerCase())
+                )
+            )
+        }
 
-  if (sortColumn.value && sortDirection.value) {
-    result = result.sort((a, b) => {
-      const aVal = a[sortColumn.value]
-      const bVal = b[sortColumn.value]
+        if (sortColumn.value && sortDirection.value) {
+            result = result.sort((a, b) => {
+                const aVal = a[sortColumn.value]
+                const bVal = b[sortColumn.value]
 
-      if (sortDirection.value === 'asc') {
-        return aVal > bVal ? 1 : -1
-      } else {
-        return aVal < bVal ? 1 : -1
-      }
+                if (sortDirection.value === 'asc') {
+                    return aVal > bVal ? 1 : -1
+                } else {
+                    return aVal < bVal ? 1 : -1
+                }
+            })
+        }
+
+        return result
     })
-  }
 
-  return result
-})
+    const handleSort = (column: string) => {
+        if (sortColumn.value === column) {
+            sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
+        } else {
+            sortColumn.value = column
+            sortDirection.value = 'asc'
+        }
 
-const handleSort = (column: string) => {
-  if (sortColumn.value === column) {
-    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sortColumn.value = column
-    sortDirection.value = 'asc'
-  }
-
-  emit('sort', column, sortDirection.value)
-}
+        emit('sort', column, sortDirection.value)
+    }
 </script>
 
 <template>
-  <div class="space-y-4">
-    <!-- Search -->
-    <div v-if="searchable" class="flex justify-between items-center">
-      <Input
-        v-model="search"
-        placeholder="Search..."
-        class="w-64"
-      />
-    </div>
+    <div class="space-y-4">
+        <!-- Search -->
+        <div v-if="searchable" class="flex justify-between items-center">
+            <Input
+                v-model="search"
+                placeholder="Search..."
+                class="w-64"
+            />
+        </div>
 
-    <!-- Table -->
-    <div class="border rounded-lg">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead
-              v-for="column in columns"
-              :key="column.key"
-              :class="{ 'cursor-pointer': column.sortable }"
-              @click="column.sortable && handleSort(column.key)"
-            >
-              <div class="flex items-center space-x-2">
-                <span>{{ column.label }}</span>
-                <span v-if="column.sortable && sortColumn === column.key">
+        <!-- Table -->
+        <div class="border rounded-lg">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead
+                            v-for="column in columns"
+                            :key="column.key"
+                            :class="{ 'cursor-pointer': column.sortable }"
+                            @click="column.sortable && handleSort(column.key)"
+                        >
+                            <div class="flex items-center space-x-2">
+                                <span>{{ column.label }}</span>
+                                <span v-if="column.sortable && sortColumn === column.key">
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </span>
-              </div>
-            </TableHead>
-            <TableHead v-if="actions">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow
-            v-for="row in filteredData"
-            :key="row.id"
-          >
-            <TableCell
-              v-for="column in columns"
-              :key="column.key"
-            >
+                            </div>
+                        </TableHead>
+                        <TableHead v-if="actions">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow
+                        v-for="row in filteredData"
+                        :key="row.id"
+                    >
+                        <TableCell
+                            v-for="column in columns"
+                            :key="column.key"
+                        >
               <span v-if="column.render">
                 {{ column.render(row[column.key], row) }}
               </span>
-              <span v-else>
+                            <span v-else>
                 {{ row[column.key] }}
               </span>
-            </TableCell>
-            <TableCell v-if="actions">
-              <div class="flex space-x-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  @click="emit('edit', row)"
-                >
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  @click="emit('delete', row)"
-                >
-                  Delete
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+                        </TableCell>
+                        <TableCell v-if="actions">
+                            <div class="flex space-x-2">
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    @click="emit('edit', row)"
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    @click="emit('delete', row)"
+                                >
+                                    Delete
+                                </Button>
+                            </div>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
+        </div>
     </div>
-  </div>
 </template>
 ```
 
@@ -714,76 +717,76 @@ import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
 export function useApi() {
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+    const loading = ref(false)
+    const error = ref<string | null>(null)
 
-  const get = async (url: string, params = {}) => {
-    loading.value = true
-    error.value = null
+    const get = async (url: string, params = {}) => {
+        loading.value = true
+        error.value = null
 
-    try {
-      await router.get(url, params, {
-        preserveState: true,
-        replace: true,
-      })
-    } catch (err) {
-      error.value = 'An error occurred while fetching data'
-      console.error('API Error:', err)
-    } finally {
-      loading.value = false
+        try {
+            await router.get(url, params, {
+                preserveState: true,
+                replace: true,
+            })
+        } catch (err) {
+            error.value = 'An error occurred while fetching data'
+            console.error('API Error:', err)
+        } finally {
+            loading.value = false
+        }
     }
-  }
 
-  const post = async (url: string, data = {}) => {
-    loading.value = true
-    error.value = null
+    const post = async (url: string, data = {}) => {
+        loading.value = true
+        error.value = null
 
-    try {
-      await router.post(url, data)
-    } catch (err) {
-      error.value = 'An error occurred while saving data'
-      console.error('API Error:', err)
-    } finally {
-      loading.value = false
+        try {
+            await router.post(url, data)
+        } catch (err) {
+            error.value = 'An error occurred while saving data'
+            console.error('API Error:', err)
+        } finally {
+            loading.value = false
+        }
     }
-  }
 
-  const put = async (url: string, data = {}) => {
-    loading.value = true
-    error.value = null
+    const put = async (url: string, data = {}) => {
+        loading.value = true
+        error.value = null
 
-    try {
-      await router.put(url, data)
-    } catch (err) {
-      error.value = 'An error occurred while updating data'
-      console.error('API Error:', err)
-    } finally {
-      loading.value = false
+        try {
+            await router.put(url, data)
+        } catch (err) {
+            error.value = 'An error occurred while updating data'
+            console.error('API Error:', err)
+        } finally {
+            loading.value = false
+        }
     }
-  }
 
-  const del = async (url: string) => {
-    loading.value = true
-    error.value = null
+    const del = async (url: string) => {
+        loading.value = true
+        error.value = null
 
-    try {
-      await router.delete(url)
-    } catch (err) {
-      error.value = 'An error occurred while deleting data'
-      console.error('API Error:', err)
-    } finally {
-      loading.value = false
+        try {
+            await router.delete(url)
+        } catch (err) {
+            error.value = 'An error occurred while deleting data'
+            console.error('API Error:', err)
+        } finally {
+            loading.value = false
+        }
     }
-  }
 
-  return {
-    loading,
-    error,
-    get,
-    post,
-    put,
-    delete: del,
-  }
+    return {
+        loading,
+        error,
+        get,
+        post,
+        put,
+        delete: del,
+    }
 }
 ```
 
@@ -794,61 +797,61 @@ export function useApi() {
 import { ref } from 'vue'
 
 interface Toast {
-  id: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  message: string
-  duration?: number
+    id: string
+    type: 'success' | 'error' | 'warning' | 'info'
+    message: string
+    duration?: number
 }
 
 const toasts = ref<Toast[]>([])
 
 export function useToast() {
-  const addToast = (toast: Omit<Toast, 'id'>) => {
-    const id = Math.random().toString(36).substr(2, 9)
-    const newToast = { ...toast, id }
+    const addToast = (toast: Omit<Toast, 'id'>) => {
+        const id = Math.random().toString(36).substr(2, 9)
+        const newToast = { ...toast, id }
 
-    toasts.value.push(newToast)
+        toasts.value.push(newToast)
 
-    // Auto remove after duration
-    if (toast.duration !== 0) {
-      setTimeout(() => {
-        removeToast(id)
-      }, toast.duration || 5000)
+        // Auto remove after duration
+        if (toast.duration !== 0) {
+            setTimeout(() => {
+                removeToast(id)
+            }, toast.duration || 5000)
+        }
     }
-  }
 
-  const removeToast = (id: string) => {
-    const index = toasts.value.findIndex(toast => toast.id === id)
-    if (index > -1) {
-      toasts.value.splice(index, 1)
+    const removeToast = (id: string) => {
+        const index = toasts.value.findIndex(toast => toast.id === id)
+        if (index > -1) {
+            toasts.value.splice(index, 1)
+        }
     }
-  }
 
-  const success = (message: string, duration?: number) => {
-    addToast({ type: 'success', message, duration })
-  }
+    const success = (message: string, duration?: number) => {
+        addToast({ type: 'success', message, duration })
+    }
 
-  const error = (message: string, duration?: number) => {
-    addToast({ type: 'error', message, duration })
-  }
+    const error = (message: string, duration?: number) => {
+        addToast({ type: 'error', message, duration })
+    }
 
-  const warning = (message: string, duration?: number) => {
-    addToast({ type: 'warning', message, duration })
-  }
+    const warning = (message: string, duration?: number) => {
+        addToast({ type: 'warning', message, duration })
+    }
 
-  const info = (message: string, duration?: number) => {
-    addToast({ type: 'info', message, duration })
-  }
+    const info = (message: string, duration?: number) => {
+        addToast({ type: 'info', message, duration })
+    }
 
-  return {
-    toasts,
-    addToast,
-    removeToast,
-    success,
-    error,
-    warning,
-    info,
-  }
+    return {
+        toasts,
+        addToast,
+        removeToast,
+        success,
+        error,
+        warning,
+        info,
+    }
 }
 ```
 
@@ -863,49 +866,50 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { useToast } from '@/composables/useToast'
 
 createInertiaApp({
-  resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
-  setup({ el, App, props, plugin }) {
-    const app = createApp({ render: () => h(App, props) })
-    app.use(plugin)
+    resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
+    setup({ el, App, props, plugin }) {
+        const app = createApp({ render: () => h(App, props) })
+        app.use(plugin)
 
-    // Global error handler
-    app.config.errorHandler = (err, instance, info) => {
-      console.error('Global error:', err, info)
+        // Global error handler
+        app.config.errorHandler = (err, instance, info) => {
+            console.error('Global error:', err, info)
 
-      const { error } = useToast()
-      error('An unexpected error occurred. Please try again.')
-    }
+            const { error } = useToast()
+            error('An unexpected error occurred. Please try again.')
+        }
 
-    app.mount(el)
-  },
+        app.mount(el)
+    },
 })
 ```
 
 ### Form Error Handling
 
 ```vue
+
 <script setup lang="ts">
-import { useForm } from '@inertiajs/vue3'
-import { useToast } from '@/composables/useToast'
+    import { useForm } from '@inertiajs/vue3'
+    import { useToast } from '@/composables/useToast'
 
-const { success, error } = useToast()
+    const { success, error } = useToast()
 
-const form = useForm({
-  name: '',
-  email: '',
-})
+    const form = useForm({
+        name: '',
+        email: '',
+    })
 
-const submit = () => {
-  form.post(route('users.store'), {
-    onSuccess: () => {
-      success('User created successfully!')
-      form.reset()
-    },
-    onError: (errors) => {
-      error('Please fix the errors below.')
-    },
-  })
-}
+    const submit = () => {
+        form.post(route('users.store'), {
+            onSuccess: () => {
+                success('User created successfully!')
+                form.reset()
+            },
+            onError: (errors) => {
+                error('Please fix the errors below.')
+            },
+        })
+    }
 </script>
 ```
 
@@ -914,30 +918,32 @@ const submit = () => {
 ### Lazy Loading
 
 ```vue
-<script setup lang="ts">
-import { defineAsyncComponent } from 'vue'
 
-const HeavyComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
-const ModalComponent = defineAsyncComponent(() => import('./ModalComponent.vue'))
+<script setup lang="ts">
+    import { defineAsyncComponent } from 'vue'
+
+    const HeavyComponent = defineAsyncComponent(() => import('./HeavyComponent.vue'))
+    const ModalComponent = defineAsyncComponent(() => import('./ModalComponent.vue'))
 </script>
 ```
 
 ### Virtual Scrolling
 
 ```vue
-<script setup lang="ts">
-import { VirtualList } from 'vue-virtual-scroll-list'
 
-const items = ref(Array.from({ length: 10000 }, (_, i) => ({ id: i, name: `Item ${i}` })))
+<script setup lang="ts">
+    import { VirtualList } from 'vue-virtual-scroll-list'
+
+    const items = ref(Array.from({ length: 10000 }, (_, i) => ({ id: i, name: `Item ${i}` })))
 </script>
 
 <template>
-  <VirtualList
-    :data-key="'id'"
-    :data-sources="items"
-    :data-component="ItemComponent"
-    :estimate-size="50"
-  />
+    <VirtualList
+        :data-key="'id'"
+        :data-sources="items"
+        :data-component="ItemComponent"
+        :estimate-size="50"
+    />
 </template>
 ```
 

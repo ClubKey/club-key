@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Clubs;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\Clubs\CreateClubAction;
 use App\Actions\Clubs\DeleteClubAction;
@@ -39,7 +39,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('create', Club::class);
 
-        return Inertia::render('clubs/CreateClub');
+        return Inertia::render('admin/clubs/CreateClub');
     }
 
     /**
@@ -74,7 +74,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('update', $club);
 
-        return Inertia::render('clubs/EditClub', [
+        return Inertia::render('admin/clubs/EditClub', [
             'club' => $club,
         ]);
     }
@@ -102,7 +102,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('delete', $club);
 
-        return Inertia::render('clubs/DangerZone', [
+        return Inertia::render('admin/clubs/DangerZone', [
             'club' => $club,
         ]);
     }

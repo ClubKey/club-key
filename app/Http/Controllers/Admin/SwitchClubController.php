@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Clubs;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\Clubs\SwitchCurrentClubAction;
 use App\Http\Controllers\Controller;

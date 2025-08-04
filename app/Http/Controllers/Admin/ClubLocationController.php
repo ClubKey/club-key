@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Clubs;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\Clubs\CreateClubLocationAction;
 use App\Actions\Clubs\DeleteClubLocationAction;
@@ -40,7 +40,7 @@ final class ClubLocationController extends Controller
 
         $locations = $club->locations()->orderBy('name')->get();
 
-        return Inertia::render('locations/Index', [
+        return Inertia::render('admin/locations/Index', [
             'club' => $club,
             'locations' => $locations,
         ]);
@@ -61,7 +61,7 @@ final class ClubLocationController extends Controller
             abort(404, 'No current club selected.');
         }
 
-        return Inertia::render('locations/Create', [
+        return Inertia::render('admin/locations/Create', [
             'club' => $club,
         ]);
     }
@@ -105,7 +105,7 @@ final class ClubLocationController extends Controller
             abort(404, 'No current club selected.');
         }
 
-        return Inertia::render('locations/Edit', [
+        return Inertia::render('admin/locations/Edit', [
             'club' => $club,
             'location' => $location,
         ]);

@@ -5,7 +5,7 @@ import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, MapPin, Trophy, User } from 'lucide-vue-next';
+import { Eye, LayoutGrid, MapPin, Trophy, User } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -43,14 +43,9 @@ const mainNavItems = computed(() => {
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
+        title: 'Member View',
         href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        icon: Eye,
     },
 ];
 </script>

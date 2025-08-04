@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ClubAdmins;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\ClubAdmins\CreateAdminInvitationAction;
 use App\Actions\ClubAdmins\ProcessAdminAcceptanceAction;

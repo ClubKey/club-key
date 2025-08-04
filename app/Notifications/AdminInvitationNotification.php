@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Notifications\ClubAdmins;
+namespace App\Notifications;
 
 use App\Models\AdminInvitation;
 use App\Models\Club;

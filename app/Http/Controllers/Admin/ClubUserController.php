@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\ClubUsers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClubUser;
@@ -22,7 +22,7 @@ final class ClubUserController extends Controller
 
         $clubUsers = $request->user()->currentClub->clubUsers()->with('user')->get();
 
-        return inertia('club-users/Index', [
+        return inertia('admin/club-users/Index', [
             'club' => $request->user()->currentClub,
             'clubUsers' => $clubUsers,
         ]);
@@ -35,7 +35,7 @@ final class ClubUserController extends Controller
     {
         Gate::authorize('view', $member);
 
-        return inertia('club-users/Show', [
+        return inertia('admin/club-users/Show', [
             'clubUser' => $member,
             'user' => $member->user,
             'club' => $member->club,

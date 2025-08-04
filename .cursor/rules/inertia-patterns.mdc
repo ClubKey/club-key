@@ -10,7 +10,7 @@ use Inertia\Response;
 
 public function index(): Response
 {
-    return Inertia::render('Clubs/Index', [
+    return Inertia::render('admin/clubs/Index', [
         'clubs' => Club::all()
     ]);
 }
