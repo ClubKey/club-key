@@ -63,7 +63,9 @@ final class UserFactory extends Factory
     public function withClub(): static
     {
         return $this->afterCreating(function (User $user) {
-            $club = Club::factory()->create();
+            $club = Club::factory()->create([
+                'owner_id' => $user->id,
+            ]);
             $user->clubs()->attach($club, [
                 'role' => ClubRole::ADMIN->value,
             ]);

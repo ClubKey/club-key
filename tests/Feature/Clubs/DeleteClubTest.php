@@ -9,6 +9,7 @@ test('a user can delete their own club', function () {
     $user = User::factory()->withClub()->create([
         'password' => 'password',
     ]);
+
     $this->actingAs($user);
 
     $club = $user->currentClub;
