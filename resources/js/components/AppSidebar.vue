@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -15,7 +15,7 @@ const mainNavItems = computed(() => {
     const items = [
         {
             title: 'Dashboard',
-            href: route('dashboard'),
+            href: '/dashboard',
             icon: LayoutGrid,
         },
     ];
@@ -23,12 +23,12 @@ const mainNavItems = computed(() => {
     if (user.current_club_id) {
         items.push({
             title: 'Locations',
-            href: route('locations.index'),
+            href: '/locations',
             icon: MapPin,
         });
         items.push({
             title: 'Reward Levels',
-            href: route('reward-levels.index'),
+            href: '/reward-levels',
             icon: Trophy,
         });
     }
@@ -55,7 +55,7 @@ const footerNavItems: NavItem[] = [
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
+                    <SidebarMenuButton as-child size="lg">
                         <Link :href="route('dashboard')">
                             <AppLogo />
                         </Link>
