@@ -37,8 +37,8 @@ const closeModal = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button variant="outline" size="sm" class="text-destructive hover:text-destructive">
-                <Trash2 class="h-4 w-4" />
+            <Button class="text-destructive hover:text-destructive" size="sm" variant="outline">
+                <Trash2 />
             </Button>
         </DialogTrigger>
         <DialogContent>

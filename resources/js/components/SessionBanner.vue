@@ -59,7 +59,11 @@ const title = computed(() => {
         leave-from-class="transform translate-y-0 opacity-100"
         leave-to-class="transform translate-y-2 opacity-0"
     >
-        <Alert v-if="shouldShow" :variant="messageType === 'error' ? 'destructive' : 'default'" class="fixed right-0 bottom-0 m-4 max-w-xl md:m-8">
+        <Alert
+            v-if="shouldShow"
+            :variant="messageType === 'error' ? 'destructive' : 'default'"
+            class="fixed right-0 bottom-0 z-50 m-4 w-[90vw] md:m-8 md:max-w-lg"
+        >
             <Rocket v-if="messageType === 'success'" class="size-4" />
             <Info v-else-if="messageType === 'info'" class="size-4" />
             <AlertCircle v-else-if="messageType === 'error'" class="size-4" />
@@ -69,7 +73,7 @@ const title = computed(() => {
                 {{ message }}
             </AlertDescription>
 
-            <Button class="absolute top-0 right-0 m-3" size="icon" variant="outline" @click="hideMessage">
+            <Button class="absolute top-0 right-0 m-3 size-6" size="icon" variant="outline" @click="hideMessage">
                 <X name="x" />
             </Button>
         </Alert>

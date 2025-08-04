@@ -43,7 +43,7 @@ const submit = () => {
         <Head :title="`Edit Reward - ${club.name}`" />
         <Heading :title="`Edit Reward`" description="Update reward details" />
 
-        <Card class="mt-8 max-w-2xl">
+        <Card class="max-w-2xl">
             <CardHeader>
                 <CardTitle>Reward Details</CardTitle>
                 <CardDescription>Update the details for this reward.</CardDescription>

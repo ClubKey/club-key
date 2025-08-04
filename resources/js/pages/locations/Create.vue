@@ -42,7 +42,7 @@ const submit = () => {
         <Head :title="`Create Location - ${club.name}`" />
         <Heading :title="`Create Location`" description="Add a new location for your club" />
 
-        <Card class="mt-8 max-w-2xl">
+        <Card class="max-w-2xl">
             <CardHeader>
                 <CardTitle>Location Details</CardTitle>
                 <CardDescription> Enter the details for your new club location.</CardDescription>
@@ -71,7 +71,7 @@ const submit = () => {
                         </p>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid gap-4 md:grid-cols-3">
                         <div class="space-y-2">
                             <Label for="city">City</Label>
                             <Input id="city" v-model="form.city" :error="form.errors.city" placeholder="City" type="text" />

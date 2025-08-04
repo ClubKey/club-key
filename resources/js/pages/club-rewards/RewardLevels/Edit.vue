@@ -1,23 +1,96 @@
+<script lang="ts" setup>
+import Heading from '@/components/Heading.vue';
+import HeadingSmall from '@/components/HeadingSmall.vue';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { type BreadcrumbItem, type Club, Reward, RewardLevel } from '@/types';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
+import { ArrowLeft, Edit, Gift, Plus, Trash2 } from 'lucide-vue-next';
+import { ref } from 'vue';
+
+const props = defineProps<{
+    club: Club;
+    rewardLevel: RewardLevel;
+}>();
+
+const form = useForm({
+    name: props.rewardLevel.name,
+    icon_name: props.rewardLevel.icon_name || '',
+    min_visits_per_month: props.rewardLevel.min_visits_per_month.toString(),
+    color: props.rewardLevel.color || '#6b7280',
+    description: props.rewardLevel.description || '',
+    percentage_discount: props.rewardLevel.percentage_discount.toString(),
+});
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Reward Levels',
+        href: route('reward-levels.index'),
+    },
+    {
+        title: 'Edit Reward Level',
+        href: route('reward-levels.edit', props.rewardLevel.id),
+    },
+];
+
+const rewardToDelete = ref<Reward | null>(null);
+const showDeleteDialog = ref(false);
+
+const submit = () => {
+    form.put(route('reward-levels.update', props.rewardLevel.id));
+};
+
+const deleteReward = (reward: Reward) => {
+    rewardToDelete.value = reward;
+    showDeleteDialog.value = true;
+};
+
+const confirmDeleteReward = () => {
+    if (rewardToDelete.value) {
+        router.delete(route('reward-levels.rewards.destroy', [props.rewardLevel.id, rewardToDelete.value.id]));
+    }
+    showDeleteDialog.value = false;
+    rewardToDelete.value = null;
+};
+</script>
+
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`Edit Reward Level - ${club.name}`" />
         <div class="grid gap-6">
-            <div class="flex flex-col justify-between md:flex-row md:items-center">
+            <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                 <Heading :title="`Edit Reward Level`" description="Update reward level details" />
                 <div class="flex flex-wrap items-center gap-3">
                     <Button as-child variant="outline">
-                        <Link :href="route('reward-levels.index')">Back to Reward Levels</Link>
+                        <Link :href="route('reward-levels.index')">
+                            <ArrowLeft />
+                            Back to Reward Levels
+                        </Link>
                     </Button>
                     <Button as-child>
                         <Link :href="route('reward-levels.rewards.create', rewardLevel.id)">
-                            <Plus class="mr-2 h-4 w-4" />
+                            <Plus />
                             Add Reward
                         </Link>
                     </Button>
                 </div>
             </div>
 
-            <div class="grid gap-8 lg:grid-cols-2">
+            <div class="grid gap-6 lg:grid-cols-2">
                 <!-- Reward Level Form -->
                 <Card>
                     <CardHeader>
@@ -115,7 +188,9 @@
                 <Card>
                     <CardHeader>
                         <CardTitle>Rewards</CardTitle>
-                        <CardDescription>Manage rewards for this level.</CardDescription>
+                        <CardDescription
+                            >Rewards are benefits that members get when they reach this reward level. You can add anything here.
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div v-if="!rewardLevel.rewards || rewardLevel.rewards.length === 0" class="py-8 text-center">
@@ -124,7 +199,7 @@
                             <p class="mt-2 text-sm text-muted-foreground">Add rewards that members can earn at this level.</p>
                             <Button as-child class="mt-4">
                                 <Link :href="route('reward-levels.rewards.create', rewardLevel.id)">
-                                    <Plus class="mr-2 h-4 w-4" />
+                                    <Plus />
                                     Add Reward
                                 </Link>
                             </Button>
@@ -142,11 +217,11 @@
                                 <div class="flex items-center space-x-2">
                                     <Button as-child size="sm" variant="outline">
                                         <Link :href="route('reward-levels.rewards.edit', [rewardLevel.id, reward.id])">
-                                            <Edit class="h-4 w-4" />
+                                            <Edit />
                                         </Link>
                                     </Button>
                                     <Button class="text-destructive" size="sm" variant="outline" @click="deleteReward(reward)">
-                                        <Trash2 class="h-4 w-4" />
+                                        <Trash2 />
                                     </Button>
                                 </div>
                             </div>
@@ -173,73 +248,3 @@
         </AlertDialog>
     </AppLayout>
 </template>
-
-<script lang="ts" setup>
-import Heading from '@/components/Heading.vue';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type Club, Reward, RewardLevel } from '@/types';
-import { Head, Link, router, useForm } from '@inertiajs/vue3';
-import { Edit, Gift, Plus, Trash2 } from 'lucide-vue-next';
-import { ref } from 'vue';
-
-const props = defineProps<{
-    club: Club;
-    rewardLevel: RewardLevel;
-}>();
-
-const form = useForm({
-    name: props.rewardLevel.name,
-    icon_name: props.rewardLevel.icon_name || '',
-    min_visits_per_month: props.rewardLevel.min_visits_per_month.toString(),
-    color: props.rewardLevel.color || '#6b7280',
-    description: props.rewardLevel.description || '',
-    percentage_discount: props.rewardLevel.percentage_discount.toString(),
-});
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Reward Levels',
-        href: route('reward-levels.index'),
-    },
-    {
-        title: 'Edit Reward Level',
-        href: route('reward-levels.edit', props.rewardLevel.id),
-    },
-];
-
-const rewardToDelete = ref<Reward | null>(null);
-const showDeleteDialog = ref(false);
-
-const submit = () => {
-    form.put(route('reward-levels.update', props.rewardLevel.id));
-};
-
-const deleteReward = (reward: Reward) => {
-    rewardToDelete.value = reward;
-    showDeleteDialog.value = true;
-};
-
-const confirmDeleteReward = () => {
-    if (rewardToDelete.value) {
-        router.delete(route('reward-levels.rewards.destroy', [props.rewardLevel.id, rewardToDelete.value.id]));
-    }
-    showDeleteDialog.value = false;
-    rewardToDelete.value = null;
-};
-</script>

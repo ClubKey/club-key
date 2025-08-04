@@ -40,15 +40,15 @@ const getIconComponent = (iconName: string | null) => {
         <Head :title="`${club.name} Reward Levels`" />
         <div class="flex items-center justify-between">
             <Heading :title="`${club.name} Reward Levels`" description="Manage your club reward levels" />
-            <Button v-if="canCreate" as-child>
+            <Button v-if="canCreate" as-child class="fixed right-4 bottom-4 md:static">
                 <Link :href="route('reward-levels.create')">
-                    <Plus class="mr-2 h-4 w-4" />
+                    <Plus />
                     Add Reward Level
                 </Link>
             </Button>
         </div>
 
-        <div v-if="rewardLevels.length === 0" class="mt-8">
+        <div v-if="rewardLevels.length === 0" class="mt-4">
             <Card>
                 <CardContent class="flex flex-col items-center justify-center py-12">
                     <Trophy class="mb-4 h-12 w-12 text-muted-foreground" />
@@ -56,7 +56,7 @@ const getIconComponent = (iconName: string | null) => {
                     <p class="mb-4 text-center text-muted-foreground">Get started by creating your first reward level.</p>
                     <Button v-if="canCreate" as-child>
                         <Link :href="route('reward-levels.create')">
-                            <Plus class="mr-2 h-4 w-4" />
+                            <Plus />
                             Add Reward Level
                         </Link>
                     </Button>
@@ -64,7 +64,7 @@ const getIconComponent = (iconName: string | null) => {
             </Card>
         </div>
 
-        <div v-else class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div v-else class="mt-4 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card v-for="rewardLevel in rewardLevels" :key="rewardLevel.id" class="group">
                 <CardHeader>
                     <div class="flex items-start justify-between">
@@ -106,7 +106,7 @@ const getIconComponent = (iconName: string | null) => {
                     <div class="flex gap-2">
                         <Button v-if="canCreate" as-child class="flex-1" size="sm" variant="outline">
                             <Link :href="route('reward-levels.edit', rewardLevel.id)">
-                                <Edit class="mr-2 h-4 w-4" />
+                                <Edit />
                                 Manage
                             </Link>
                         </Button>

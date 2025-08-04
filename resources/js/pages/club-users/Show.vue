@@ -32,10 +32,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${clubUser.user?.name} Profile`" />
-
-        <Card class="min-h-[100vh]">
+        <Card class="min-h-[80vh]">
             <CardHeader>
-                <div class="flex items-center space-x-4">
+                <div class="flex items-start space-x-4">
                     <Avatar class="h-16 w-16">
                         <AvatarImage v-if="user.avatar" :alt="user.name" :src="user.avatar" />
                         <AvatarFallback class="text-lg">

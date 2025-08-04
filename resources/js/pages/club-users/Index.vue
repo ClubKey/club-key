@@ -26,7 +26,7 @@ const breadcrumbs: BreadcrumbItem[] = [
             <Heading :title="`${club.name} Members`" description="View your club members." />
         </div>
 
-        <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             <Link v-for="clubUser in clubUsers" :key="clubUser.id" :href="route('members.show', clubUser.id)">
                 <Card class="transition hover:shadow-md">
                     <CardContent>

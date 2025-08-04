@@ -36,17 +36,17 @@ const formatAddress = (location: ClubLocation) => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Locations`" />
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <Heading :title="`${club.name} Locations`" description="Manage your club locations" />
-            <Button v-if="canCreate" as-child>
+            <Button v-if="canCreate" as-child class="fixed right-4 bottom-4 md:static">
                 <Link :href="route('locations.create')">
-                    <Plus class="mr-2 h-4 w-4" />
+                    <Plus />
                     Add Location
                 </Link>
             </Button>
         </div>
 
-        <div v-if="locations.length === 0" class="mt-8">
+        <div v-if="locations.length === 0" class="mt-4">
             <Card>
                 <CardContent class="flex flex-col items-center justify-center py-12">
                     <MapPin class="mb-4 h-12 w-12 text-muted-foreground" />
@@ -54,7 +54,7 @@ const formatAddress = (location: ClubLocation) => {
                     <p class="mb-4 text-center text-muted-foreground">Get started by adding your first club location.</p>
                     <Button v-if="canCreate" as-child>
                         <Link :href="route('locations.create')">
-                            <Plus class="mr-2 h-4 w-4" />
+                            <Plus />
                             Add Location
                         </Link>
                     </Button>
@@ -62,7 +62,7 @@ const formatAddress = (location: ClubLocation) => {
             </Card>
         </div>
 
-        <div v-else class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card v-for="location in locations" :key="location.id" class="group">
                 <CardHeader>
                     <div class="flex items-start justify-between">
@@ -79,7 +79,7 @@ const formatAddress = (location: ClubLocation) => {
                 </CardHeader>
                 <CardContent>
                     <div v-if="location.phone" class="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Phone class="h-4 w-4" />
+                        <Phone />
                         <span>{{ location.phone }}</span>
                     </div>
 

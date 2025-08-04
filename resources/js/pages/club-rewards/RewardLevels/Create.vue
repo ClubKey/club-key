@@ -43,7 +43,7 @@ const submit = () => {
         <Head :title="`Create Reward Level - ${club.name}`" />
         <Heading :title="`Create Reward Level`" description="Add a new reward level for your club" />
 
-        <Card class="mt-8 max-w-2xl">
+        <Card class="max-w-2xl">
             <CardHeader>
                 <CardTitle>Reward Level Details</CardTitle>
                 <CardDescription>Enter the details for your new reward level.</CardDescription>
