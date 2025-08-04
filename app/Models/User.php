@@ -116,7 +116,8 @@ final class User extends Authenticatable
 
     public function clubs(): BelongsToMany
     {
-        return $this->belongsToMany(Club::class, 'club_user', 'user_id', 'club_id')
+        return $this->belongsToMany(Club::class)
+            ->using(ClubUser::class)
             ->withPivot('role')
             ->withTimestamps();
     }
@@ -151,6 +152,6 @@ final class User extends Authenticatable
             return null;
         }
 
-        return ClubRole::from($pivot->role);
+        return $pivot->role instanceof ClubRole ? $pivot->role : ClubRole::from($pivot->role);
     }
 }

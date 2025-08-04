@@ -109,9 +109,15 @@ final class Club extends Model
 
     public function members(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'club_user', 'club_id', 'user_id')
+        return $this->belongsToMany(User::class)
+            ->using(ClubUser::class)
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    public function clubUsers(): HasMany
+    {
+        return $this->hasMany(ClubUser::class);
     }
 
     public function owner(): BelongsTo

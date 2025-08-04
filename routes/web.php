@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\ClubRewards\RewardController;
 use App\Http\Controllers\ClubRewards\RewardLevelController;
 use App\Http\Controllers\Clubs\ClubLocationController;
+use App\Http\Controllers\ClubUsers\ClubUserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +25,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Rewards
     Route::resource('reward-levels.rewards', RewardController::class)->except(['index', 'show']);
+
+    // Club Members
+    Route::resource('members', ClubUserController::class)->only(['index', 'show']);
 });
 
 require __DIR__.'/settings.php';

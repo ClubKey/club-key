@@ -50,6 +50,17 @@ export interface User {
     updated_at: string;
 }
 
+export interface ClubUser {
+    id: number;
+    user_id: number;
+    user?: User;
+    club_id: number;
+    club?: Club;
+    role: ClubRole;
+    created_at: string;
+    updated_at: string;
+}
+
 export interface Club {
     id: number;
     owner_id: number;

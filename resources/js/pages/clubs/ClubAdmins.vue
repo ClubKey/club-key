@@ -1,17 +1,13 @@
 <script lang="ts" setup>
 import InvitationList from '@/components/admin-invitations/InvitationList.vue';
 import InviteAdminForm from '@/components/admin-invitations/InviteAdminForm.vue';
+import Member from '@/components/clubs/Member.vue';
 import Heading from '@/components/Heading.vue';
 import HeadingSmall from '@/components/HeadingSmall.vue';
-import Avatar from '@/components/ui/avatar/Avatar.vue';
-import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue';
-import AvatarImage from '@/components/ui/avatar/AvatarImage.vue';
 import { Card } from '@/components/ui/card';
-import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import ClubLayout from '@/layouts/club/ClubLayout.vue';
 import { AdminInvitation, type BreadcrumbItem, Club, User } from '@/types';
-import { page } from '@inertiajs/core/types/page';
 import { Head, usePage } from '@inertiajs/vue3';
 
 const props = defineProps<{
@@ -55,19 +51,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <HeadingSmall title="Current Admins" />
                 <div class="flex flex-col gap-4">
                     <div v-for="user in admins" :key="user.id">
-                        <div class="flex items-center gap-2">
-                            <Avatar class="h-10 w-10 overflow-hidden rounded-lg">
-                                <AvatarImage v-if="user.avatar" :alt="user.name" :src="user.avatar!" />
-                                <AvatarFallback class="rounded-lg text-black dark:text-white">
-                                    {{ getInitials(user.name) }}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div class="flex flex-col">
-                                <p class="text-sm font-medium">{{ user.name }} {{ user.id === page.props.auth.user.id ? '(You)' : '' }}</p>
-                                <p class="text-xs font-bold">{{ user.id === club.owner_id ? 'Club Owner' : 'Admin' }}</p>
-                                <p class="text-sm text-neutral-500">{{ user.email }}</p>
-                            </div>
-                        </div>
+                        <Member :club :user />
                     </div>
                 </div>
             </Card>
