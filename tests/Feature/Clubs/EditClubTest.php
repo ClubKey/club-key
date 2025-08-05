@@ -14,7 +14,7 @@ test('a user can visit the edit club page if they are an admin of the club', fun
         ->get(route('clubs.edit', $user->currentClub->slug))
         ->assertOk()
         ->assertInertia(function (AssertableInertia $inertia) {
-            $inertia->component('clubs/EditClub')
+            $inertia->component('clubs/Edit')
                 ->has('club', function (AssertableInertia $page) {
                     $page->where('id', fn ($value) => is_int($value))
                         ->where('name', fn ($value) => is_string($value))
