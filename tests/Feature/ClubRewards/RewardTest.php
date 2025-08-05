@@ -62,7 +62,7 @@ final class RewardTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
-            ->component('club-rewards/Rewards/Edit')
+            ->component('club-rewards/rewards/Edit')
             ->has('reward')
         );
     }

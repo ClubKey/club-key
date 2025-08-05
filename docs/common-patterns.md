@@ -33,7 +33,7 @@ final class ClubController extends Controller
             )
             ->paginate(15);
 
-        return Inertia::render('admin/clubs/Index', [
+        return Inertia::render('clubs/Index', [
             'clubs' => $clubs,
             'filters' => request()->only(['search']),
         ]);
@@ -41,7 +41,7 @@ final class ClubController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render('admin/clubs/Create', [
+        return Inertia::render('clubs/Create', [
             'users' => User::all(),
         ]);
     }
@@ -58,7 +58,7 @@ final class ClubController extends Controller
     {
         $this->authorize('view', $club);
 
-        return Inertia::render('admin/clubs/Show', [
+        return Inertia::render('clubs/Show', [
             'club' => $club->load(['owner', 'members', 'rewards']),
         ]);
     }
@@ -67,7 +67,7 @@ final class ClubController extends Controller
     {
         $this->authorize('update', $club);
 
-        return Inertia::render('admin/clubs/Edit', [
+        return Inertia::render('clubs/Edit', [
             'club' => $club,
             'users' => User::all(),
         ]);

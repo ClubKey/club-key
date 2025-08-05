@@ -184,7 +184,7 @@ const confirmDeleteReward = () => {
                     </CardContent>
                 </Card>
 
-                <!-- Rewards Management -->
+                <!-- rewards Management -->
                 <Card>
                     <CardHeader>
                         <CardTitle>Rewards</CardTitle>

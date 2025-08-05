@@ -2,7 +2,7 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import Button from '../../components/ui/button/Button.vue';
+import Button from '../components/ui/button/Button.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Clubs;
 
 use App\Actions\ClubRewards\CreateRewardAction;
 use App\Actions\ClubRewards\DeleteRewardAction;
@@ -44,7 +44,7 @@ final class RewardController extends Controller
             abort(404, 'Reward level not found.');
         }
 
-        return Inertia::render('admin/Rewards/Create', [
+        return Inertia::render('rewards/Create', [
             'rewardLevel' => $rewardLevel,
             'club' => $club,
         ]);
@@ -93,7 +93,7 @@ final class RewardController extends Controller
             abort(404, 'No current club selected.');
         }
 
-        return Inertia::render('admin/Rewards/Edit', [
+        return Inertia::render('rewards/Edit', [
             'reward' => $reward,
             'club' => $club,
             'rewardLevel' => $rewardLevel,

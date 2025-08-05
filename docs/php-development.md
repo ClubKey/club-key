@@ -120,7 +120,7 @@ final class ClubController extends Controller
     {
         $club = $this->createClubAction->handle($request->validated());
 
-        return Inertia::render('admin/clubs/Show', [
+        return Inertia::render('clubs/Show', [
             'club' => $club
         ]);
     }

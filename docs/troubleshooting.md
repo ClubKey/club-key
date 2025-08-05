@@ -72,7 +72,7 @@ public function handle(array $data): Club
 
 ```php
 // Correct Inertia response
-return Inertia::render('admin/clubs/Index', [
+return Inertia::render('clubs/Index', [
     'clubs' => $clubs,
 ]);
 

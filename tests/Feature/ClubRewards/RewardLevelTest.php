@@ -26,7 +26,7 @@ final class RewardLevelTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
-            ->component('club-rewards/RewardLevels/Index')
+            ->component('club-rewards/reward-levels/Index')
             ->has('rewardLevels')
         );
     }
@@ -76,7 +76,7 @@ final class RewardLevelTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertInertia(fn ($page) => $page
-            ->component('club-rewards/RewardLevels/Edit')
+            ->component('club-rewards/reward-levels/Edit')
             ->has('rewardLevel')
         );
     }

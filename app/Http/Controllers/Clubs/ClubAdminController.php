@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Clubs;
 
 use App\Http\Controllers\Controller;
 use App\Models\Club;
@@ -24,7 +24,7 @@ final class ClubAdminController extends Controller
         $admins = $club->admins;
         $adminInvitations = $club->adminInvitations;
 
-        return Inertia::render('admin/clubs/ClubAdmins', [
+        return Inertia::render('clubs/ClubAdmins', [
             'club' => $club,
             'admins' => $admins,
             'adminInvitations' => $adminInvitations,
