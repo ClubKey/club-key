@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AdminInvitationController;
-use App\Http\Controllers\Admin\ClubAdminController;
-use App\Http\Controllers\Admin\ClubController;
-use App\Http\Controllers\Admin\ClubLocationController;
-use App\Http\Controllers\Admin\ClubUserController;
-use App\Http\Controllers\Admin\RewardController;
-use App\Http\Controllers\Admin\RewardLevelController;
-use App\Http\Controllers\Admin\SwitchClubController;
+use App\Http\Controllers\Clubs\AdminInvitationController;
+use App\Http\Controllers\Clubs\ClubAdminController;
+use App\Http\Controllers\Clubs\ClubController;
+use App\Http\Controllers\Clubs\ClubLocationController;
+use App\Http\Controllers\Clubs\ClubUserController;
+use App\Http\Controllers\Clubs\RewardController;
+use App\Http\Controllers\Clubs\RewardLevelController;
+use App\Http\Controllers\Clubs\SwitchClubController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('clubs/{club}/admin-invitations/{adminInvitation}/accept', [AdminInvitationController::class, 'accept'])
@@ -34,7 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reward Levels
     Route::resource('reward-levels', RewardLevelController::class);
 
-    // Rewards
+    // rewards
     Route::resource('reward-levels.rewards', RewardController::class)->except(['index', 'show']);
 
     // Club Members
