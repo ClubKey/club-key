@@ -8,6 +8,7 @@ use App\Actions\Clubs\CreateClubAction;
 use App\Actions\Clubs\DeleteClubAction;
 use App\Actions\Clubs\UpdateClubAction;
 use App\DTOs\ClubDto;
+use App\Enums\ClubRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\ClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
@@ -39,7 +40,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('create', Club::class);
 
-        return Inertia::render('clubs/CreateClub');
+        return Inertia::render('clubs/Create');
     }
 
     /**
@@ -59,10 +60,18 @@ final class ClubController extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @throws AuthorizationException
      */
-    public function show(string $id)
+    public function show(Request $request, Club $club): Response
     {
-        //
+        Gate::authorize('view', $club);
+
+        return Inertia::render('clubs/Show', [
+            'club' => $club,
+            'isMember' => $request->user()?->belongsToClub($club) ?? false,
+            'isAdmin' => $request->user()?->hasRoleInClub($club, ClubRole::ADMIN) ?? false,
+        ]);
     }
 
     /**
@@ -74,7 +83,7 @@ final class ClubController extends Controller
     {
         Gate::authorize('update', $club);
 
-        return Inertia::render('clubs/EditClub', [
+        return Inertia::render('clubs/Edit', [
             'club' => $club,
         ]);
     }

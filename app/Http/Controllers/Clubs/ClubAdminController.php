@@ -24,7 +24,7 @@ final class ClubAdminController extends Controller
         $admins = $club->admins;
         $adminInvitations = $club->adminInvitations;
 
-        return Inertia::render('clubs/ClubAdmins', [
+        return Inertia::render('clubs/Admins', [
             'club' => $club,
             'admins' => $admins,
             'adminInvitations' => $adminInvitations,
