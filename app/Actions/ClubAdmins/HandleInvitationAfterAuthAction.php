@@ -27,7 +27,7 @@ final readonly class HandleInvitationAfterAuthAction
     public function handle(User $user, ?string $inviteToken): RedirectResponse
     {
         if (! $inviteToken) {
-            return redirect()->route('dashboard');
+            return redirect()->intended(route('dashboard'));
         }
 
         $adminInvitation = AdminInvitation::byToken($inviteToken)->first();

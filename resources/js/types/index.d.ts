@@ -53,10 +53,12 @@ export interface User {
 export interface ClubUser {
     id: number;
     user_id: number;
-    user?: User;
+    user: User;
     club_id: number;
-    club?: Club;
+    club: Club;
     role: ClubRole;
+    reward_level_id?: number;
+    rewardLevel?: RewardLevel;
     created_at: string;
     updated_at: string;
 }

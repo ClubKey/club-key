@@ -6,13 +6,14 @@ namespace App\Http\Controllers\Clubs;
 
 use App\Actions\Clubs\CreateClubAction;
 use App\Actions\Clubs\DeleteClubAction;
+use App\Actions\Clubs\SwitchCurrentClubAction;
 use App\Actions\Clubs\UpdateClubAction;
 use App\DTOs\ClubDto;
-use App\Enums\ClubRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\ClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
 use App\Models\Club;
+use App\Models\ClubUser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -63,14 +64,20 @@ final class ClubController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function show(Request $request, Club $club): Response
+    public function show(Request $request, Club $club, SwitchCurrentClubAction $switchCurrentClubAction): Response
     {
         Gate::authorize('view', $club);
 
+        $clubUser = null;
+        $user = auth()->user();
+        if ($user) {
+            $switchCurrentClubAction->handle($user, $club);
+            $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
+        }
+
         return Inertia::render('clubs/Show', [
             'club' => $club,
-            'isMember' => $request->user()?->belongsToClub($club) ?? false,
-            'isAdmin' => $request->user()?->hasRoleInClub($club, ClubRole::ADMIN) ?? false,
+            'clubUser' => $clubUser,
         ]);
     }
 

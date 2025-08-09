@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import Member from '@/components/clubs/Member.vue';
 import Heading from '@/components/Heading.vue';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type Club, ClubUser } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
@@ -28,9 +27,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             <Link v-for="clubUser in clubUsers" :key="clubUser.id" :href="route('members.show', clubUser.id)">
-                <Card class="transition hover:shadow-md">
-                    <CardContent>
-                        <Member v-if="clubUser.user" :club :user="clubUser.user" />
+                <Card class="h-full transition hover:shadow-md">
+                    <CardContent class="flex flex-col gap-2">
+                        <CardTitle>{{ clubUser.user.name }}</CardTitle>
+                        <div class="text-sm text-wrap text-foreground">{{ clubUser.user.email }}</div>
                     </CardContent>
                 </Card>
             </Link>

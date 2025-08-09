@@ -73,7 +73,7 @@ const title = computed(() => {
                 {{ message }}
             </AlertDescription>
 
-            <Button class="absolute top-0 right-0 m-3 size-6" size="icon" variant="outline" @click="hideMessage">
+            <Button class="absolute top-0 right-0 m-2 size-6" size="icon" variant="outline" @click="hideMessage">
                 <X name="x" />
             </Button>
         </Alert>

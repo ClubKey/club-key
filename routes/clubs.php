@@ -7,6 +7,7 @@ use App\Http\Controllers\Clubs\ClubAdminController;
 use App\Http\Controllers\Clubs\ClubController;
 use App\Http\Controllers\Clubs\ClubLocationController;
 use App\Http\Controllers\Clubs\ClubUserController;
+use App\Http\Controllers\Clubs\JoinClubController;
 use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
@@ -17,6 +18,11 @@ Route::get('clubs/{club}/admin-invitations/{adminInvitation}/accept', [AdminInvi
     ->middleware('signed');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('clubs/{club}/join', JoinClubController::class)
+        ->name('clubs.join');
+    // The clubs show route is a wildcard route, and allows guests to view clubs.
+    // It is defined at the end of this file.
     Route::resource('clubs', ClubController::class)->except(['show', 'index']);
     Route::get('clubs/{club}/danger-zone', [ClubController::class, 'dangerZone'])
         ->name('clubs.danger-zone');
@@ -40,3 +46,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Club Members
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
 });
+
+Route::get('{club}', [ClubController::class, 'show'])
+    ->name('clubs.show');

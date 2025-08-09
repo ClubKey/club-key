@@ -20,6 +20,12 @@ final class ClubPolicy
         return $user->hasRoleInClub($club, ClubRole::ADMIN) || $user->isSuperAdmin();
     }
 
+    public function view(?User $user, Club $club): bool
+    {
+        // Allow all users to view the club, including guests.
+        return true;
+    }
+
     public function inviteAdmins(User $user, Club $club): bool
     {
         return $user->hasRoleInClub($club, ClubRole::ADMIN);

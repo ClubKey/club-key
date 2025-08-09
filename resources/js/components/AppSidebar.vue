@@ -3,13 +3,14 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Eye, LayoutGrid, MapPin, Trophy, User } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from './AppLogo.vue';
 
 const user = usePage().props.auth.user;
+
+const club = usePage().props.currentClub;
 
 const mainNavItems = computed(() => {
     const items = [
@@ -26,6 +27,8 @@ const mainNavItems = computed(() => {
             href: '/locations',
             icon: MapPin,
         });
+    }
+    if (user.club_role === 'admin') {
         items.push({
             title: 'Reward Levels',
             href: '/reward-levels',
@@ -41,13 +44,18 @@ const mainNavItems = computed(() => {
     return items;
 });
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Member View',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Eye,
-    },
-];
+const footerNavItems = computed(() => {
+    if (club) {
+        return [
+            {
+                title: 'View Club',
+                href: `/${club.slug}`,
+                icon: Eye,
+            },
+        ];
+    }
+    return [];
+});
 </script>
 
 <template>

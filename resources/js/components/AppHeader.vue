@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import AppLogo from '@/components/AppLogo.vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
@@ -12,7 +12,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-vue-next';
+import { LayoutGrid, Menu } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -40,18 +40,7 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+const rightNavItems: NavItem[] = [];
 </script>
 
 <template>
@@ -62,11 +51,11 @@ const rightNavItems: NavItem[] = [
                 <div class="lg:hidden">
                     <Sheet>
                         <SheetTrigger :as-child="true">
-                            <Button variant="ghost" size="icon" class="mr-2 h-9 w-9">
+                            <Button class="mr-2 h-9 w-9" size="icon" variant="ghost">
                                 <Menu class="h-5 w-5" />
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" class="w-[300px] p-6">
+                        <SheetContent class="w-[300px] p-6" side="left">
                             <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
                             <SheetHeader class="flex justify-start text-left">
                                 <AppLogoIcon class="size-6 fill-current text-black dark:text-white" />
@@ -76,11 +65,11 @@ const rightNavItems: NavItem[] = [
                                     <Link
                                         v-for="item in mainNavItems"
                                         :key="item.title"
+                                        :class="activeItemStyles(item.href)"
                                         :href="item.href"
                                         class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent"
-                                        :class="activeItemStyles(item.href)"
                                     >
-                                        <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
+                                        <component :is="item.icon" v-if="item.icon" class="h-5 w-5" />
                                         {{ item.title }}
                                     </Link>
                                 </nav>
@@ -89,11 +78,11 @@ const rightNavItems: NavItem[] = [
                                         v-for="item in rightNavItems"
                                         :key="item.title"
                                         :href="item.href"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
                                         class="flex items-center space-x-2 text-sm font-medium"
+                                        rel="noopener noreferrer"
+                                        target="_blank"
                                     >
-                                        <component v-if="item.icon" :is="item.icon" class="h-5 w-5" />
+                                        <component :is="item.icon" v-if="item.icon" class="h-5 w-5" />
                                         <span>{{ item.title }}</span>
                                     </a>
                                 </div>
@@ -108,14 +97,14 @@ const rightNavItems: NavItem[] = [
 
                 <!-- Desktop Menu -->
                 <div class="hidden h-full lg:flex lg:flex-1">
-                    <NavigationMenu class="ml-10 flex h-full items-stretch">
+                    <NavigationMenu class="flex h-full items-stretch">
                         <NavigationMenuList class="flex h-full items-stretch space-x-2">
                             <NavigationMenuItem v-for="(item, index) in mainNavItems" :key="index" class="relative flex h-full items-center">
                                 <Link
                                     :class="[navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 cursor-pointer px-3']"
                                     :href="item.href"
                                 >
-                                    <component v-if="item.icon" :is="item.icon" class="mr-2 h-4 w-4" />
+                                    <component :is="item.icon" v-if="item.icon" class="mr-2 h-4 w-4" />
                                     {{ item.title }}
                                 </Link>
                                 <div
@@ -129,17 +118,13 @@ const rightNavItems: NavItem[] = [
 
                 <div class="ml-auto flex items-center space-x-2">
                     <div class="relative flex items-center space-x-1">
-                        <Button variant="ghost" size="icon" class="group h-9 w-9 cursor-pointer">
-                            <Search class="size-5 opacity-80 group-hover:opacity-100" />
-                        </Button>
-
                         <div class="hidden space-x-1 lg:flex">
                             <template v-for="item in rightNavItems" :key="item.title">
                                 <TooltipProvider :delay-duration="0">
                                     <Tooltip>
                                         <TooltipTrigger>
-                                            <Button variant="ghost" size="icon" as-child class="group h-9 w-9 cursor-pointer">
-                                                <a :href="item.href" target="_blank" rel="noopener noreferrer">
+                                            <Button as-child class="group h-9 w-9 cursor-pointer" size="icon" variant="ghost">
+                                                <a :href="item.href" rel="noopener noreferrer" target="_blank">
                                                     <span class="sr-only">{{ item.title }}</span>
                                                     <component :is="item.icon" class="size-5 opacity-80 group-hover:opacity-100" />
                                                 </a>
@@ -154,15 +139,15 @@ const rightNavItems: NavItem[] = [
                         </div>
                     </div>
 
-                    <DropdownMenu>
+                    <DropdownMenu v-if="auth.user">
                         <DropdownMenuTrigger :as-child="true">
                             <Button
-                                variant="ghost"
-                                size="icon"
                                 class="relative size-10 w-auto rounded-full p-1 focus-within:ring-2 focus-within:ring-primary"
+                                size="icon"
+                                variant="ghost"
                             >
                                 <Avatar class="size-8 overflow-hidden rounded-full">
-                                    <AvatarImage v-if="auth.user.avatar" :src="auth.user.avatar" :alt="auth.user.name" />
+                                    <AvatarImage v-if="auth.user.avatar" :alt="auth.user.name" :src="auth.user.avatar" />
                                     <AvatarFallback class="rounded-lg bg-neutral-200 font-semibold text-black dark:bg-neutral-700 dark:text-white">
                                         {{ getInitials(auth.user?.name) }}
                                     </AvatarFallback>
@@ -173,6 +158,21 @@ const rightNavItems: NavItem[] = [
                             <UserMenuContent :user="auth.user" />
                         </DropdownMenuContent>
                     </DropdownMenu>
+                    <div v-else class="flex items-center gap-2">
+                        <Button as-child size="sm" variant="secondary">
+                            <Link :href="route('login')">Login</Link>
+                        </Button>
+                        <Button as-child size="sm">
+                            <Link
+                                :href="
+                                    route('register', {
+                                        club_slug: club.slug,
+                                    })
+                                "
+                                >Register
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>

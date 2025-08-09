@@ -16,6 +16,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 final class RegisteredUserController extends Controller
 {
@@ -26,7 +27,7 @@ final class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws ValidationException
+     * @throws ValidationException|Throwable
      */
     public function store(Request $request): RedirectResponse
     {
