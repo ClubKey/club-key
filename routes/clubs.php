@@ -13,11 +13,10 @@ use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('clubs/{club}/admin-invitations/{adminInvitation}/accept', [AdminInvitationController::class, 'accept'])
-    ->name('clubs.admin-invitations.accept')
-    ->middleware('signed');
-
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('clubs/{club}/admin-invitations/{adminInvitation}/accept', [AdminInvitationController::class, 'accept'])
+        ->name('clubs.admin-invitations.accept')
+        ->middleware('signed');
 
     Route::get('clubs/{club}/join', JoinClubController::class)
         ->name('clubs.join');

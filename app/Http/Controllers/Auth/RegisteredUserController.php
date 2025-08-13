@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\ClubAdmins\HandleInvitationAfterAuthAction;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -18,12 +17,11 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
 
+use function redirect;
+use function route;
+
 final class RegisteredUserController extends Controller
 {
-    public function __construct(
-        private HandleInvitationAfterAuthAction $handleInvitationAfterAuthAction
-    ) {}
-
     /**
      * Handle an incoming registration request.
      *
@@ -31,30 +29,23 @@ final class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $inviteToken = $request->cookie('invite_token');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
 
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            ]);
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
+        event(new Registered($user));
 
-            event(new Registered($user));
+        Auth::login($user);
 
-            Auth::login($user);
-
-            return $this->handleInvitationAfterAuthAction->handle($user, $inviteToken);
-        } catch (ValidationException $e) {
-            // Re-throw the validation exception - the cookie will persist automatically
-            throw $e;
-        }
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

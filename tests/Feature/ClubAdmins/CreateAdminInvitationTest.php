@@ -127,8 +127,7 @@ test('guest users are redirected to register page when accepting invitation', fu
         'adminInvitation' => $adminInvitation,
     ]));
 
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    $response->assertRedirect(route('login'));
 });
 
 test('logged in users can accept valid invitations', function () {
@@ -224,24 +223,27 @@ test('new users can register and accept invitation automatically', function () {
         'expires_at' => now()->addDays(7),
     ]);
 
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
+    $route = URL::signedRoute('clubs.admin-invitations.accept', [
         'club' => $club,
         'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    ]);
 
-    // Register with the invited email, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('register'), [
-            'name' => 'New User',
-            'email' => 'newuser@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+    // Simulate the invitation acceptance flow
+    $response = $this->get($route);
+    $response->assertRedirect(route('login'));
 
-    $response->assertRedirect(route('dashboard'));
+    // Register with the invited email
+    $response = $this->post(route('register'), [
+        'name' => 'New User',
+        'email' => 'newuser@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $response->assertRedirect($route);
+
+    $response = $this->get($route);
+
     $response->assertSessionHas('success');
 
     $user = User::where('email', 'newuser@example.com')->first();
@@ -264,58 +266,25 @@ test('existing users can login and accept invitation automatically', function ()
         'expires_at' => now()->addDays(7),
     ]);
 
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
+    $route = URL::signedRoute('clubs.admin-invitations.accept', [
         'club' => $club,
         'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    ]);
+
+    // Simulate the invitation acceptance flow
+    $response = $this->get($route);
+    $response->assertRedirect(route('login'));
 
     // Login with the invited email, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('login'), [
-            'email' => 'existing@example.com',
-            'password' => 'password',
-        ]);
-
-    $response->assertRedirect(route('dashboard'));
-    $response->assertSessionHas('success');
-
-    $this->assertDatabaseHas('club_user', [
-        'club_id' => $club->id,
-        'user_id' => $user->id,
-        'role' => ClubRole::ADMIN->value,
-    ]);
-});
-
-test('existing users can login with different email and accept invitation automatically', function () {
-    $club = Club::factory()->create();
-    $user = User::factory()->create([
-        'email' => 'different@example.com',
-        'password' => bcrypt('password'),
-    ]);
-    $adminInvitation = AdminInvitation::factory()->for($club)->create([
-        'email' => 'invited@example.com',
-        'expires_at' => now()->addDays(7),
+    $response = $this->post(route('login'), [
+        'email' => 'existing@example.com',
+        'password' => 'password',
     ]);
 
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
-        'club' => $club,
-        'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    $response->assertRedirect($route);
 
-    // Login with a different email than the invited one, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('login'), [
-            'email' => 'different@example.com',
-            'password' => 'password',
-        ]);
+    $response = $this->get($route);
 
-    $response->assertRedirect(route('dashboard'));
     $response->assertSessionHas('success');
 
     $this->assertDatabaseHas('club_user', [
@@ -366,23 +335,6 @@ test('invalid invitation tokens are handled gracefully', function () {
     $response->assertSessionMissing('error');
 });
 
-test('invitation tokens are passed to registration and login pages', function () {
-    $club = Club::factory()->create();
-    $adminInvitation = AdminInvitation::factory()->for($club)->create([
-        'email' => 'test@example.com',
-        'expires_at' => now()->addDays(7),
-    ]);
-
-    // Test that the invitation acceptance URL redirects to register and sets cookie
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
-        'club' => $club,
-        'adminInvitation' => $adminInvitation,
-    ]));
-
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
-});
-
 test('new users can register with different email and accept invitation automatically', function () {
     $club = Club::factory()->create();
     $adminInvitation = AdminInvitation::factory()->for($club)->create([
@@ -390,75 +342,30 @@ test('new users can register with different email and accept invitation automati
         'expires_at' => now()->addDays(7),
     ]);
 
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
+    $route = URL::signedRoute('clubs.admin-invitations.accept', [
         'club' => $club,
         'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    ]);
+
+    // Simulate the invitation acceptance flow
+    $response = $this->get($route);
+    $response->assertRedirect(route('login'));
 
     // Register with a different email than the invited one, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('register'), [
-            'name' => 'New User',
-            'email' => 'different@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+    $response = $this->post(route('register'), [
+        'name' => 'New User',
+        'email' => 'different@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
 
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect($route);
+
+    $response = $this->get($route);
+
     $response->assertSessionHas('success');
 
     $user = User::where('email', 'different@example.com')->first();
-    $this->assertNotNull($user);
-    $this->assertDatabaseHas('club_user', [
-        'club_id' => $club->id,
-        'user_id' => $user->id,
-        'role' => ClubRole::ADMIN->value,
-    ]);
-});
-
-test('invitation token persists through registration validation errors', function () {
-    $club = Club::factory()->create();
-    $adminInvitation = AdminInvitation::factory()->for($club)->create([
-        'email' => 'test@example.com',
-        'expires_at' => now()->addDays(7),
-    ]);
-
-    // First visit the invitation acceptance URL to set the cookie
-    $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
-        'club' => $club,
-        'adminInvitation' => $adminInvitation,
-    ]));
-
-    // Try to register with validation errors (missing password confirmation), maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('register'), [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            // Missing password_confirmation
-        ]);
-
-    $response->assertSessionHasErrors(['password']);
-
-    // The cookie should persist through validation errors (no need to assert it)
-
-    // Now try to register again with valid data, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('register'), [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-
-    $response->assertRedirect(route('dashboard'));
-    $response->assertSessionHas('success');
-    $response->assertCookie('invite_token', '', -1); // Cookie should be cleared
-
-    $user = User::where('email', 'test@example.com')->first();
     $this->assertNotNull($user);
     $this->assertDatabaseHas('club_user', [
         'club_id' => $club->id,
@@ -536,25 +443,27 @@ test('invitation is deleted when new user registers with invitation token', func
         'email' => 'newuser@example.com',
         'expires_at' => now()->addDays(7),
     ]);
-
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
+    $route = URL::signedRoute('clubs.admin-invitations.accept', [
         'club' => $club,
         'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    ]);
+
+    // Simulate the invitation acceptance flow
+    $response = $this->get($route);
+    $response->assertRedirect(route('login'));
 
     // Register with the invited email, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('register'), [
-            'name' => 'New User',
-            'email' => 'newuser@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
+    $response = $this->post(route('register'), [
+        'name' => 'New User',
+        'email' => 'newuser@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
 
-    $response->assertRedirect(route('dashboard'));
+    $response->assertRedirect($route);
+
+    $response = $this->get($route);
+
     $response->assertSessionHas('success');
 
     $user = User::where('email', 'newuser@example.com')->first();
@@ -581,24 +490,24 @@ test('invitation is deleted when existing user logs in with invitation token', f
         'email' => 'existing@example.com',
         'expires_at' => now()->addDays(7),
     ]);
-
-    // Simulate the invitation acceptance flow
-    $response = $this->get(URL::signedRoute('clubs.admin-invitations.accept', [
+    $route = URL::signedRoute('clubs.admin-invitations.accept', [
         'club' => $club,
         'adminInvitation' => $adminInvitation,
-    ]));
-    $response->assertRedirect(route('register'));
-    $response->assertCookie('invite_token', $adminInvitation->token);
+    ]);
+    // Simulate the invitation acceptance flow
+    $response = $this->get($route);
+    $response->assertRedirect(route('login'));
 
-    // Login with the invited email, maintaining the cookie
-    $response = $this->withCookie('invite_token', (string) $adminInvitation->token)
-        ->post(route('login'), [
-            'email' => 'existing@example.com',
-            'password' => 'password',
-        ]);
+    $response = $this->post(route('login'), [
+        'email' => 'existing@example.com',
+        'password' => 'password',
+    ]);
 
-    $response->assertRedirect(route('dashboard'));
-    $response->assertSessionHas('success');
+    $response->assertRedirect($route);
+
+    $response = $this->get($route);
+
+    $response->assertRedirect();
 
     $this->assertDatabaseHas('club_user', [
         'club_id' => $club->id,

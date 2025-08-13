@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\ClubAdmins\HandleInvitationAfterAuthAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -14,12 +13,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use function redirect;
+use function route;
+
 final class AuthenticatedSessionController extends Controller
 {
-    public function __construct(
-        private HandleInvitationAfterAuthAction $handleInvitationAfterAuthAction
-    ) {}
-
     /**
      * Show the login page.
      */
@@ -39,12 +37,9 @@ final class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        // Get the invite token from cookie before regenerating the session
-        $inviteToken = $request->cookie('invite_token');
-
         $request->session()->regenerate();
 
-        return $this->handleInvitationAfterAuthAction->handle(Auth::user(), $inviteToken);
+        return redirect()->intended(route('dashboard'));
     }
 
     /**
