@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('current_club_id')
                 ->nullable()
+                ->index()
                 ->constrained('clubs')
                 ->nullOnDelete();
         });

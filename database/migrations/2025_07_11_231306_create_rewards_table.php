@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('rewards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('reward_level_id')->constrained('reward_levels')->onDelete('cascade');
+            $table->foreignId('reward_level_id')->index()->constrained('reward_levels')->onDelete('cascade');
             $table->text('description');
             $table->smallInteger('order')->default(0);
             $table->timestamps();

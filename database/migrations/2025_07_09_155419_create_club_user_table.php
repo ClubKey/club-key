@@ -16,9 +16,9 @@ return new class extends Migration
     {
         Schema::create('club_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('club_id')->constrained('clubs')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->enum('role', ClubRole::values())->default(ClubRole::MEMBER->value);
+            $table->foreignId('club_id')->index()->constrained('clubs')->cascadeOnDelete();
+            $table->foreignId('user_id')->index()->constrained('users')->cascadeOnDelete();
+            $table->enum('role', ClubRole::values())->default(ClubRole::MEMBER->value)->index();
             $table->timestamps();
         });
     }

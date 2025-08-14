@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('club_id')->constrained('clubs')->onDelete('cascade');
-            $table->foreignId('club_location_id')->constrained('club_locations')->onDelete('set null');
+            $table->foreignId('user_id')->index()->constrained('users')->onDelete('cascade');
+            $table->foreignId('club_id')->index()->constrained('clubs')->onDelete('cascade');
+            $table->foreignId('club_location_id')->index()->nullable()->constrained('club_locations')->nullOnDelete();
             $table->timestamps();
         });
     }

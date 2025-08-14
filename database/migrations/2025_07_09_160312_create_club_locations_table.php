@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('club_locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('club_id')->constrained('clubs');
+            $table->foreignId('club_id')->index()->constrained('clubs');
             $table->string('name')->nullable();
             $table->string('phone')->nullable();
             $table->string('street_address');

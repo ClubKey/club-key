@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('admin_invitations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('club_id')->constrained('clubs');
+            $table->foreignId('club_id')->index()->constrained('clubs');
             $table->string('email');
             $table->string('token');
             $table->enum('role', [ClubRole::ADMIN->value])->default(ClubRole::ADMIN->value);

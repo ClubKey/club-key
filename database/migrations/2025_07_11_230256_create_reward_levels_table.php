@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('reward_levels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('club_id')->constrained('clubs')->onDelete('cascade');
+            $table->foreignId('club_id')->index()->constrained('clubs')->onDelete('cascade');
             $table->string('name');
             $table->smallInteger('order')->default(0);
             $table->string('icon_name')->nullable();
-            $table->integer('min_visits_per_month')->default(0);
+            $table->integer('min_visits_per_month')->index()->default(0);
             $table->string('color')->nullable();
             $table->text('description')->nullable();
             $table->smallInteger('percentage_discount')->default(0);

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('club_user', function (Blueprint $table) {
-            $table->foreignId('reward_level_id')->nullable()->constrained('reward_levels')->nullOnDelete();
+            $table->foreignId('reward_level_id')->index()->nullable()->constrained('reward_levels')->nullOnDelete();
         });
     }
 

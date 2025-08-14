@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::table('admin_invitations', function (Blueprint $table) {
             $table->foreignId('inviter_id')
                 ->nullable()
+                ->index()
                 ->after('id')
                 ->comment('The ID of the user who sent the invitation')
                 ->constrained('users')
