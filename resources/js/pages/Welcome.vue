@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
         <link href="https://rsms.me/" rel="preconnect" />
         <link href="https://rsms.me/inter/inter.css" rel="stylesheet" />
     </Head>
-    <div class="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
+    <div class="flex min-h-screen flex-col items-center justify-between bg-[#FDFDFC] p-6 text-[#1b1b18] lg:p-8 dark:bg-[#0a0a0a]">
         <header class="mb-6 w-full text-sm not-has-[nav]:hidden lg:max-w-4xl">
             <nav class="flex items-center justify-end gap-4">
                 <Link
@@ -33,7 +33,7 @@ import { Head, Link } from '@inertiajs/vue3';
                 </template>
             </nav>
         </header>
-        <div class="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
+        <div class="flex w-full grow items-center justify-center opacity-100 transition-opacity duration-750 starting:opacity-0">
             <main class="w-full overflow-hidden rounded-lg lg:max-w-4xl">
                 <div
                     class="rounded-lg bg-white p-6 pb-12 text-[13px] leading-[20px] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:p-20 dark:bg-[#161615] dark:text-[#EDEDEC] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]"
