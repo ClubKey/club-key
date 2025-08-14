@@ -236,6 +236,7 @@ test('new users can register and accept invitation automatically', function () {
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'newuser@example.com',
+        'phone' => '+1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);
@@ -355,6 +356,7 @@ test('new users can register with different email and accept invitation automati
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'different@example.com',
+        'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);
@@ -456,6 +458,7 @@ test('invitation is deleted when new user registers with invitation token', func
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'newuser@example.com',
+        'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);

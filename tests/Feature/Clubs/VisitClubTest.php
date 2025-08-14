@@ -52,6 +52,7 @@ test('when a guest visits a club, they will be redirected to login, then after l
     $response = $this->post(route('register'), [
         'name' => 'John Doe',
         'email' => 'test@test.com',
+        'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);

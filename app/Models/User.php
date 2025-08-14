@@ -26,6 +26,7 @@ use Illuminate\Notifications\Notifiable;
  * @property int $id
  * @property string $name
  * @property string $email
+ * @property ?string $phone
  * @property ?int $current_club_id
  * @property AppRole $role
  * @property CarbonImmutable|null $email_verified_at
@@ -71,6 +72,7 @@ final class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'role',
         'current_club_id',

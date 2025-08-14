@@ -75,6 +75,9 @@ final class ClubController extends Controller
             $switchCurrentClubAction->handle($user, $club);
 
             $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
+        }
+
+        if ($clubUser) {
             $updateUserRewardLevelAction->handle($clubUser);
         }
 
