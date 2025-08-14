@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  */
 final class ClubUser extends Pivot
 {
-    protected $with = ['user', 'club'];
+    protected $with = ['user', 'club', 'rewardLevel'];
 
     protected $fillable = [
         'user_id',

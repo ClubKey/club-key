@@ -58,7 +58,7 @@ export interface ClubUser {
     club: Club;
     role: ClubRole;
     reward_level_id?: number;
-    rewardLevel?: RewardLevel;
+    reward_level?: RewardLevel;
     created_at: string;
     updated_at: string;
 }

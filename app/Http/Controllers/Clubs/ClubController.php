@@ -8,6 +8,7 @@ use App\Actions\Clubs\CreateClubAction;
 use App\Actions\Clubs\DeleteClubAction;
 use App\Actions\Clubs\SwitchCurrentClubAction;
 use App\Actions\Clubs\UpdateClubAction;
+use App\Actions\Clubs\UpdateUserRewardLevelAction;
 use App\DTOs\ClubDto;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\ClubRequest;
@@ -64,7 +65,7 @@ final class ClubController extends Controller
      *
      * @throws AuthorizationException
      */
-    public function show(Request $request, Club $club, SwitchCurrentClubAction $switchCurrentClubAction): Response
+    public function show(Request $request, Club $club, SwitchCurrentClubAction $switchCurrentClubAction, UpdateUserRewardLevelAction $updateUserRewardLevelAction): Response
     {
         Gate::authorize('view', $club);
 
@@ -74,6 +75,7 @@ final class ClubController extends Controller
             $switchCurrentClubAction->handle($user, $club);
 
             $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
+            $updateUserRewardLevelAction->handle($clubUser);
         }
 
         return Inertia::render('clubs/Show', [

@@ -99,11 +99,6 @@ final class User extends Authenticatable
         return $this->belongsTo(Club::class);
     }
 
-    public function visits(): HasMany
-    {
-        return $this->hasMany(Visit::class);
-    }
-
     public function isSuperAdmin(): bool
     {
         return $this->role->isSuperAdmin();
@@ -153,5 +148,15 @@ final class User extends Authenticatable
         }
 
         return $pivot->role instanceof ClubRole ? $pivot->role : ClubRole::from($pivot->role);
+    }
+
+    public function visitsForClub(Club $club): HasMany
+    {
+        return $this->visits()->whereClubId($club->id);
+    }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
     }
 }

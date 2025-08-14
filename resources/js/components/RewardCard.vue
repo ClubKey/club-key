@@ -9,7 +9,7 @@ const props = defineProps<{
 }>();
 
 const bgColor = computed(() => {
-    return props.clubUser.rewardLevel?.color ?? 'black';
+    return props.clubUser.reward_level?.color ?? 'black';
 });
 
 function getContrastColor(hex: string): string {
@@ -37,8 +37,8 @@ function getContrastColor(hex: string): string {
 const textColor = computed(() => getContrastColor(bgColor.value));
 
 const cardTitle = computed(() => {
-    if (props.clubUser.rewardLevel) {
-        return props.clubUser.rewardLevel.name;
+    if (props.clubUser.reward_level) {
+        return `${props.clubUser.reward_level.name} Member`;
     }
 
     return `${props.clubUser.club.name} Member`;
@@ -48,17 +48,19 @@ const cardTitle = computed(() => {
 <template>
     <div
         :style="`background-color:${bgColor}; color:${textColor}`"
-        class="relative flex aspect-4/2 w-full max-w-lg flex-col justify-end rounded-lg border p-6 shadow"
+        class="flex aspect-4/2 w-full max-w-lg flex-col justify-end gap-12 rounded-lg border p-6 shadow"
     >
-        <Avatar class="absolute top-6 left-6 size-10 overflow-hidden rounded-full">
+        <Avatar class="size-20 overflow-hidden rounded-full">
             <AvatarImage v-if="clubUser.club.logo_path" :alt="clubUser.club.name" :src="clubUser.club.logo_path!" />
             <AvatarFallback class="rounded-lg text-black dark:text-white">
                 {{ getInitials(clubUser.club.name) }}
             </AvatarFallback>
         </Avatar>
 
-        <p class="text-xs">Loyalty Card</p>
-        <h2 class="text-xl font-semibold">{{ cardTitle }}</h2>
-        <p>{{ clubUser.user.name }}</p>
+        <div>
+            <p class="text-xs">Loyalty Card</p>
+            <h2 class="text-xl font-semibold">{{ cardTitle }}</h2>
+            <p>{{ clubUser.user.name }}</p>
+        </div>
     </div>
 </template>
