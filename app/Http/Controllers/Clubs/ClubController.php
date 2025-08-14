@@ -72,6 +72,7 @@ final class ClubController extends Controller
         $user = auth()->user();
         if ($user) {
             $switchCurrentClubAction->handle($user, $club);
+
             $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
         }
 

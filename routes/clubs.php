@@ -11,6 +11,7 @@ use App\Http\Controllers\Clubs\JoinClubController;
 use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
+use App\Http\Controllers\Clubs\VisitController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -20,6 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('clubs/{club}/join', JoinClubController::class)
         ->name('clubs.join');
+
+    Route::get('/visit/clubs/{club}/{clubLocation?}', [VisitController::class, 'store'])
+        ->name('clubs.visit')
+        ->middleware('signed');
+
     // The clubs show route is a wildcard route, and allows guests to view clubs.
     // It is defined at the end of this file.
     Route::resource('clubs', ClubController::class)->except(['show', 'index']);
