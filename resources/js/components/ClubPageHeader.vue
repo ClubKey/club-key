@@ -11,7 +11,7 @@ import UserMenuContent from '@/components/UserMenuContent.vue';
 import { getInitials } from '@/composables/useInitials';
 import type { BreadcrumbItem, Club, NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, Menu } from 'lucide-vue-next';
+import { LayoutGrid, MapPin, Menu, Trophy, User } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 interface Props {
@@ -32,13 +32,39 @@ const activeItemStyles = computed(
     () => (url: string) => (isCurrentRoute.value(url) ? 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100' : ''),
 );
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
+const user = usePage().props.auth?.user;
+
+const mainNavItems = computed(() => {
+    const items = [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+            icon: LayoutGrid,
+        },
+    ];
+
+    if (user?.current_club_id) {
+        items.push({
+            title: 'Locations',
+            href: '/locations',
+            icon: MapPin,
+        });
+    }
+    if (user?.club_role === 'admin' && user?.current_club_id === props.club.id) {
+        items.push({
+            title: 'Reward Levels',
+            href: '/reward-levels',
+            icon: Trophy,
+        });
+        items.push({
+            title: 'Members',
+            href: '/members',
+            icon: User,
+        });
+    }
+
+    return items;
+});
 
 const rightNavItems: NavItem[] = [];
 </script>
@@ -57,10 +83,10 @@ const rightNavItems: NavItem[] = [];
                         </SheetTrigger>
                         <SheetContent class="w-[300px] p-6" side="left">
                             <SheetTitle class="sr-only">Navigation Menu</SheetTitle>
-                            <SheetHeader class="flex justify-start text-left">
-                                <AppLogoIcon class="size-6 fill-current text-black dark:text-white" />
+                            <SheetHeader>
+                                <AppLogoIcon class="size-16 fill-current text-black dark:text-white" />
                             </SheetHeader>
-                            <div class="flex h-full flex-1 flex-col justify-between space-y-4 py-6">
+                            <div class="flex h-full flex-1 flex-col justify-between space-y-4 pb-6">
                                 <nav class="-mx-3 space-y-1">
                                     <Link
                                         v-for="item in mainNavItems"

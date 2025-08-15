@@ -28,7 +28,7 @@ const mainNavItems = computed(() => {
             icon: MapPin,
         });
     }
-    if (user.club_role === 'admin') {
+    if (user.club_role === 'admin' && user.current_club_id) {
         items.push({
             title: 'Reward Levels',
             href: '/reward-levels',
@@ -63,7 +63,7 @@ const footerNavItems = computed(() => {
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton as-child size="lg">
+                    <SidebarMenuButton as-child size="xl">
                         <Link :href="route('dashboard')">
                             <AppLogo />
                         </Link>
