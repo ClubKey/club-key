@@ -14,7 +14,10 @@ defineProps<{
 
 <template>
     <ClubLayout :club>
-        <Head :description="club.description" :title="club.name" />
+        <Head>
+            <title>{{ club.name }}</title>
+            <meta :content="club.description" name="description" />
+        </Head>
         <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6">
             <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" class="h-32 overflow-hidden rounded-lg" />
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
