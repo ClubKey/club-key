@@ -146,7 +146,7 @@ final class Club extends Model
             get: fn ($path) => $path ? asset('storage/'.$path) : null,
             set: function ($value) {
                 if ($value instanceof UploadedFile) {
-                    return $value->store('clubs', 'public');
+                    return $value->store('clubs');
                 }
 
                 if (is_string($value) && mb_trim($value) !== '') {
