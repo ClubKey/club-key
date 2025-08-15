@@ -6,20 +6,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { getInitials } from '@/composables/useInitials';
 import ClubLayout from '@/layouts/ClubLayout.vue';
 import { Club, ClubUser } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 
 defineProps<{
     club: Club;
     clubUser?: ClubUser;
 }>();
-
-const user = usePage().props.auth.user;
 </script>
 
 <template>
     <ClubLayout :club>
         <Head :description="club.description" :title="club.name" />
-        <div class="mx-auto flex max-w-screen-lg flex-col items-center gap-6">
+        <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6">
             <Avatar class="size-28 overflow-hidden rounded-full">
                 <AvatarImage v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" />
                 <AvatarFallback class="rounded-lg text-black dark:text-white">
