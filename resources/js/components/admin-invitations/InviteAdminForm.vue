@@ -19,6 +19,9 @@ const form = useForm({
 const submit = () => {
     form.post(route('clubs.admin-invitations.store', props.club), {
         preserveScroll: true,
+        onSuccess: () => {
+            form.reset();
+        },
     });
 };
 </script>
