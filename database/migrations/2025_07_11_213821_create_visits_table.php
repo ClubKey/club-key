@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('club_id')->index()->constrained('clubs')->onDelete('cascade');
             $table->foreignId('club_location_id')->index()->nullable()->constrained('club_locations')->nullOnDelete();
             $table->timestamps();
+            $table->index(['user_id', 'club_id', 'created_at']);
         });
     }
 

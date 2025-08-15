@@ -15,25 +15,25 @@ return new class extends Migration
     {
         Schema::create('clubs', function (Blueprint $table) {
             $table->id();
-            $table->text('name');
-            $table->text('slug')->unique();
-            $table->text('logo_path')->nullable();
+            $table->string('name');
+            $table->string('slug')->unique();
+            $table->string('logo_path')->nullable();
             $table->text('description')->nullable();
-            $table->text('website')->nullable();
-            $table->text('email')->nullable();
-            $table->text('phone')->nullable();
-            $table->text('street_address')->nullable();
-            $table->text('city')->nullable();
-            $table->text('state')->nullable();
-            $table->text('zip')->nullable();
-            $table->text('facebook')->nullable();
-            $table->text('instagram')->nullable();
-            $table->text('x')->nullable();
-            $table->text('youtube')->nullable();
-            $table->text('tiktok')->nullable();
-            $table->text('linkedin')->nullable();
-            $table->text('pinterest')->nullable();
-            $table->text('snapchat')->nullable();
+            $table->string('website')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('x')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('tiktok')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('pinterest')->nullable();
+            $table->string('snapchat')->nullable();
             $table->timestamps();
         });
     }
