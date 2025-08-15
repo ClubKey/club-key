@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { getInitials } from '@/composables/useInitials';
 import { ClubUser } from '@/types';
 import { computed } from 'vue';
 
@@ -48,14 +46,14 @@ const cardTitle = computed(() => {
 <template>
     <div
         :style="`background-color:${bgColor}; color:${textColor}`"
-        class="flex aspect-4/2 w-full max-w-lg flex-col justify-end gap-12 rounded-lg border p-6 shadow"
+        class="flex aspect-4/2 w-full max-w-lg flex-col items-start justify-end gap-12 rounded-lg border p-6 shadow"
     >
-        <Avatar class="size-20 overflow-hidden rounded-full">
-            <AvatarImage v-if="clubUser.club.logo_path" :alt="clubUser.club.name" :src="clubUser.club.logo_path!" />
-            <AvatarFallback class="rounded-lg text-black dark:text-white">
-                {{ getInitials(clubUser.club.name) }}
-            </AvatarFallback>
-        </Avatar>
+        <img
+            v-if="clubUser.club.logo_path"
+            :alt="clubUser.club.name"
+            :src="clubUser.club.logo_path!"
+            class="h-20 w-auto overflow-hidden rounded-lg"
+        />
 
         <div>
             <p class="text-xs">Loyalty Card</p>

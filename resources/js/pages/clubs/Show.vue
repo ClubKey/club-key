@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 import RewardCard from '@/components/RewardCard.vue';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { getInitials } from '@/composables/useInitials';
 import ClubLayout from '@/layouts/ClubLayout.vue';
 import { Club, ClubUser } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
@@ -18,12 +16,7 @@ defineProps<{
     <ClubLayout :club>
         <Head :description="club.description" :title="club.name" />
         <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6">
-            <Avatar class="size-28 overflow-hidden rounded-full">
-                <AvatarImage v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" />
-                <AvatarFallback class="rounded-lg text-black dark:text-white">
-                    {{ getInitials(club.name) }}
-                </AvatarFallback>
-            </Avatar>
+            <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" class="h-32 overflow-hidden rounded-lg" />
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
             <RewardCard v-if="clubUser" :club-user />
