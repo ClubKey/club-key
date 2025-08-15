@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\ClubRole;
 use Carbon\CarbonImmutable;
 use Eloquent;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -146,12 +147,36 @@ final class Club extends Model
         return new Attribute(
             get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
             set: function ($value) {
+                // Handle file uploads
                 if ($value instanceof UploadedFile) {
-                    return Storage::disk('public')->put('clubs', $value);
+                    // Delete previous logo if it exists
+                    $previousPath = $this->getOriginal('logo_path');
+                    if ($previousPath && Storage::disk('public')->exists($previousPath)) {
+                        Storage::disk('public')->delete($previousPath);
+                    }
+
+                    // Store the new file
+                    $path = $value->store('clubs', 'public');
+
+                    if ($path === false) {
+                        throw new Exception('Failed to upload logo file');
+                    }
+
+                    return $path;
                 }
 
+                // Handle string values (direct path assignment)
                 if (is_string($value) && mb_trim($value) !== '') {
                     return mb_trim($value);
+                }
+
+                // Handle null/empty values
+                if ($value === null || $value === '') {
+                    // Delete previous logo if it exists
+                    $previousPath = $this->getOriginal('logo_path');
+                    if ($previousPath && Storage::disk('public')->exists($previousPath)) {
+                        Storage::disk('public')->delete($previousPath);
+                    }
                 }
 
                 return null;
