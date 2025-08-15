@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -143,10 +144,10 @@ final class Club extends Model
     public function logoPath(): Attribute
     {
         return new Attribute(
-            get: fn ($path) => $path ? asset('storage/'.$path) : null,
+            get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
             set: function ($value) {
                 if ($value instanceof UploadedFile) {
-                    return $value->storePublicly('clubs');
+                    return Storage::disk('public')->put('clubs', $value);
                 }
 
                 if (is_string($value) && mb_trim($value) !== '') {
