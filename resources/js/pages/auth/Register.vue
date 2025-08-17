@@ -24,7 +24,7 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase description="Enter your details below to create your account" title="Create an account">
+    <AuthBase description="Enter your details below to start getting club your rewards!" title="Create an account">
         <Head title="Register" />
 
         <form class="flex flex-col gap-6" @submit.prevent="submit">

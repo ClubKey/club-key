@@ -23,6 +23,6 @@ final class JoinClubController extends Controller
 
         $joinClubAction->handle($user, $club);
 
-        return to_route('clubs.show', ['club' => $club])->with('success', "You joined the $club->name successfully! Congrats, and look forward to seeing rewards soon.");
+        return to_route('clubs.show', ['club' => $club])->with('success', "You joined $club->name successfully! Congrats, and look forward to seeing rewards soon.");
     }
 }
