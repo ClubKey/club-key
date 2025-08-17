@@ -34,7 +34,6 @@ const breadcrumbs: BreadcrumbItem[] = [
             />
             <Card class="w-full max-w-2xl p-6">
                 <HeadingSmall title="Details" />
-
                 <UpdateClubForm :club="club" />
             </Card>
         </ClubLayout>

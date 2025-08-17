@@ -68,6 +68,7 @@ export interface Club {
     id: number;
     owner_id: number;
     name: string;
+    visit_qr_code_path: string;
     slug: string;
     description?: string;
     logo_path?: string;
@@ -109,6 +110,7 @@ export interface ClubLocation {
     club_id: number;
     club?: Club;
     name: string;
+    visit_qr_code_path: string;
     street_address: string;
     city: string;
     state: string;

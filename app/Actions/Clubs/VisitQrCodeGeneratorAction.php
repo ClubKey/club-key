@@ -70,10 +70,8 @@ final readonly class VisitQrCodeGeneratorAction
     {
         if ($clubLocation) {
             $url = URL::signedRoute('clubs.visit', ['club' => $clubLocation->club->slug, 'clubLocation' => $clubLocation->id]);
-            $logoPath = $clubLocation->club->logo_path ?? '';
         } elseif ($club) {
             $url = URL::signedRoute('clubs.visit', ['club' => $club->slug]);
-            $logoPath = $club->club->logo_path ?? '';
         } else {
             throw new InvalidArgumentException('Either clubLocation or club must be provided.');
         }
@@ -81,9 +79,8 @@ final readonly class VisitQrCodeGeneratorAction
         $builder = new Builder(
             writer: new PngWriter(),
             data: $url,
-            size: 300,
+            size: 500,
             margin: 0,
-            logoPath: $logoPath,
         );
 
         $result = $builder->build();

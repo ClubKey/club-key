@@ -129,6 +129,15 @@ final class ClubController extends Controller
         ]);
     }
 
+    public function checkInCode(Request $request, Club $club): Response
+    {
+        Gate::authorize('update', $club);
+
+        return Inertia::render('clubs/CheckInCode', [
+            'club' => $club,
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

@@ -20,6 +20,10 @@ const sidebarNavItems = computed(() => {
             title: 'Admins',
             href: `/clubs/${props.club.slug}/admins`,
         },
+        {
+            title: 'Check In Qr Code',
+            href: `/clubs/${props.club.slug}/check-in-code`,
+        },
     ];
 
     if (props.club.owner_id === usePage().props.auth.user.id) {

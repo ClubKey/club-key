@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type Club, type ClubLocation } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { MapPin, Phone, Plus } from 'lucide-vue-next';
+import { Download, MapPin, Phone, Plus } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 defineProps<{
@@ -83,7 +83,14 @@ const formatAddress = (location: ClubLocation) => {
                         <span>{{ location.phone }}</span>
                     </div>
 
-                    <Separator class="my-4" />
+                    <Button v-if="canCreate" as-child class="ml-auto" size="sm">
+                        <a :download="`${location.name} Visit Code`" :href="location.visit_qr_code_path" target="_blank">
+                            <Download />
+                            Download Check In Code</a
+                        >
+                    </Button>
+
+                    <Separator v-if="canCreate" class="my-4" />
 
                     <div class="flex gap-2">
                         <Button v-if="canCreate" as-child class="flex-1" size="sm" variant="outline">

@@ -185,4 +185,11 @@ final class Club extends Model
             }
         );
     }
+
+    public function visitQrCodePath(): Attribute
+    {
+        return new Attribute(
+            get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
+        );
+    }
 }

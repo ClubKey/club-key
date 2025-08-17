@@ -22,6 +22,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('clubs/{club}/join', JoinClubController::class)
         ->name('clubs.join');
 
+    Route::get('clubs/{club}/check-in-code', [ClubController::class, 'checkInCode'])
+        ->name('clubs.check-in-code');
+
     Route::get('/visit/clubs/{club}/{clubLocation?}', [VisitController::class, 'store'])
         ->name('clubs.visit')
         ->middleware('signed');

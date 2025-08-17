@@ -7,9 +7,11 @@ namespace App\Models;
 use Carbon\CarbonImmutable;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -53,5 +55,12 @@ final class ClubLocation extends Model
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
+    }
+
+    public function visitQrCodePath(): Attribute
+    {
+        return new Attribute(
+            get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
+        );
     }
 }
