@@ -43,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('clubs/{club}/admin-invitations/{adminInvitation}/resend', [AdminInvitationController::class, 'resend'])
         ->name('clubs.admin-invitations.resend');
 
-    Route::resource('locations', ClubLocationController::class);
+    Route::resource('locations', ClubLocationController::class)->except('show');
 
     // Reward Levels
     Route::resource('reward-levels', RewardLevelController::class);
