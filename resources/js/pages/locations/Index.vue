@@ -37,7 +37,7 @@ const formatAddress = (location: ClubLocation) => {
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Locations`" />
         <div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-            <Heading :title="`${club.name} Locations`" description="Manage your club locations" />
+            <Heading :title="`${club.name} Locations`" description="View club locations" />
             <Button v-if="canCreate" as-child class="fixed right-4 bottom-4 md:static">
                 <Link :href="route('locations.create')">
                     <Plus />
