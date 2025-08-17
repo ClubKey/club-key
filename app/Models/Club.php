@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int $id
  * @property int|null $owner_id
  * @property string $name
+ * @property string|null $visit_qr_code_path
  * @property string $slug
  * @property string|null $logo_path
  * @property string|null $description
@@ -69,6 +70,7 @@ final class Club extends Model
     protected $fillable = [
         'owner_id',
         'name',
+        'visit_qr_code_path',
         'slug',
         'logo_path',
         'description',

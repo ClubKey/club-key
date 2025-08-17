@@ -11,6 +11,10 @@ use Throwable;
 
 final readonly class UpdateClubAction
 {
+    public function __construct(
+        private VisitQrCodeGeneratorAction $qrCodeGeneratorAction,
+    ) {}
+
     /**
      * Execute the action.
      *
@@ -20,6 +24,14 @@ final readonly class UpdateClubAction
     {
         DB::transaction(function () use ($clubDto, $club): void {
             $club->update($clubDto->toArray());
+
+            if ($club->wasChanged('slug')) {
+                $this->qrCodeGeneratorAction->handle(club: $club);
+                $clubLocations = $club->locations;
+                foreach ($clubLocations as $location) {
+                    $this->qrCodeGeneratorAction->handle(clubLocation: $location);
+                }
+            }
         });
     }
 }

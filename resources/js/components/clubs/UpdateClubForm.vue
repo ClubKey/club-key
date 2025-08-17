@@ -47,7 +47,6 @@ const onLogoChange = (event: Event) => {
 const submit = () => {
     form.post(`/clubs/${props.club.slug}`, {
         preserveScroll: true,
-        preserveState: false,
         onSuccess: () => {
             form.reset('logo');
         },

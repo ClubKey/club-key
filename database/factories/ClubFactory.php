@@ -25,7 +25,6 @@ final class ClubFactory extends Factory
             'name' => $this->faker->company(),
             'description' => $this->faker->paragraph(),
             'slug' => $this->faker->unique()->slug(),
-            'logo_path' => $this->faker->imageUrl(640, 480, 'business', true, 'Club Logo'),
             'website' => $this->faker->url(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),

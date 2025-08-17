@@ -14,7 +14,10 @@ use Throwable;
 
 final readonly class CreateClubAction
 {
-    public function __construct(private SwitchCurrentClubAction $switchCurrentClubAction) {}
+    public function __construct(
+        private SwitchCurrentClubAction $switchCurrentClubAction,
+        private VisitQrCodeGeneratorAction $qrCodeGeneratorAction
+    ) {}
 
     /**
      * Execute the action.
@@ -36,6 +39,8 @@ final readonly class CreateClubAction
                 $user = Auth::user(),
                 $club
             );
+
+            $this->qrCodeGeneratorAction->handle(club: $club);
 
             ClubCreated::dispatch($user, $club);
 

@@ -11,6 +11,10 @@ use Throwable;
 
 final readonly class CreateClubLocationAction
 {
+    public function __construct(
+        private VisitQrCodeGeneratorAction $qrCodeGeneratorAction,
+    ) {}
+
     /**
      * Execute the action.
      *
@@ -19,7 +23,11 @@ final readonly class CreateClubLocationAction
     public function handle(ClubLocationDto $dto): ClubLocation
     {
         return DB::transaction(function () use ($dto): ClubLocation {
-            return ClubLocation::create($dto->toArray());
+            $clubLocation = ClubLocation::create($dto->toArray());
+
+            $this->qrCodeGeneratorAction->handle(clubLocation: $clubLocation);
+
+            return $clubLocation;
         });
     }
 }

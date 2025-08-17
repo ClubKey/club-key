@@ -38,7 +38,6 @@ final readonly class VisitClubAction
                     'club_id' => $club->id,
                     'club_location_id' => $clubLocation?->id,
                 ]);
-
             }
         });
     }
