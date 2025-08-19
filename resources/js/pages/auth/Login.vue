@@ -2,6 +2,7 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -34,12 +35,14 @@ const submit = () => {
         <div v-if="status" class="mb-4 text-center text-sm font-medium text-green-600">
             {{ status }}
         </div>
-        <div class="flex items-center justify-between gap-2 rounded-lg bg-card p-4 shadow">
-            <h2>First time here?</h2>
-            <Button as-child size="sm">
-                <Link :href="route('register')"> <Rocket /> Get Started</Link>
-            </Button>
-        </div>
+        <Card class="w-full">
+            <CardContent class="flex items-center justify-between gap-2">
+                <CardTitle>First time here?</CardTitle>
+                <Button as-child size="sm">
+                    <Link :href="route('register')"> <Rocket /> Get Started</Link>
+                </Button>
+            </CardContent>
+        </Card>
 
         <form class="flex flex-col gap-6" @submit.prevent="submit">
             <div class="grid gap-6">
