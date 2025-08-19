@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="relative grid h-dvh lg:max-w-none lg:grid-cols-2 lg:items-center lg:justify-center lg:px-0">
+    <div class="relative grid h-dvh lg:grid-cols-2 lg:items-center lg:justify-center lg:px-0">
         <div class="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
             <div class="absolute inset-0 bg-zinc-900" />
             <Link :href="route('home')" class="relative z-20 flex items-center text-lg font-medium">
@@ -27,8 +27,8 @@ defineProps<{
                 </blockquote>
             </div>
         </div>
-        <div class="p-8 py-8">
-            <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
+        <div class="p-8">
+            <div class="mx-auto flex h-full w-full flex-col justify-center space-y-6 sm:w-[400px]">
                 <div class="flex flex-col space-y-2 text-center">
                     <Link :href="route('home')" class="flex flex-col items-center gap-2 text-lg font-medium">
                         <AppLogoIcon class="size-20" />
