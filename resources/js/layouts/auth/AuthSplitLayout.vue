@@ -27,12 +27,11 @@ defineProps<{
                 </blockquote>
             </div>
         </div>
-        <div class="p-8">
+        <div class="py-8 md:p-8">
             <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                 <div class="flex flex-col space-y-2 text-center">
-                    <Link :href="route('home')" class="flex flex-col items-center text-lg font-medium lg:hidden">
-                        <AppLogoIcon class="mr-2 size-20" />
-                        {{ name }}
+                    <Link :href="route('home')" class="flex flex-col items-center gap-2 text-lg font-medium lg:hidden">
+                        <AppLogoIcon class="size-20" />
                     </Link>
                     <h1 v-if="title" class="text-xl font-medium tracking-tight">{{ title }}</h1>
                     <p v-if="description" class="text-sm text-muted-foreground">{{ description }}</p>
