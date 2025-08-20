@@ -21,8 +21,12 @@ final class JoinClubController extends Controller
     {
         $user = $request->user();
 
-        $joinClubAction->handle($user, $club);
+        $wasNewMember = $joinClubAction->handle($user, $club);
 
-        return to_route('clubs.show', ['club' => $club])->with('success', "You joined $club->name successfully! Congrats, and look forward to seeing rewards soon.");
+        if ($wasNewMember) {
+            session()->flash('success', "You joined $club->name successfully! Congrats, and look forward to seeing rewards soon.");
+        }
+
+        return to_route('clubs.show', ['club' => $club]);
     }
 }

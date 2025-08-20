@@ -35,6 +35,11 @@ final class RegisteredUserController extends Controller
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'phone' => ['required', 'string', 'max:255', new Phone],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'accept_terms' => ['accepted'],
+            'accept_marketing' => ['accepted'],
+        ], [
+            'accept_terms' => 'In order to use this application you must accept the terms and conditions.',
+            'accept_marketing' => 'You must consent to receiving occasional emails to use this application.',
         ]);
 
         $user = User::create([
@@ -42,6 +47,8 @@ final class RegisteredUserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'accepted_terms' => now(),
+            'accepted_marketing' => now(),
         ]);
 
         event(new Registered($user));

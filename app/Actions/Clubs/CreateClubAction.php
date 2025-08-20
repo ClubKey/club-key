@@ -6,7 +6,7 @@ namespace App\Actions\Clubs;
 
 use App\DTOs\ClubDto;
 use App\Enums\ClubRole;
-use App\Events\Clubs\ClubCreated;
+use App\Events\ClubCreated;
 use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

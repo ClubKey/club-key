@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Events\ClubAdmins;
+namespace App\Events;
 
-use App\Models\AdminInvitation;
+use App\Models\ClubUser;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-final class AdminInvitationCreated
+final class UserJoinedClub
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -18,7 +19,7 @@ final class AdminInvitationCreated
      * Create a new event instance.
      */
     public function __construct(
-        public AdminInvitation $adminInvitation
+        public ClubUser $clubUser,
     ) {
         //
     }
@@ -31,6 +32,7 @@ final class AdminInvitationCreated
     public function broadcastOn(): array
     {
         return [
+            //            new PrivateChannel('channel-name'),
         ];
     }
 }

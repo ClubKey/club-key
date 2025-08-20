@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\ClubAdmins;
 
 use App\DTOs\AdminInvitatiionDto;
-use App\Events\ClubAdmins\AdminInvitationCreated;
+use App\Events\AdminInvitationCreated;
 use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

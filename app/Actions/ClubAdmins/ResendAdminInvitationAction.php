@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\ClubAdmins;
 
-use App\Events\ClubAdmins\AdminNotificationResent;
+use App\Events\AdminNotificationResent;
 use App\Models\AdminInvitation;
 use Illuminate\Support\Facades\DB;
 

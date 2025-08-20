@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Listeners\ClubAdmins;
+namespace App\Listeners;
 
-use App\Events\ClubAdmins\AdminNotificationResent;
+use App\Events\AdminInvitationCreated;
 use App\Mail\InviteAdmin;
 use Illuminate\Support\Facades\Mail;
 
-final class SendResendInvitation
+final class SendAdminInvitation
 {
     /**
      * Create the event listener.
      */
-    public function __construct()
-    {
+    public function __construct(
+    ) {
         //
     }
 
     /**
      * Handle the event.
      */
-    public function handle(AdminNotificationResent $event): void
+    public function handle(AdminInvitationCreated $event): void
     {
         Mail::to($event->adminInvitation->email)->send(new InviteAdmin($event->adminInvitation));
     }

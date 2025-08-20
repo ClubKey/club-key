@@ -31,6 +31,8 @@ use Illuminate\Notifications\Notifiable;
  * @property AppRole $role
  * @property CarbonImmutable|null $email_verified_at
  * @property string $password
+ * @property CarbonImmutable|null $accepted_terms
+ * @property CarbonImmutable|null $accepted_marketing
  * @property string|null $remember_token
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
@@ -74,6 +76,8 @@ final class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'accepted_terms',
+        'accepted_marketing',
         'role',
         'current_club_id',
     ];
@@ -93,6 +97,8 @@ final class User extends Authenticatable
         'password' => 'hashed',
         'created_at' => 'immutable_datetime',
         'updated_at' => 'immutable_datetime',
+        'accepted_terms' => 'immutable_datetime',
+        'accepted_marketing' => 'immutable_datetime',
         'role' => AppRole::class,
     ];
 

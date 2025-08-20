@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Events\ClubAdmins;
+namespace App\Events;
 
-use App\Models\AdminInvitation;
+use App\Models\Club;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-final class AdminNotificationResent
+final class ClubCreated implements ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -18,8 +21,11 @@ final class AdminNotificationResent
      * Create a new event instance.
      */
     public function __construct(
-        public readonly AdminInvitation $adminInvitation,
-    ) {}
+        public User $user,
+        public Club $club
+    ) {
+        //
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -28,6 +34,8 @@ final class AdminNotificationResent
      */
     public function broadcastOn(): array
     {
-        return [];
+        return [
+            new PrivateChannel('user.'.$this->user->id.'.clubs'),
+        ];
     }
 }
