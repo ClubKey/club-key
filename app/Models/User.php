@@ -25,6 +25,7 @@ use Illuminate\Notifications\Notifiable;
 /**
  * @property int $id
  * @property string $name
+ * @property-read string $first_name
  * @property string $email
  * @property ?string $phone
  * @property ?int $current_club_id
@@ -101,6 +102,13 @@ final class User extends Authenticatable
         'accepted_marketing' => 'immutable_datetime',
         'role' => AppRole::class,
     ];
+
+    public function firstName(): Attribute
+    {
+        return new Attribute(
+            get: fn () => explode(' ', $this->name)[0] ?? $this->name,
+        );
+    }
 
     public function currentClub(): BelongsTo
     {

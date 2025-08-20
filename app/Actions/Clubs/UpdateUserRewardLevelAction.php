@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Clubs;
 
+use App\Events\ClubUserRewardLevelUpdated;
 use App\Models\ClubUser;
+use App\Models\RewardLevel;
 use Illuminate\Support\Facades\DB;
 
 final readonly class UpdateUserRewardLevelAction
@@ -26,6 +28,11 @@ final readonly class UpdateUserRewardLevelAction
             $clubUser->reward_level_id = $rewardLevel?->id;
 
             $clubUser->save();
+
+            if ($clubUser->wasChanged('reward_level_id')) {
+                $previousRewardLevel = RewardLevel::find($clubUser->getOriginal('reward_level_id'));
+                event(new ClubUserRewardLevelUpdated($clubUser, $previousRewardLevel));
+            }
         });
     }
 }
