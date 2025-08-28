@@ -239,6 +239,8 @@ test('new users can register and accept invitation automatically', function () {
         'phone' => '+1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'accept_terms' => true,
+        'accept_marketing' => true,
     ]);
 
     $response->assertRedirect($route);
@@ -359,6 +361,8 @@ test('new users can register with different email and accept invitation automati
         'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'accept_terms' => true,
+        'accept_marketing' => true,
     ]);
 
     $response->assertRedirect($route);
@@ -461,6 +465,8 @@ test('invitation is deleted when new user registers with invitation token', func
         'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'accept_terms' => true,
+        'accept_marketing' => true,
     ]);
 
     $response->assertRedirect($route);

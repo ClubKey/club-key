@@ -55,6 +55,8 @@ test('when a guest visits a club, they will be redirected to login, then after l
         'phone' => '1234567890',
         'password' => 'password',
         'password_confirmation' => 'password',
+        'accept_terms' => true,
+        'accept_marketing' => true,
     ]);
 
     $response->assertRedirect($route);
