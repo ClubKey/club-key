@@ -55,7 +55,7 @@ const description = computed(() => {
             </div>
         </CardHeader>
         <CardContent>
-            <div v-if="rewardLevel.description" class="mb-4 truncate text-sm text-wrap text-muted-foreground">
+            <div v-if="rewardLevel.description" class="mb-4 text-sm text-wrap text-muted-foreground">
                 {{ description }}
             </div>
 
