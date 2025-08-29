@@ -86,7 +86,7 @@ const getIconComponent = (iconName: string | null) => {
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <div v-if="rewardLevel.description" class="mb-4 truncate text-sm text-muted-foreground">
+                    <div v-if="rewardLevel.description" class="mb-4 truncate text-sm text-wrap text-muted-foreground">
                         {{ rewardLevel.description }}
                     </div>
 
