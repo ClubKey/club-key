@@ -14,7 +14,7 @@ final class DashboardController extends Controller
     {
         $user = $request->user();
 
-        $clubUser = ClubUser::where('user_id', $user->id)->where('club_id', $user->currentClub->id)
+        $clubUser = ClubUser::where('user_id', $user->id)->where('club_id', $user->currentClub?->id)
             ->with('rewardLevel.rewards')
             ->first();
 
