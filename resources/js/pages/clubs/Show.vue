@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import RewardCard from '@/components/RewardCard.vue';
+import RewardCardRewards from '@/components/RewardCardRewards.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import ClubLayout from '@/layouts/ClubLayout.vue';
@@ -18,11 +19,14 @@ defineProps<{
             <title>{{ club.name }}</title>
             <meta :content="club.description" name="description" />
         </Head>
-        <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6">
+        <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6 pb-8">
             <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" class="h-32 overflow-hidden rounded-lg" />
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
-            <RewardCard v-if="clubUser" :club-user />
+            <div v-if="clubUser" class="flex w-full flex-col items-center gap-6">
+                <RewardCard :club-user />
+                <RewardCardRewards :reward-level="clubUser.reward_level" />
+            </div>
             <Card v-else>
                 <CardContent class="flex flex-col items-center gap-2 text-center">
                     <h2 class="text-2xl font-bold">Join the Club!</h2>

@@ -1,7 +1,10 @@
 <script lang="ts" setup>
+import RewardCard from '@/components/RewardCard.vue';
+import RewardCardRewards from '@/components/RewardCardRewards.vue';
+import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Auth, type BreadcrumbItem, Club, ClubUser } from '@/types';
+import { Head, Link } from '@inertiajs/vue3';
 import Button from '../components/ui/button/Button.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -11,7 +14,11 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const page = usePage();
+const props = defineProps<{
+    currentClub: Club;
+    auth: Auth;
+    clubUser: ClubUser;
+}>();
 </script>
 
 <template>
@@ -19,14 +26,18 @@ const page = usePage();
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
-            <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                <div
-                    v-if="!page.props.currentClub && page.props.auth.user.role == 'super_admin'"
-                    class="flex h-full flex-col items-center justify-center"
-                >
-                    <h1 class="text-2xl font-bold">Create your first club</h1>
-                    <Button :as="Link" :href="route('clubs.create')" class="mt-4">Create Club</Button>
-                </div>
+            <div v-if="!currentClub && auth.user.role == 'super_admin'" class="flex h-full flex-col items-center justify-center">
+                <h1 class="text-2xl font-bold">Create your first club</h1>
+                <Button :as="Link" :href="route('clubs.create')" class="mt-4">Create Club</Button>
+            </div>
+            <div v-if="clubUser" class="grid gap-6 xl:grid-cols-2">
+                <Card>
+                    <CardContent class="flex flex-col gap-4">
+                        <h2 class="text-xl font-bold">Your reward card</h2>
+                        <RewardCard :club-user />
+                    </CardContent>
+                </Card>
+                <RewardCardRewards :reward-level="clubUser.reward_level" class="max-w-none" />
             </div>
         </div>
     </AppLayout>

@@ -6,6 +6,8 @@ const props = defineProps<{
     clubUser: ClubUser;
 }>();
 
+const rewardLevel = computed(() => props.clubUser.reward_level);
+
 const bgColor = computed(() => {
     return props.clubUser.reward_level?.color ?? 'black';
 });
@@ -36,7 +38,7 @@ const textColor = computed(() => getContrastColor(bgColor.value));
 
 const cardTitle = computed(() => {
     if (props.clubUser.reward_level) {
-        return `${props.clubUser.reward_level.name} Member`;
+        return props.clubUser.reward_level.name;
     }
 
     return `${props.clubUser.club.name} Member`;
@@ -46,7 +48,7 @@ const cardTitle = computed(() => {
 <template>
     <div
         :style="`background-color:${bgColor}; color:${textColor}`"
-        class="flex aspect-4/2 w-full max-w-lg flex-col items-start justify-end gap-12 rounded-lg border p-6 shadow"
+        class="flex aspect-4/2 w-full max-w-lg flex-none flex-col items-start justify-end gap-12 rounded-lg border p-6 shadow"
     >
         <img
             v-if="clubUser.club.logo_path"
