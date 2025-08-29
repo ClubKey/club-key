@@ -14,7 +14,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps<{
+defineProps<{
     currentClub: Club;
     auth: Auth;
     clubUser: ClubUser;

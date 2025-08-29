@@ -6,8 +6,6 @@ const props = defineProps<{
     clubUser: ClubUser;
 }>();
 
-const rewardLevel = computed(() => props.clubUser.reward_level);
-
 const bgColor = computed(() => {
     return props.clubUser.reward_level?.color ?? 'black';
 });
