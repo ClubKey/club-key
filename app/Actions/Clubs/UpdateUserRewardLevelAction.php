@@ -8,11 +8,14 @@ use App\Events\ClubUserRewardLevelUpdated;
 use App\Models\ClubUser;
 use App\Models\RewardLevel;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 final readonly class UpdateUserRewardLevelAction
 {
     /**
      * Execute the action.
+     *
+     * @throws Throwable
      */
     public function handle(ClubUser $clubUser): void
     {
@@ -25,7 +28,13 @@ final readonly class UpdateUserRewardLevelAction
                 ->orderByDesc('min_visits_per_month')
                 ->first();
 
+            $nextRewardLevel = $club->rewardLevels()->where('min_visits_per_month', '>', $visitsInLastMonth)
+                ->orderBy('min_visits_per_month')
+                ->first();
+
             $clubUser->reward_level_id = $rewardLevel?->id;
+            $clubUser->next_reward_level_id = $nextRewardLevel?->id;
+            $clubUser->visits_past_30_days = $visitsInLastMonth;
 
             $clubUser->save();
 

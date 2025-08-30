@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import RewardCard from '@/components/RewardCard.vue';
-import RewardCardRewards from '@/components/RewardCardRewards.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import RewardCard from '@/components/user-rewards/RewardCard.vue';
+import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
+import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
 import ClubLayout from '@/layouts/ClubLayout.vue';
 import { Club, ClubUser } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
@@ -24,6 +25,7 @@ defineProps<{
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
             <div v-if="clubUser" class="flex w-full flex-col items-center gap-6">
+                <RewardProgress :club-user class="w-full" />
                 <RewardCard :club-user />
                 <RewardCardRewards :reward-level="clubUser.reward_level" />
             </div>

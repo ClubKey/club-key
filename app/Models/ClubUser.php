@@ -13,19 +13,23 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property int $club_id
  * @property ClubRole $role
  * @property int $reward_level_id
+ * @property int $visits_past_30_days
+ * @property int $next_reward_level_id
  * @property-read Club $club
  * @property-read User $user
  * @property-read RewardLevel $rewardLevel
+ * @property-read RewardLevel $nextRewardLevel
  */
 final class ClubUser extends Pivot
 {
-    protected $with = ['user', 'club', 'rewardLevel'];
+    protected $with = ['user', 'club', 'rewardLevel', 'nextRewardLevel'];
 
     protected $fillable = [
         'user_id',
         'club_id',
         'role',
         'reward_level_id',
+        'next_reward_level_id',
     ];
 
     protected $casts = [
@@ -43,6 +47,11 @@ final class ClubUser extends Pivot
     }
 
     public function rewardLevel(): BelongsTo
+    {
+        return $this->belongsTo(RewardLevel::class);
+    }
+
+    public function nextRewardLevel(): BelongsTo
     {
         return $this->belongsTo(RewardLevel::class);
     }

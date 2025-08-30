@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import RewardCard from '@/components/RewardCard.vue';
-import RewardCardRewards from '@/components/RewardCardRewards.vue';
 import { Card, CardContent } from '@/components/ui/card';
+import RewardCard from '@/components/user-rewards/RewardCard.vue';
+import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
+import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Auth, type BreadcrumbItem, Club, ClubUser } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
@@ -31,6 +32,7 @@ defineProps<{
                 <Button :as="Link" :href="route('clubs.create')" class="mt-4">Create Club</Button>
             </div>
             <div v-if="clubUser" class="grid gap-6 xl:grid-cols-2">
+                <RewardProgress :club-user class="w-full xl:col-span-2" />
                 <Card>
                     <CardContent class="flex flex-col gap-4">
                         <h2 class="text-xl font-bold">Your reward card</h2>

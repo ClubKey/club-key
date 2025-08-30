@@ -59,7 +59,10 @@ export interface ClubUser {
     club: Club;
     role: ClubRole;
     reward_level_id?: number;
+    visits_past_30_days: number;
+    next_reward_level_id?: number;
     reward_level?: RewardLevel;
+    next_reward_level?: RewardLevel;
     created_at: string;
     updated_at: string;
 }
