@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('club_user', function (Blueprint $table) {
-            $table->after('reward_points', function (Blueprint $table) {
+            $table->after('reward_level_id', function (Blueprint $table) {
                 $table->integer('visits_past_30_days')->default(0);
                 $table->foreignId('next_reward_level_id')->nullable()->constrained('reward_levels');
             });
@@ -27,7 +27,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('club_user', function (Blueprint $table) {
-            //
+            
         });
     }
 };
