@@ -29,7 +29,7 @@ watchEffect((cleanupFn) => {
     <div class="flex flex-col items-center gap-2 text-center">
         <h2 class="text-2xl font-bold">Your progress to more rewards:</h2>
         <Progress v-model="progress" />
-        <div class="flex w-full items-center justify-between gap-2">
+        <div class="flex w-full flex-wrap items-center justify-between gap-2">
             <h3 v-if="clubUser.reward_level" class="font-semibold">
                 {{
                     `${clubUser.reward_level?.name} (Current Reward Level) ${clubUser.visits_past_30_days}/${clubUser.reward_level?.min_visits_per_month}`
