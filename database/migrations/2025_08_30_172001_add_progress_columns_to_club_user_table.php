@@ -27,7 +27,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('club_user', function (Blueprint $table) {
-            
+            $table->dropColumn('visits_past_30_days');
+            $table->dropForeign(['next_reward_level_id']);
+            $table->dropColumn('next_reward_level_id');
         });
     }
 };
