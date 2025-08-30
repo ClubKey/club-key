@@ -83,7 +83,7 @@ final class ClubController extends Controller
 
         return Inertia::render('clubs/Show', [
             'club' => $club,
-            'clubUser' => $clubUser?->load('rewardLevel.rewards')->fresh(),
+            'clubUser' => $clubUser?->fresh('rewardLevel.rewards'),
         ]);
     }
 
