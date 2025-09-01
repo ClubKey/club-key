@@ -41,24 +41,35 @@ const cardTitle = computed(() => {
 
     return `${props.clubUser.club.name} Member`;
 });
+
+const todaysDate = new Date().toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+});
 </script>
 
 <template>
     <div
         :style="`background-color:${bgColor}; color:${textColor}`"
-        class="flex aspect-4/2 w-full max-w-lg flex-none flex-col items-start justify-end gap-12 rounded-lg border p-6 shadow"
+        class="flex aspect-4/2 w-full max-w-lg flex-none flex-col items-start justify-between gap-4 rounded-lg border p-6 shadow"
     >
         <img
             v-if="clubUser.club.logo_path"
             :alt="clubUser.club.name"
             :src="clubUser.club.logo_path!"
-            class="h-20 w-auto overflow-hidden rounded-lg"
+            class="h-12 w-auto overflow-hidden rounded-lg"
         />
 
-        <div>
-            <p class="text-xs">Loyalty Card</p>
-            <h2 class="text-xl font-semibold">{{ cardTitle }}</h2>
-            <p>{{ clubUser.user.name }}</p>
+        <div class="flex w-full items-end justify-between">
+            <div>
+                <p class="text-xs">Loyalty Card</p>
+                <h2 class="text-2xl font-semibold">{{ cardTitle }}</h2>
+                <p class="text-sm">{{ clubUser.user.name }}</p>
+            </div>
+            <div>
+                {{ todaysDate }}
+            </div>
         </div>
     </div>
 </template>
