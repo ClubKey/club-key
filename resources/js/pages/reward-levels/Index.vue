@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
-import RewardLevelCard from '@/components/RewardLevels/RewardLevelCard.vue';
+import RewardLevelCard from '@/components/reward-levels/RewardLevelCard.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';

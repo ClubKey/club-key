@@ -34,7 +34,7 @@ const description = computed(() => {
 
 <template>
     <Card>
-        <CardHeader>
+        <CardHeader class="border-b">
             <div class="flex items-start justify-between">
                 <div class="flex-1">
                     <div class="flex items-center space-x-3">
@@ -64,7 +64,7 @@ const description = computed(() => {
                     <span class="font-medium">{{ rewardLevel.percentage_discount }}%</span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-muted-foreground">Rewards:</span>
+                    <span class="text-muted-foreground">Perks:</span>
                     <span class="font-medium">{{ rewardLevel.rewards?.length || 0 }}</span>
                 </div>
             </div>
