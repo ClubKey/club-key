@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import DeleteRewardLevel from '@/components/club-rewards/DeleteRewardLevel.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { RewardLevel } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { Edit, Trophy } from 'lucide-vue-next';
@@ -34,7 +33,7 @@ const description = computed(() => {
 </script>
 
 <template>
-    <Card class="group">
+    <Card>
         <CardHeader>
             <div class="flex items-start justify-between">
                 <div class="flex-1">
@@ -69,10 +68,9 @@ const description = computed(() => {
                     <span class="font-medium">{{ rewardLevel.rewards?.length || 0 }}</span>
                 </div>
             </div>
-
-            <Separator class="my-4" />
-
-            <div class="flex gap-2">
+        </CardContent>
+        <CardFooter v-if="canEdit" class="mt-auto flex flex-col justify-between gap-2 border-t">
+            <div class="flex w-full gap-2">
                 <Button v-if="canEdit" as-child class="flex-1" size="sm" variant="outline">
                     <Link :href="route('reward-levels.edit', rewardLevel.id)">
                         <Edit />
@@ -81,6 +79,6 @@ const description = computed(() => {
                 </Button>
                 <DeleteRewardLevel v-if="canEdit" :reward-level="rewardLevel" />
             </div>
-        </CardContent>
+        </CardFooter>
     </Card>
 </template>
