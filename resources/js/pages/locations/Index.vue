@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
-import DeleteLocation from '@/components/locations/DeleteLocation.vue';
+import LocationCard from '@/components/locations/LocationCard.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem, type Club, type ClubLocation } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/vue3';
-import { Download, MapPin, Phone, Plus } from 'lucide-vue-next';
+import { MapPin, Plus } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 defineProps<{
@@ -27,10 +26,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 const canCreate = computed(() => {
     return page.props.auth.user.club_role === 'admin';
 });
-
-const formatAddress = (location: ClubLocation) => {
-    return `${location.street_address}, ${location.city}, ${location.state} ${location.zip}`;
-};
 </script>
 
 <template>
@@ -63,43 +58,7 @@ const formatAddress = (location: ClubLocation) => {
         </div>
 
         <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card v-for="location in locations" :key="location.id" class="group">
-                <CardHeader>
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <CardTitle class="text-lg">{{ location.name }}</CardTitle>
-                            <CardDescription class="mt-2">
-                                <div class="flex items-start gap-2">
-                                    <MapPin class="mt-0.5 h-4 w-4 flex-shrink-0" />
-                                    <span>{{ formatAddress(location) }}</span>
-                                </div>
-                            </CardDescription>
-                        </div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <div v-if="location.phone" class="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Phone />
-                        <span>{{ location.phone }}</span>
-                    </div>
-
-                    <Button v-if="canCreate" as-child class="ml-auto" size="sm">
-                        <a :download="`${location.name} Visit Code`" :href="location.visit_qr_code_path" target="_blank">
-                            <Download />
-                            Download Check In Code</a
-                        >
-                    </Button>
-
-                    <Separator v-if="canCreate" class="my-4" />
-
-                    <div class="flex gap-2">
-                        <Button v-if="canCreate" as-child class="flex-1" size="sm" variant="outline">
-                            <Link :href="route('locations.edit', location.id)"> Edit</Link>
-                        </Button>
-                        <DeleteLocation v-if="canCreate" :location="location" />
-                    </div>
-                </CardContent>
-            </Card>
+            <LocationCard v-for="location in locations" :key="location.id" :can-edit="canCreate" :location="location" />
         </div>
     </AppLayout>
 </template>

@@ -14,6 +14,7 @@ import {
     DialogTrigger,
 } from '@/components/ui/dialog';
 import { type ClubLocation } from '@/types';
+import { Trash2 } from 'lucide-vue-next';
 
 const form = useForm({});
 
@@ -36,7 +37,7 @@ const closeModal = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button variant="outline" size="sm" class="flex-1"> Delete </Button>
+            <Button size="icon" variant="destructive"><Trash2 /></Button>
         </DialogTrigger>
         <DialogContent>
             <form class="space-y-6" @submit="deleteLocation">
