@@ -7,6 +7,7 @@ import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem, ClubUser, User } from '@/types';
 import { Head, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps<{
     clubUser: ClubUser;
@@ -27,6 +28,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: route('members.show', props.clubUser.id),
     },
 ];
+
+const visitText = computed(() => {
+    return props.clubUser.visits_past_30_days === 1
+        ? `${props.clubUser.user.name} has visited the club once in the past 30 days.`
+        : `${props.clubUser.user.name} has visited the club ${props.clubUser.visits_past_30_days} times in the past 30 days.`;
+});
 </script>
 
 <template>
@@ -34,7 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         <Head :title="`${clubUser.user?.name} Profile`" />
         <Card class="min-h-[80vh]">
             <CardHeader>
-                <div class="flex items-start space-x-4">
+                <div class="flex flex-wrap items-start gap-4">
                     <Avatar class="h-16 w-16">
                         <AvatarImage v-if="user.avatar" :alt="user.name" :src="user.avatar" />
                         <AvatarFallback class="text-lg">
@@ -51,20 +58,16 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
             </CardHeader>
             <CardContent class="space-y-6">
-                <div class="grid gap-4 md:grid-cols-2">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-sm font-medium">Member Since</h3>
-                            <p class="text-sm">{{ formatDate(clubUser.created_at) }}</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-sm font-medium">Account Created</h3>
-                            <p class="text-sm">{{ formatDate(user.created_at) }}</p>
-                        </div>
-                    </div>
+                <div class="font-medium">{{ visitText }}</div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <dl>
+                        <dt class="text-sm font-medium">Member Since</dt>
+                        <dd class="text-sm">{{ formatDate(clubUser.created_at) }}</dd>
+                    </dl>
+                    <dl>
+                        <dt class="text-sm font-medium">Account Created</dt>
+                        <dd class="text-sm">{{ formatDate(user.created_at) }}</dd>
+                    </dl>
                 </div>
             </CardContent>
         </Card>

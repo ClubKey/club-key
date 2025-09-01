@@ -11,10 +11,10 @@ defineProps<{
 <template>
     <Link :href="route('members.show', clubUser.id)">
         <Card class="h-full transition hover:shadow-md">
-            <CardContent class="flex flex-col gap-2">
+            <CardContent class="flex flex-col gap-2 break-all">
                 <CardTitle>{{ clubUser.user.name }}</CardTitle>
                 <div class="text-sm text-wrap text-foreground">{{ clubUser.user.email }}</div>
-                <dl class="flex justify-between font-semibold">
+                <dl class="flex justify-between font-medium">
                     <dt>Visits this month:</dt>
                     <dd>{{ clubUser.visits_past_30_days }}</dd>
                 </dl>
