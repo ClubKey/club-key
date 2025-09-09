@@ -1,5 +1,4 @@
-# Club Rewards
-
+# ClubKey
 A modern Laravel 12 application for managing club memberships and rewards using Inertia.js with Vue 3 and TypeScript.
 
 ## 🚀 Quick Start
