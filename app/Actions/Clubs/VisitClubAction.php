@@ -6,6 +6,7 @@ namespace App\Actions\Clubs;
 
 use App\Models\Club;
 use App\Models\ClubLocation;
+use App\Models\ClubUser;
 use App\Models\User;
 use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,10 @@ use Throwable;
 
 final readonly class VisitClubAction
 {
-    public function __construct(private JoinClubAction $joinClubAction) {}
+    public function __construct(
+        private JoinClubAction $joinClubAction,
+        private UpdateUserRewardLevelAction $updateUserRewardLevelAction
+    ) {}
 
     /**
      * Execute the action.
@@ -38,6 +42,8 @@ final readonly class VisitClubAction
                     'club_id' => $club->id,
                     'club_location_id' => $clubLocation?->id,
                 ]);
+
+                $this->updateUserRewardLevelAction->handle(ClubUser::whereClubId($club->id)->whereUserId($user->id)->first());
             }
         });
     }

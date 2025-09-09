@@ -77,10 +77,6 @@ final class ClubController extends Controller
             $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
         }
 
-        if ($clubUser) {
-            $updateUserRewardLevelAction->handle($clubUser);
-        }
-
         return Inertia::render('clubs/Show', [
             'club' => $club,
             'clubUser' => $clubUser?->fresh(['rewardLevel.rewards', 'nextRewardLevel']),
