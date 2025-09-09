@@ -31,7 +31,7 @@ const canCreate = computed(() => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Locations`" />
-        <div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+        <div class="mb-4 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
             <Heading :title="`${club.name} Locations`" description="View club locations" />
             <Button v-if="canCreate" as-child class="fixed right-4 bottom-4 md:static">
                 <Link :href="route('locations.create')">
@@ -41,21 +41,19 @@ const canCreate = computed(() => {
             </Button>
         </div>
 
-        <div v-if="locations.length === 0" class="mt-4">
-            <Card>
-                <CardContent class="flex flex-col items-center justify-center py-12">
-                    <MapPin class="mb-4 h-12 w-12 text-muted-foreground" />
-                    <h3 class="mb-2 text-lg font-semibold">No locations yet</h3>
-                    <p class="mb-4 text-center text-muted-foreground">Get started by adding your first club location.</p>
-                    <Button v-if="canCreate" as-child>
-                        <Link :href="route('locations.create')">
-                            <Plus />
-                            Add Location
-                        </Link>
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
+        <Card v-if="locations.length === 0">
+            <CardContent class="flex flex-col items-center justify-center py-12">
+                <MapPin class="mb-4 h-12 w-12 text-muted-foreground" />
+                <h3 class="mb-2 text-lg font-semibold">No locations yet</h3>
+                <p class="mb-4 text-center text-muted-foreground">Get started by adding your first club location.</p>
+                <Button v-if="canCreate" as-child>
+                    <Link :href="route('locations.create')">
+                        <Plus />
+                        Add Location
+                    </Link>
+                </Button>
+            </CardContent>
+        </Card>
 
         <div v-else class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <LocationCard v-for="location in locations" :key="location.id" :can-edit="canCreate" :location="location" />

@@ -31,7 +31,7 @@ const handleSubmit = debounce(() => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Members`" />
-        <div class="flex items-center justify-between">
+        <div class="mb-4 flex items-center justify-between">
             <Heading :title="`${club.name} Members`" description="View your club members." />
         </div>
         <div class="grid gap-2">

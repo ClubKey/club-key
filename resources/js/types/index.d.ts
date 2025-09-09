@@ -173,4 +173,34 @@ export interface RewardLevel {
     rewards?: Reward[];
 }
 
+export interface Promotion {
+    id: number;
+    club_id: number;
+    club?: Club;
+    title: string;
+    description: string;
+    image_path: string | null;
+    starts_at: string;
+    ends_at: string | null;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
+
+export interface Paginator<T> {
+    data: T[];
+    perPage: number;
+    currentPage: number;
+    path: string;
+    query: Record<string, string>;
+    fragment: string | null;
+    pageName: string;
+    total: number;
+    lastPage: number;
+    onEachSide: number;
+    options: {
+        [key: string]: unknown;
+    };
+}

@@ -3,16 +3,19 @@ import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Paginator } from '@/types';
 
 const props = defineProps<{
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: Paginator<TData>
 }>()
 
 const table = useVueTable({
-    get data() { return props.data },
+    get data() { return props.data.data },
     get columns() { return props.columns },
     getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    pageCount: props.data.lastPage,
 })
 </script>
 

@@ -56,6 +56,10 @@ use Illuminate\Support\Facades\Storage;
  * @property-read Collection<int, User> $admins
  * @property-read Collection<int, RewardLevel> $rewardLevels
  * @property-read int|null $reward_levels_count
+ * @property-read Collection<int, ClubUser> $clubUsers
+ * @property-read int|null $club_users_count
+ * @property-read Collection<int, Promotion> $promotions
+ * @property-read int|null $promotions_count
  *
  * @method static Builder<static>|Club newModelQuery()
  * @method static Builder<static>|Club newQuery()
@@ -142,6 +146,11 @@ final class Club extends Model
     public function rewardLevels(): HasMany
     {
         return $this->hasMany(RewardLevel::class)->orderBy('order');
+    }
+
+    public function promotions(): HasMany
+    {
+        return $this->hasMany(Promotion::class);
     }
 
     public function logoPath(): Attribute
