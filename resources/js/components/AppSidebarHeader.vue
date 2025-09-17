@@ -25,6 +25,6 @@ withDefaults(
             </template>
         </div>
 
-        <ClubSwitcher />
+        <ClubSwitcher class="ml-auto" />
     </header>
 </template>
