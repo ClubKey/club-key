@@ -31,7 +31,7 @@ function back() {
             <div v-show="step === 1 || hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name*</Label>
-                    <Input id="name" :tabindex="1" autocomplete="name" autofocus name="name" placeholder="Full name" required type="text" />
+                    <Input id="name" :tabindex="1" autocomplete="name" name="name" placeholder="Full name" required type="text" />
                     <InputError :message="errors.name" />
                 </div>
 
