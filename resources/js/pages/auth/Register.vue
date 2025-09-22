@@ -13,10 +13,6 @@ import { ref } from 'vue';
 
 const step = ref(1);
 
-function isStep2Error(errors: Record<string, string | undefined>) {
-    return !!errors.password || !!errors.password_confirmation || !!errors.accept_terms || !!errors.accept_marketing;
-}
-
 function next() {
     step.value = 2;
 }
@@ -24,23 +20,15 @@ function next() {
 function back() {
     step.value = 1;
 }
-
-function handleError(errors: Record<string, string | undefined>) {
-    if (isStep2Error(errors)) {
-        step.value = 2;
-    } else {
-        step.value = 1;
-    }
-}
 </script>
 
 <template>
     <AuthBase description="Enter your details below to start getting club your rewards!" title="Create an account">
         <Head title="Register" />
 
-        <Form #default="{ errors, processing }" :action="route('register')" class="flex flex-col gap-6" method="post" @error="handleError">
+        <Form #default="{ errors, hasErrors, processing }" :action="route('register')" class="flex flex-col gap-6" method="post">
             <!-- Section 1: Basic info -->
-            <div v-show="step === 1 && !isStep2Error(errors)" class="grid gap-6">
+            <div v-show="step === 1 || hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name*</Label>
                     <Input id="name" :tabindex="1" autocomplete="name" autofocus name="name" placeholder="Full name" required type="text" />
@@ -59,11 +47,11 @@ function handleError(errors: Record<string, string | undefined>) {
                     <InputError :message="errors.phone" />
                 </div>
 
-                <Button class="mt-2 w-full" type="button" @click="next">Next</Button>
+                <Button v-if="!hasErrors" class="mt-2 w-full" type="button" @click="next">Next</Button>
             </div>
 
             <!-- Section 2: Security & consent -->
-            <div v-show="step === 2 || isStep2Error(errors)" class="grid gap-6">
+            <div v-show="step === 2 || hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="password">Password*</Label>
                     <Input id="password" :tabindex="4" autocomplete="new-password" name="password" placeholder="Password" required type="password" />
@@ -103,7 +91,7 @@ function handleError(errors: Record<string, string | undefined>) {
                     <InputError :message="errors.accept_marketing" />
                 </div>
                 <div class="grid gap-2">
-                    <Button type="button" variant="outline" @click="back">Back</Button>
+                    <Button v-if="!hasErrors" type="button" variant="outline" @click="back">Back</Button>
                     <Button :disabled="processing" class="mt-2 w-full" tabindex="6" type="submit">
                         <LoaderCircle v-if="processing" class="h-4 w-4 animate-spin" />
                         Create account
