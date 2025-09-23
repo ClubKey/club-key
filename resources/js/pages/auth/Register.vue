@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthBase from '@/layouts/AuthLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import { ArrowLeft, ArrowRight, LoaderCircle } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 const step = ref(1);
@@ -78,7 +78,9 @@ function back() {
                     <InputError :message="form.errors.phone" />
                 </div>
 
-                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button" @click="next">Next</Button>
+                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button" @click="next"
+                    >Next<ArrowRight
+                /></Button>
             </div>
 
             <!-- Section 2: Security & consent -->
@@ -132,7 +134,7 @@ function back() {
                     <InputError :message="form.errors.accept_marketing" />
                 </div>
                 <div class="grid gap-2">
-                    <Button v-if="!form.hasErrors" type="button" variant="outline" @click="back">Back</Button>
+                    <Button v-if="!form.hasErrors" type="button" variant="outline" @click="back"><ArrowLeft />Back</Button>
                     <Button :disabled="form.processing" class="mt-2 w-full" tabindex="6" type="submit">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                         Create account
