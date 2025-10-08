@@ -12,7 +12,7 @@ const props = defineProps<{
     canEdit: boolean;
 }>();
 
-const copyText = ref('Copy Visit Tap Link');
+const copyText = ref('Copy Check-In Tap Link');
 
 function formatAddress(location: ClubLocation) {
     return `${location.street_address}, ${location.city}, ${location.state} ${location.zip}`;
