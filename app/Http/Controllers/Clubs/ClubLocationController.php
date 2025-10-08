@@ -8,6 +8,7 @@ use App\Actions\Clubs\CreateClubLocationAction;
 use App\Actions\Clubs\DeleteClubLocationAction;
 use App\Actions\Clubs\UpdateClubLocationAction;
 use App\DTOs\ClubLocationDto;
+use App\Enums\ClubRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\ClubLocationRequest;
 use App\Models\ClubLocation;
@@ -34,11 +35,15 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (! $club) {
+        if (!$club) {
             abort(404, 'No current club selected.');
         }
 
         $locations = $club->locations()->orderBy('name')->get();
+        if (auth()->user()->hasRoleInClub($club, ClubRole::ADMIN)) {
+            // append the visit_tap_link to the locations
+            $locations->append('visit_tap_link');
+        }
 
         return Inertia::render('locations/Index', [
             'club' => $club,
@@ -57,7 +62,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (! $club) {
+        if (!$club) {
             abort(404, 'No current club selected.');
         }
 
@@ -77,7 +82,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (! $club) {
+        if (!$club) {
             abort(404, 'No current club selected.');
         }
 
@@ -101,7 +106,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (! $club) {
+        if (!$club) {
             abort(404, 'No current club selected.');
         }
 
@@ -122,7 +127,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (! $club) {
+        if (!$club) {
             abort(404, 'No current club selected.');
         }
 

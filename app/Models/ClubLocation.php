@@ -12,12 +12,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 /**
  * @property int $id
  * @property int $club_id
  * @property string|null $name
  * @property string|null $visit_qr_code_path
+ * @property-read string|null $visit_tap_link
  * @property string|null $phone
  * @property string $street_address
  * @property string $city
@@ -60,7 +62,17 @@ final class ClubLocation extends Model
     public function visitQrCodePath(): Attribute
     {
         return new Attribute(
-            get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
+            get: fn($path) => $path ? Storage::disk('public')->url($path) : null,
+        );
+    }
+
+    public function visitTapLink(): Attribute
+    {
+        return new Attribute(
+            get: fn() => URL::signedRoute('clubs.visit', [
+                'club' => $this->club->slug,
+                'clubLocation' => $this->id,
+            ]),
         );
     }
 }

@@ -5,14 +5,26 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ClubLocation } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { Download, MapPin, Phone, SquarePen } from 'lucide-vue-next';
+import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     location: ClubLocation;
     canEdit: boolean;
 }>();
 
+const copyText = ref('Copy Visit Tap Link');
+
 function formatAddress(location: ClubLocation) {
     return `${location.street_address}, ${location.city}, ${location.state} ${location.zip}`;
+}
+
+function copyVisitLink() {
+    if (!props.location.visit_tap_link) return;
+    navigator.clipboard.writeText(props.location.visit_tap_link);
+    copyText.value = 'Copied!';
+    setTimeout(() => {
+        copyText.value = 'Copy Visit Tap Link';
+    }, 5000);
 }
 </script>
 
@@ -36,13 +48,16 @@ function formatAddress(location: ClubLocation) {
                 <Phone />
                 <span>{{ location.phone }}</span>
             </div>
+            <div v-if="canEdit" class="flex flex-col items-start gap-2">
+                <Button v-if="location.visit_tap_link" size="sm" variant="outline" @click="copyVisitLink">{{ copyText }}</Button>
 
-            <Button v-if="canEdit" as-child class="ml-auto" size="sm">
-                <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download target="_blank">
-                    <Download />
-                    Download Check In Code</a
-                >
-            </Button>
+                <Button as-child size="sm">
+                    <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download target="_blank">
+                        <Download />
+                        Download Check In Code</a
+                    >
+                </Button>
+            </div>
         </CardContent>
         <CardFooter class="border-t">
             <div class="flex w-full gap-2">

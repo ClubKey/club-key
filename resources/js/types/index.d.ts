@@ -114,6 +114,7 @@ export interface ClubLocation {
     club?: Club;
     name: string;
     visit_qr_code_path: string;
+    visit_tap_link?: string;
     street_address: string;
     city: string;
     state: string;
