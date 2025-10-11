@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Auth, type BreadcrumbItem, Club, ClubUser } from '@/types';
+import { AdminOverview, Auth, type BreadcrumbItem, Club, ClubUser } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '../components/ui/button/Button.vue';
 
@@ -20,6 +20,7 @@ defineProps<{
     auth: Auth;
     clubs: Club[];
     clubUser: ClubUser;
+    adminOverview: AdminOverview | null;
 }>();
 </script>
 
@@ -28,7 +29,33 @@ defineProps<{
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
-            <div v-if="clubUser && currentClub" class="grid gap-6 xl:grid-cols-2">
+            <div v-if="adminOverview" class="grid gap-6 py-6 md:grid-cols-2 lg:grid-cols-3">
+                <Card>
+                    <CardContent class="flex flex-col gap-4">
+                        <div class="text-7xl">{{ adminOverview.numberOfMembersToday }}</div>
+                        <CardTitle>New members today</CardTitle>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent class="flex flex-col gap-4">
+                        <div class="text-7xl">{{ adminOverview.numberOfMembers }}</div>
+                        <CardTitle>Total members</CardTitle>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardContent class="flex flex-col gap-4">
+                        <div class="text-7xl">{{ adminOverview.numberOfVisitsThisWeek }}</div>
+                        <CardTitle>Visits this week</CardTitle>
+                    </CardContent>
+                </Card>
+                <Card v-if="adminOverview.mostPopularLocationName">
+                    <CardContent class="flex flex-col gap-4">
+                        <div class="text-7xl">{{ adminOverview.mostPopularLocationName }}</div>
+                        <CardTitle>Most popular location</CardTitle>
+                    </CardContent>
+                </Card>
+            </div>
+            <div v-else-if="clubUser && currentClub" class="grid gap-6 xl:grid-cols-2">
                 <RewardProgress :club-user class="w-full xl:col-span-2" />
                 <Card>
                     <CardContent class="flex flex-col gap-4">

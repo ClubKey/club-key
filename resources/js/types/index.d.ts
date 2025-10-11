@@ -95,6 +95,13 @@ export interface Club {
     owner?: User;
 }
 
+export interface AdminOverview {
+    numberOfMembers: number;
+    numberOfMembersToday: number;
+    numberOfVisitsThisWeek: number;
+    mostPopularLocationName: string | null;
+}
+
 export interface AdminInvitation {
     id: number;
     email: string;
