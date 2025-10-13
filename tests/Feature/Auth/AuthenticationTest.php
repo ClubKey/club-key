@@ -22,6 +22,20 @@ test('users can authenticate using the login screen', function () {
     $response->assertRedirect(route('dashboard', absolute: false));
 });
 
+test('users can authenticate regardless of email casing', function () {
+    $user = User::factory()->create([
+        'email' => 'case-test@example.com',
+    ]);
+
+    $response = $this->post('/login', [
+        'email' => strtoupper($user->email),
+        'password' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('dashboard', absolute: false));
+});
+
 test('users can not authenticate with invalid password', function () {
     $user = User::factory()->create();
 
