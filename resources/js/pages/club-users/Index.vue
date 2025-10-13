@@ -50,6 +50,12 @@ const handleSubmit = () => {
             <button class="hidden" type="submit">Search</button>
         </Form>
 
+        <div v-if="clubUsers.data.length === 0" class="mt-4">
+            <div class="flex items-center justify-center py-12">
+                <h3 class="text-lg font-semibold">Couldn't find any members. Adjust your search?</h3>
+            </div>
+        </div>
+
         <InfiniteScroll :buffer="100" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" data="clubUsers">
             <ClubUserCard v-for="clubUser in clubUsers.data" :key="clubUser.id" :club-user />
         </InfiniteScroll>
