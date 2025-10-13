@@ -26,7 +26,7 @@ final class ClubUserController extends Controller
             ->clubUsers()
             ->search($search)
             ->with('user')
-            ->paginate(1)
+            ->paginate(40)
         );
 
         return Inertia::render('club-users/Index', [

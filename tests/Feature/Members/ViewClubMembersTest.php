@@ -28,7 +28,7 @@ test('a club admin can view the members in their club', function () {
 
     $response->assertInertia(function (AssertableInertia $inertia) {
         $inertia->component('club-users/Index')
-            ->has('clubUsers', 2);
+            ->has('clubUsers.data', 2);
     });
 });
 
