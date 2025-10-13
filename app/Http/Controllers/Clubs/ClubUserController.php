@@ -21,12 +21,13 @@ final class ClubUserController extends Controller
     {
         Gate::authorize('viewAny', [ClubUser::class, $request->user()->currentClub]);
         $search = $request->input('search');
-        $clubUsers = $request->user()
+        $clubUsers = Inertia::scroll(fn() => $request->user()
             ->currentClub
             ->clubUsers()
             ->search($search)
             ->with('user')
-            ->get();
+            ->paginate(1)
+        );
 
         return Inertia::render('club-users/Index', [
             'club' => $request->user()->currentClub,

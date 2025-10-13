@@ -17,6 +17,19 @@ export interface NavItem {
     isActive?: boolean;
 }
 
+export interface Paginator<T extends Record<unknown>> {
+    current_page: number;
+    data: T[];
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: any[];
+    next_page_url: string | null;
+    path: string;
+    per_page: number;
+}
+
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     name: string;
     quote: { message: string; author: string };
