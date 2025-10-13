@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ClubRole;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
@@ -54,5 +56,19 @@ final class ClubUser extends Pivot
     public function nextRewardLevel(): BelongsTo
     {
         return $this->belongsTo(RewardLevel::class);
+    }
+
+    #[Scope]
+    public function search(Builder $query, ?string $search = null): void
+    {
+        if (!$search) {
+            return;
+        }
+
+        $query->whereHas('user', function (Builder $query) use ($search) {
+            $query->whereLike('name', $search)
+                ->orWhereLike('email', $search)
+                ->orWhereLike('phone', $search);
+        });
     }
 }

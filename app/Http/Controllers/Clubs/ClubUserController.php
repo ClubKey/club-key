@@ -9,6 +9,7 @@ use App\Models\ClubUser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 use Inertia\Response;
 
 final class ClubUserController extends Controller
@@ -19,12 +20,18 @@ final class ClubUserController extends Controller
     public function index(Request $request): Response
     {
         Gate::authorize('viewAny', [ClubUser::class, $request->user()->currentClub]);
+        $search = $request->input('search');
+        $clubUsers = $request->user()
+            ->currentClub
+            ->clubUsers()
+            ->search($search)
+            ->with('user')
+            ->get();
 
-        $clubUsers = $request->user()->currentClub->clubUsers()->with('user')->get();
-
-        return inertia('club-users/Index', [
+        return Inertia::render('club-users/Index', [
             'club' => $request->user()->currentClub,
             'clubUsers' => $clubUsers,
+            'search' => $search,
         ]);
     }
 
