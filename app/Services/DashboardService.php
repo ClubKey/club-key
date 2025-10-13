@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\DTOs\DashboardAdminOverviewDto;
 use App\DTOs\DashboardUserOverviewDto;
+use App\Models\ClubLocation;
 use App\Models\ClubUser;
 use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
@@ -30,19 +31,15 @@ final class DashboardService
             ->count();
 
         // Most popular location
-        $mostPopularLocation = Visit::query()
-            ->select('club_location_id', DB::raw('count(*) as total'))
-            ->where('club_id', $clubId)
-            ->whereNotNull('club_location_id')
-            ->groupBy('club_location_id')
-            ->orderByDesc('total')
+        $mostPopularLocation = ClubLocation::query()
+            ->whereHas('visits', function ($query) use ($clubId) {
+                $query->where('club_id', $clubId);
+            })
+            ->withCount('visits')
+            ->orderByDesc('visits_count')
             ->first();
 
-        $mostPopularLocationName = null;
-        if ($mostPopularLocation) {
-            $location = DB::table('club_locations')->where('id', $mostPopularLocation->club_location_id)->first();
-            $mostPopularLocationName = $location?->name;
-        }
+        $mostPopularLocationName = $mostPopularLocation?->name;
 
         return new DashboardAdminOverviewDto(
             $numberOfMembers,
