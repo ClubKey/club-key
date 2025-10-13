@@ -3,6 +3,7 @@ import ClubUserCard from '@/components/club-users/ClubUserCard.vue';
 import Heading from '@/components/Heading.vue';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { debounce } from '@/lib/utils';
 import { type BreadcrumbItem, type Club, ClubUser, Paginator } from '@/types';
 import { Form, Head, InfiniteScroll } from '@inertiajs/vue3';
 import { ref } from 'vue';
@@ -22,11 +23,9 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const formRef = ref();
 
-const handleSubmit = () => {
-    setTimeout(() => {
-        formRef.value.submit();
-    }, 1000);
-};
+const handleSubmit = debounce(() => {
+    formRef.value.submit();
+}, 300);
 </script>
 
 <template>
