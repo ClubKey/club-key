@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ClubRole;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $user_id
@@ -62,5 +64,24 @@ final class ClubUser extends Pivot
     {
         return $this->hasMany(Visit::class, 'user_id', 'user_id')
             ->whereColumn('club_id', $this->qualifyColumn('club_id'));
+    }
+
+    public function scopeForClub(Builder $query, Club $club): Builder
+    {
+        return $query->where('club_id', $club->id);
+    }
+
+    public function scopeWithMembershipDetails(Builder $query): Builder
+    {
+        return $query->with(['user', 'club', 'rewardLevel', 'nextRewardLevel']);
+    }
+
+    public function scopeWithVisitMetrics(Builder $query): Builder
+    {
+        return $query->withCount([
+            'visits as total_visits',
+            'visits as visits_last_week' => static fn (Builder $builder) => $builder
+                ->where('created_at', '>=', Carbon::now()->subDays(7)),
+        ]);
     }
 }

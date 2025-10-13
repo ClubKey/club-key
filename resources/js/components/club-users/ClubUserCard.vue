@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
-import { ClubUser } from '@/types';
+import type { ClubUser } from '@/types';
 import { Link } from '@inertiajs/vue3';
 
 defineProps<{

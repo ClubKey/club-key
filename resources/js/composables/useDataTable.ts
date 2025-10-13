@@ -1,6 +1,6 @@
 import { router } from '@inertiajs/vue3';
 import { watchDebounced } from '@vueuse/core';
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, watch, type Ref } from 'vue';
 
 import type {
     DataTableFilterConfig,
@@ -12,7 +12,7 @@ type FilterValue = string[] | string | null;
 
 interface UseDataTableOptions {
     routeName: string;
-    meta: DataTableMeta;
+    meta: Ref<DataTableMeta>;
     query?: Record<string, unknown>;
 }
 
@@ -27,37 +27,61 @@ function sanitizeArrayValue(value: unknown): string[] {
 }
 
 export function useDataTable(options: UseDataTableOptions) {
-    const search = ref<string>(typeof options.meta.state.search === 'string' ? options.meta.state.search : '');
-    const sortKey = ref<string | null>(options.meta.state.sort.key ?? null);
-    const sortDirection = ref<'asc' | 'desc'>(options.meta.state.sort.direction ?? 'asc');
+    const search = ref<string>('');
+    const sortKey = ref<string | null>(null);
+    const sortDirection = ref<'asc' | 'desc'>('asc');
     const filters = reactive<Record<string, FilterValue>>({});
 
-    const filtersConfig = options.meta.filters;
-    const sorts = options.meta.sorts;
+    const filtersConfig = computed(() => options.meta.value.filters);
+    const sorts = computed(() => options.meta.value.sorts);
 
-    Object.entries(options.meta.state.filters ?? {}).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-            filters[key] = sanitizeArrayValue(value);
+    function syncFilters(): void {
+        const nextState: Record<string, FilterValue> = {};
+        const stateFilters = options.meta.value.state.filters ?? {};
 
-            return;
-        }
+        Object.entries(stateFilters).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+                nextState[key] = sanitizeArrayValue(value);
 
-        if (value === null || value === undefined) {
-            filters[key] = null;
+                return;
+            }
 
-            return;
-        }
+            if (value === null || value === undefined) {
+                nextState[key] = null;
 
-        filters[key] = String(value);
-    });
+                return;
+            }
 
-    Object.entries(filtersConfig).forEach(([key, config]) => {
-        if (filters[key] !== undefined) {
-            return;
-        }
+            nextState[key] = String(value);
+        });
 
-        filters[key] = config.type === 'multi' ? [] : null;
-    });
+        Object.entries(filtersConfig.value).forEach(([key, config]) => {
+            if (nextState[key] !== undefined) {
+                return;
+            }
+
+            nextState[key] = config.type === 'multi' ? [] : null;
+        });
+
+        Object.keys(filters).forEach((key) => {
+            if (! Object.prototype.hasOwnProperty.call(nextState, key)) {
+                delete filters[key];
+            }
+        });
+
+        Object.assign(filters, nextState);
+    }
+
+    watch(
+        options.meta,
+        (meta) => {
+            search.value = typeof meta.state.search === 'string' ? meta.state.search : '';
+            sortKey.value = meta.state.sort.key ?? null;
+            sortDirection.value = meta.state.sort.direction ?? 'asc';
+            syncFilters();
+        },
+        { immediate: true }
+    );
 
     const activeFilterCount = computed(() =>
         Object.values(filters).reduce((count, value) => {
@@ -159,7 +183,7 @@ export function useDataTable(options: UseDataTableOptions) {
     }
 
     function clearFilters(): void {
-        Object.entries(filtersConfig).forEach(([key, config]) => {
+        Object.entries(filtersConfig.value).forEach(([key, config]) => {
             filters[key] = config.type === 'multi' ? [] : null;
         });
 

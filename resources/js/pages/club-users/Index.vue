@@ -4,14 +4,15 @@ import Heading from '@/components/Heading.vue';
 import DataTableToolbar from '@/components/ui/DataTableToolbar.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useDataTable } from '@/composables/useDataTable';
-import { type BreadcrumbItem, type Club, type DataTableMeta, ClubUser } from '@/types';
+import { type BreadcrumbItem, type Club, type DataTableMeta, type ClubUser } from '@/types';
 import { Head } from '@inertiajs/vue3';
+import { toRef } from 'vue';
 
 const props = defineProps<{ club: Club; clubUsers: ClubUser[]; dataTable: DataTableMeta }>();
 
 const table = useDataTable({
     routeName: 'members.index',
-    meta: props.dataTable,
+    meta: toRef(props, 'dataTable'),
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -43,7 +44,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            <ClubUserCard v-for="clubUser in props.clubUsers" :key="clubUser.id" :club-user />
+            <ClubUserCard v-for="clubUser in props.clubUsers" :key="clubUser.id" :club-user="clubUser" />
         </div>
     </AppLayout>
 </template>

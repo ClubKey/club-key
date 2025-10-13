@@ -27,14 +27,45 @@ final class ClubUserController extends Controller
 
         $club = $request->user()->currentClub;
 
+        $rewardLevelOptions = $club->rewardLevels()
+            ->get(['id', 'name'])
+            ->map(static fn (RewardLevel $level) => [
+                'label' => $level->name,
+                'value' => (string) $level->id,
+            ])->all();
+
+        $sortOptions = [
+            ['label' => 'Most visits', 'value' => 'most_visits', 'direction' => 'desc'],
+            ['label' => 'Most visits last week', 'value' => 'most_visits_last_week', 'direction' => 'desc'],
+            ['label' => 'Name', 'value' => 'name', 'direction' => 'asc'],
+            ['label' => 'New members', 'value' => 'new_members', 'direction' => 'desc'],
+            ['label' => 'Oldest members', 'value' => 'old', 'direction' => 'asc'],
+        ];
+
+        $filterConfig = [
+            'role' => [
+                'label' => 'Role',
+                'type' => 'multi',
+                'options' => array_map(
+                    static fn (ClubRole $role) => [
+                        'label' => $role->label(),
+                        'value' => $role->value,
+                    ],
+                    ClubRole::cases()
+                ),
+            ],
+            'reward_level_id' => [
+                'label' => 'Reward level',
+                'type' => 'multi',
+                'options' => $rewardLevelOptions,
+            ],
+        ];
+
         $dataTable = DataTable::for(
             ClubUser::query()
-                ->where('club_id', $club->id)
-                ->with(['user', 'club', 'rewardLevel', 'nextRewardLevel'])
-                ->withCount([
-                    'visits as total_visits',
-                    'visits as visits_last_week' => fn (Builder $builder) => $builder->where('created_at', '>=', now()->subDays(7)),
-                ])
+                ->forClub($club)
+                ->withMembershipDetails()
+                ->withVisitMetrics()
         )
             ->searchable([
                 static function (Builder $builder, string $search): void {
@@ -89,36 +120,8 @@ final class ClubUserController extends Controller
             'clubUsers' => $clubUsers,
             'dataTable' => [
                 'state' => $dataTable->state(),
-                'sorts' => [
-                    ['label' => 'Most visits', 'value' => 'most_visits', 'direction' => 'desc'],
-                    ['label' => 'Most visits last week', 'value' => 'most_visits_last_week', 'direction' => 'desc'],
-                    ['label' => 'Name', 'value' => 'name', 'direction' => 'asc'],
-                    ['label' => 'New members', 'value' => 'new_members', 'direction' => 'desc'],
-                    ['label' => 'Oldest members', 'value' => 'old', 'direction' => 'asc'],
-                ],
-                'filters' => [
-                    'role' => [
-                        'label' => 'Role',
-                        'type' => 'multi',
-                        'options' => array_map(
-                            static fn (ClubRole $role) => [
-                                'label' => $role->label(),
-                                'value' => $role->value,
-                            ],
-                            ClubRole::cases()
-                        ),
-                    ],
-                    'reward_level_id' => [
-                        'label' => 'Reward level',
-                        'type' => 'multi',
-                        'options' => $club->rewardLevels()
-                            ->get(['id', 'name'])
-                            ->map(static fn (RewardLevel $level) => [
-                                'label' => $level->name,
-                                'value' => (string) $level->id,
-                            ])->all(),
-                    ],
-                ],
+                'sorts' => $sortOptions,
+                'filters' => $filterConfig,
             ],
         ]);
     }
