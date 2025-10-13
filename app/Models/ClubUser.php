@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ClubRole;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property-read User $user
  * @property-read RewardLevel $rewardLevel
  * @property-read RewardLevel $nextRewardLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Visit> $visits
  */
 final class ClubUser extends Pivot
 {
@@ -54,5 +56,11 @@ final class ClubUser extends Pivot
     public function nextRewardLevel(): BelongsTo
     {
         return $this->belongsTo(RewardLevel::class);
+    }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class, 'user_id', 'user_id')
+            ->whereColumn('club_id', $this->qualifyColumn('club_id'));
     }
 }

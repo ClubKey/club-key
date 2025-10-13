@@ -10,6 +10,40 @@ export interface BreadcrumbItem {
     href: string;
 }
 
+export interface DataTableSortOption {
+    value: string;
+    label: string;
+    direction: 'asc' | 'desc';
+}
+
+export type DataTableFilterType = 'single' | 'multi';
+
+export interface DataTableFilterOption {
+    label: string;
+    value: string;
+}
+
+export interface DataTableFilterConfig {
+    label: string;
+    type: DataTableFilterType;
+    options: DataTableFilterOption[];
+}
+
+export interface DataTableState {
+    search: string;
+    sort: {
+        key: string | null;
+        direction: 'asc' | 'desc';
+    };
+    filters: Record<string, unknown>;
+}
+
+export interface DataTableMeta {
+    sorts: DataTableSortOption[];
+    filters: Record<string, DataTableFilterConfig>;
+    state: DataTableState;
+}
+
 export interface NavItem {
     title: string;
     href: string;
@@ -60,6 +94,8 @@ export interface ClubUser {
     role: ClubRole;
     reward_level_id?: number;
     visits_past_30_days: number;
+    total_visits: number;
+    visits_last_week: number;
     next_reward_level_id?: number;
     reward_level?: RewardLevel;
     next_reward_level?: RewardLevel;

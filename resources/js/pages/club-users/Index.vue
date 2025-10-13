@@ -1,14 +1,18 @@
 <script lang="ts" setup>
 import ClubUserCard from '@/components/club-users/ClubUserCard.vue';
 import Heading from '@/components/Heading.vue';
+import DataTableToolbar from '@/components/ui/DataTableToolbar.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem, type Club, ClubUser } from '@/types';
+import { useDataTable } from '@/composables/useDataTable';
+import { type BreadcrumbItem, type Club, type DataTableMeta, ClubUser } from '@/types';
 import { Head } from '@inertiajs/vue3';
 
-defineProps<{
-    club: Club;
-    clubUsers: ClubUser[];
-}>();
+const props = defineProps<{ club: Club; clubUsers: ClubUser[]; dataTable: DataTableMeta }>();
+
+const table = useDataTable({
+    routeName: 'members.index',
+    meta: props.dataTable,
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,13 +24,26 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 <template>
     <AppLayout :breadcrumbs>
-        <Head :title="`${club.name} Members`" />
-        <div class="flex items-center justify-between">
-            <Heading :title="`${club.name} Members`" description="View your club members." />
+        <Head :title="`${props.club.name} Members`" />
+        <div class="flex flex-col gap-6">
+            <Heading :title="`${props.club.name} Members`" description="View your club members." />
+            <DataTableToolbar
+                :search="table.search"
+                :sort-key="table.sortKey"
+                :sorts="table.sorts"
+                :filters="table.filtersConfig"
+                :filters-state="table.filters"
+                :active-filter-count="table.activeFilterCount"
+                search-placeholder="Search by name, email, or phone"
+                @update:search="table.setSearch"
+                @sort-change="table.setSort"
+                @filter-toggle="({ key, value }) => table.toggleFilter(key, value)"
+                @filter-clear="table.clearFilters"
+            />
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            <ClubUserCard v-for="clubUser in clubUsers" :key="clubUser.id" :club-user />
+            <ClubUserCard v-for="clubUser in props.clubUsers" :key="clubUser.id" :club-user />
         </div>
     </AppLayout>
 </template>
