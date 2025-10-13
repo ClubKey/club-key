@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTOs\DashboardAdminOverviewDto;
+use App\DTOs\DashboardUserOverviewDto;
+use App\Models\ClubLocation;
 use App\Models\ClubUser;
 use App\Models\Visit;
 use Illuminate\Support\Facades\DB;
@@ -29,25 +31,69 @@ final class DashboardService
             ->count();
 
         // Most popular location
-        $mostPopularLocation = Visit::query()
-            ->select('club_location_id', DB::raw('count(*) as total'))
-            ->where('club_id', $clubId)
-            ->whereNotNull('club_location_id')
-            ->groupBy('club_location_id')
-            ->orderByDesc('total')
+        $mostPopularLocation = ClubLocation::query()
+            ->whereHas('visits', function ($query) use ($clubId) {
+                $query->where('club_id', $clubId);
+            })
+            ->withCount('visits')
+            ->orderByDesc('visits_count')
             ->first();
 
-        $mostPopularLocationName = null;
-        if ($mostPopularLocation) {
-            $location = DB::table('club_locations')->where('id', $mostPopularLocation->club_location_id)->first();
-            $mostPopularLocationName = $location?->name;
-        }
+        $mostPopularLocationName = $mostPopularLocation?->name;
 
         return new DashboardAdminOverviewDto(
             $numberOfMembers,
             $numberOfMembersToday,
             $numberOfVisitsThisWeek,
             $mostPopularLocationName
+        );
+    }
+
+    public function getUserOverview(ClubUser $clubUser): DashboardUserOverviewDto
+    {
+        $baseVisitQuery = Visit::query()
+            ->where('club_id', $clubUser->club_id)
+            ->where('user_id', $clubUser->user_id);
+
+        $visitsPastWeek = (clone $baseVisitQuery)
+            ->where('created_at', '>=', now()->subDays(7))
+            ->count();
+
+        $visitsThisMonth = (clone $baseVisitQuery)
+            ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->count();
+
+        $lifetimeVisits = (clone $baseVisitQuery)->count();
+
+        $lastVisit = (clone $baseVisitQuery)
+            ->latest('created_at')
+            ->first();
+
+        $lastVisitedAt = $lastVisit?->created_at?->toIso8601String();
+
+        $visitsPastThirtyDays = (clone $baseVisitQuery)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->count();
+
+        $nextRewardLevel = $clubUser->nextRewardLevel;
+        $visitsUntilNextReward = null;
+        $nextRewardLevelName = null;
+
+        if ($nextRewardLevel) {
+            $nextRewardLevelName = $nextRewardLevel->name;
+            $visitsUntilNextReward = max(
+                $nextRewardLevel->min_visits_per_month - $visitsPastThirtyDays,
+                0
+            );
+        }
+
+        return new DashboardUserOverviewDto(
+            visitsPastWeek: $visitsPastWeek,
+            visitsThisMonth: $visitsThisMonth,
+            lifetimeVisits: $lifetimeVisits,
+            lastVisitedAt: $lastVisitedAt,
+            visitsUntilNextReward: $visitsUntilNextReward,
+            nextRewardLevelName: $nextRewardLevelName
         );
     }
 }

@@ -102,6 +102,15 @@ export interface AdminOverview {
     mostPopularLocationName: string | null;
 }
 
+export interface UserOverview {
+    visitsPastWeek: number;
+    visitsThisMonth: number;
+    lifetimeVisits: number;
+    lastVisitedAt: string | null;
+    visitsUntilNextReward: number | null;
+    nextRewardLevelName: string | null;
+}
+
 export interface AdminInvitation {
     id: number;
     email: string;
