@@ -66,9 +66,9 @@ final class ClubUser extends Pivot
         }
 
         $query->whereHas('user', function (Builder $query) use ($search) {
-            $query->whereLike('name', $search)
-                ->orWhereLike('email', $search)
-                ->orWhereLike('phone', $search);
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('phone', 'like', "%{$search}%");
         });
     }
 }

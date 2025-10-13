@@ -3,11 +3,11 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
+import { useDate } from '@/composables/useDate';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { AdminOverview, Auth, type BreadcrumbItem, Club, ClubUser, UserOverview } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '../components/ui/button/Button.vue';
-import { useDate } from '@/composables/useDate';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -60,6 +60,16 @@ defineProps<{
                 </Card>
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
+                <div class="grid gap-6 xl:grid-cols-2">
+                    <RewardProgress :club-user class="w-full xl:col-span-2" />
+                    <Card>
+                        <CardContent class="flex flex-col gap-4">
+                            <h2 class="text-xl font-bold">Your reward card</h2>
+                            <RewardCard :club-user />
+                        </CardContent>
+                    </Card>
+                    <RewardCardRewards :reward-level="clubUser.reward_level" class="max-w-none" />
+                </div>
                 <div v-if="userOverview" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <Card>
                         <CardContent class="flex flex-col gap-2">
@@ -95,9 +105,7 @@ defineProps<{
                                 </template>
                                 <template v-else>🎉</template>
                             </div>
-                            <CardTitle v-if="userOverview.visitsUntilNextReward !== null">
-                                Visits until next reward
-                            </CardTitle>
+                            <CardTitle v-if="userOverview.visitsUntilNextReward !== null"> Visits until next reward </CardTitle>
                             <CardTitle v-else>You're at the top tier!</CardTitle>
                             <p v-if="userOverview.nextRewardLevelName" class="text-sm text-muted-foreground">
                                 Next up: {{ userOverview.nextRewardLevelName }}
@@ -112,17 +120,6 @@ defineProps<{
                             <CardTitle>Last visit</CardTitle>
                         </CardContent>
                     </Card>
-                </div>
-
-                <div class="grid gap-6 xl:grid-cols-2">
-                    <RewardProgress :club-user class="w-full xl:col-span-2" />
-                    <Card>
-                        <CardContent class="flex flex-col gap-4">
-                            <h2 class="text-xl font-bold">Your reward card</h2>
-                            <RewardCard :club-user />
-                        </CardContent>
-                    </Card>
-                    <RewardCardRewards :reward-level="clubUser.reward_level" class="max-w-none" />
                 </div>
             </div>
 
