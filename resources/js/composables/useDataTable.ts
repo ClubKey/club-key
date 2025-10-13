@@ -1,3 +1,4 @@
+import type { FormDataConvertible } from '@inertiajs/core';
 import { router } from '@inertiajs/vue3';
 import { watchDebounced } from '@vueuse/core';
 import { computed, reactive, ref } from 'vue';
@@ -69,8 +70,8 @@ export function useDataTable(options: UseDataTableOptions) {
         }, 0)
     );
 
-    function buildFiltersPayload(): Record<string, unknown> {
-        const payload: Record<string, unknown> = {};
+    function buildFiltersPayload(): Record<string, FormDataConvertible> {
+        const payload: Record<string, FormDataConvertible> = {};
 
         Object.entries(filters).forEach(([key, value]) => {
             if (Array.isArray(value)) {
@@ -89,16 +90,40 @@ export function useDataTable(options: UseDataTableOptions) {
         return payload;
     }
 
+    function assignConvertibleValues(
+        target: Record<string, FormDataConvertible>,
+        source: Record<string, unknown>
+    ): void {
+        Object.entries(source).forEach(([key, value]) => {
+            if (value === undefined) {
+                return;
+            }
+
+            target[key] = value as FormDataConvertible;
+        });
+    }
+
     function refresh(extra: Record<string, unknown> = {}): void {
         const filtersPayload = buildFiltersPayload();
 
-        const data: Record<string, unknown> = {
-            ...(options.query ?? {}),
-            search: search.value !== '' ? search.value : undefined,
-            sort: sortKey.value ?? undefined,
-            direction: sortKey.value ? sortDirection.value : undefined,
-            ...extra,
-        };
+        const data: Record<string, FormDataConvertible> = {};
+
+        if (options.query) {
+            assignConvertibleValues(data, options.query);
+        }
+
+        if (search.value !== '') {
+            data.search = search.value;
+        }
+
+        if (sortKey.value) {
+            data.sort = sortKey.value;
+            data.direction = sortDirection.value;
+        }
+
+        if (extra) {
+            assignConvertibleValues(data, extra);
+        }
 
         if (Object.keys(filtersPayload).length > 0) {
             data.filters = filtersPayload;

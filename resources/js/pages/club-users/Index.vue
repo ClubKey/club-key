@@ -28,12 +28,12 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="flex flex-col gap-6">
             <Heading :title="`${props.club.name} Members`" description="View your club members." />
             <DataTableToolbar
-                :search="table.search"
-                :sort-key="table.sortKey"
+                :search="table.search.value"
+                :sort-key="table.sortKey.value"
                 :sorts="table.sorts"
                 :filters="table.filtersConfig"
                 :filters-state="table.filters"
-                :active-filter-count="table.activeFilterCount"
+                :active-filter-count="table.activeFilterCount.value"
                 search-placeholder="Search by name, email, or phone"
                 @update:search="table.setSearch"
                 @sort-change="table.setSort"
@@ -43,7 +43,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            <ClubUserCard v-for="clubUser in props.clubUsers" :key="clubUser.id" :club-user />
+            <ClubUserCard v-for="clubUser in props.clubUsers" :key="clubUser.id" :club-user="clubUser" />
         </div>
     </AppLayout>
 </template>

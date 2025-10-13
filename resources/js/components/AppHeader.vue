@@ -34,7 +34,7 @@ const activeItemStyles = computed(
 
 const user = usePage().props.auth?.user;
 
-const club = usePage().props.currentClub;
+const currentClub = computed(() => usePage().props.currentClub);
 
 const mainNavItems = computed(() => {
     const items = [
@@ -193,9 +193,14 @@ const rightNavItems: NavItem[] = [];
                         <Button as-child size="sm">
                             <Link
                                 :href="
-                                    route('register', {
-                                        club_slug: club.slug,
-                                    })
+                                    route(
+                                        'register',
+                                        currentClub
+                                            ? {
+                                                  club_slug: currentClub.slug,
+                                              }
+                                            : undefined
+                                    )
                                 "
                                 >Register
                             </Link>
