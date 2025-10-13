@@ -32,8 +32,10 @@ export function useDataTable(options: UseDataTableOptions) {
     const sortDirection = ref<'asc' | 'desc'>('asc');
     const filters = reactive<Record<string, FilterValue>>({});
 
-    const filtersConfig = computed(() => options.meta.value.filters);
-    const sorts = computed(() => options.meta.value.sorts);
+    const filtersConfig = computed<Record<string, DataTableFilterConfig>>(
+        () => options.meta.value.filters ?? {}
+    );
+    const sorts = computed<DataTableSortOption[]>(() => options.meta.value.sorts ?? []);
 
     function syncFilters(): void {
         const nextState: Record<string, FilterValue> = {};
@@ -158,7 +160,7 @@ export function useDataTable(options: UseDataTableOptions) {
     }
 
     function toggleFilter(key: string, value: string): void {
-        const config: DataTableFilterConfig | undefined = filtersConfig[key];
+        const config: DataTableFilterConfig | undefined = filtersConfig.value[key];
 
         if (! config) {
             return;
