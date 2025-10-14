@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
@@ -19,13 +22,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $color
  * @property string $description
  * @property int $percentage_discount
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property-read Club $club
+ * @property-read HasMany<Reward> $rewards
+ * @property-read BelongsToMany<User> $users
+ * @property-read BelongsToMany<User> $usersWithThisAsNextLevel
  *
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RewardLevel newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RewardLevel newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|RewardLevel query()
+ * @method static Builder<static>|RewardLevel newModelQuery()
+ * @method static Builder<static>|RewardLevel newQuery()
+ * @method static Builder<static>|RewardLevel query()
  */
 final class RewardLevel extends Model
 {
@@ -50,5 +56,15 @@ final class RewardLevel extends Model
     public function rewards(): HasMany
     {
         return $this->hasMany(Reward::class)->orderBy('order');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, ClubUser::class);
+    }
+
+    public function usersWithThisAsNextLevel(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, ClubUser::class, 'next_reward_level_id');
     }
 }
