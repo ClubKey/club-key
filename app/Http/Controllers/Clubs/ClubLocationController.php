@@ -35,7 +35,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (!$club) {
+        if (! $club) {
             abort(404, 'No current club selected.');
         }
 
@@ -62,7 +62,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (!$club) {
+        if (! $club) {
             abort(404, 'No current club selected.');
         }
 
@@ -82,7 +82,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (!$club) {
+        if (! $club) {
             abort(404, 'No current club selected.');
         }
 
@@ -106,7 +106,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (!$club) {
+        if (! $club) {
             abort(404, 'No current club selected.');
         }
 
@@ -127,7 +127,7 @@ final class ClubLocationController extends Controller
 
         $club = Auth::user()->currentClub;
 
-        if (!$club) {
+        if (! $club) {
             abort(404, 'No current club selected.');
         }
 

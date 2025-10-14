@@ -13,8 +13,7 @@ final class DashboardUserOverviewDto
         public ?string $lastVisitedAt,
         public ?int $visitsUntilNextReward,
         public ?string $nextRewardLevelName,
-    ) {
-    }
+    ) {}
 
     public function toArray(): array
     {

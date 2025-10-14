@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Services;
@@ -8,7 +9,6 @@ use App\DTOs\DashboardUserOverviewDto;
 use App\Models\ClubLocation;
 use App\Models\ClubUser;
 use App\Models\Visit;
-use Illuminate\Support\Facades\DB;
 
 final class DashboardService
 {

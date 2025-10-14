@@ -68,14 +68,14 @@ final class ClubLocation extends Model
     public function visitQrCodePath(): Attribute
     {
         return new Attribute(
-            get: fn($path) => $path ? Storage::disk('public')->url($path) : null,
+            get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
         );
     }
 
     public function visitTapLink(): Attribute
     {
         return new Attribute(
-            get: fn() => URL::signedRoute('clubs.visit', [
+            get: fn () => URL::signedRoute('clubs.visit', [
                 'club' => $this->club->slug,
                 'clubLocation' => $this->id,
             ]),

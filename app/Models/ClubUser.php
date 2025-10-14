@@ -61,7 +61,7 @@ final class ClubUser extends Pivot
     #[Scope]
     public function search(Builder $query, ?string $search = null): void
     {
-        if (!$search) {
+        if (! $search) {
             return;
         }
 

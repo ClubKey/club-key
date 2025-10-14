@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\ClubUser;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Services\DashboardService;
 
 final class DashboardController extends Controller
 {
