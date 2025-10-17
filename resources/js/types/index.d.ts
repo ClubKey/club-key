@@ -108,20 +108,10 @@ export interface Club {
     owner?: User;
 }
 
-export interface AdminOverview {
-    numberOfMembers: number;
-    numberOfMembersToday: number;
-    numberOfVisitsThisWeek: number;
-    mostPopularLocationName: string | null;
-}
-
-export interface UserOverview {
-    visitsPastWeek: number;
-    visitsThisMonth: number;
-    lifetimeVisits: number;
-    lastVisitedAt: string | null;
-    visitsUntilNextReward: number | null;
-    nextRewardLevelName: string | null;
+export interface DashboardDatum {
+    value: number | string;
+    heading: string;
+    subheading?: string | null;
 }
 
 export interface AdminInvitation {
