@@ -31,7 +31,7 @@ defineProps<{
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
             <div v-if="clubUser && clubUser.role === 'admin'" class="grid gap-6 py-6 md:grid-cols-2 lg:grid-cols-3">
-                <DataCard v-for="(datum, index) in dashboardData" :key="index" :datum />
+                <DataCard v-for="(datum, index) in dashboardData" :key="index + datum.heading" :datum />
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
                 <div class="grid gap-6 xl:grid-cols-2">
@@ -45,7 +45,7 @@ defineProps<{
                     <RewardCardRewards :reward-level="clubUser.reward_level" class="max-w-none" />
                 </div>
                 <div v-if="dashboardData.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <DataCard v-for="(datum, index) in dashboardData" :key="index" :datum />
+                    <DataCard v-for="(datum, index) in dashboardData" :key="index + datum.heading" :datum />
                 </div>
             </div>
 
