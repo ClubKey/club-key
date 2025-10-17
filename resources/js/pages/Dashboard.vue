@@ -35,14 +35,14 @@ defineProps<{
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
                 <div class="grid gap-6 xl:grid-cols-2">
-                    <RewardProgress :club-user="clubUser!" class="w-full xl:col-span-2" />
+                    <RewardProgress :club-user class="w-full xl:col-span-2" />
                     <Card>
                         <CardContent class="flex flex-col gap-4">
                             <h2 class="text-xl font-bold">Your reward card</h2>
-                            <RewardCard :club-user="clubUser!" />
+                            <RewardCard :club-user />
                         </CardContent>
                     </Card>
-                    <RewardCardRewards :reward-level="clubUser!.reward_level" class="max-w-none" />
+                    <RewardCardRewards :reward-level="clubUser.reward_level" class="max-w-none" />
                 </div>
                 <div v-if="dashboardData.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <DataCard v-for="(datum, index) in dashboardData" :key="index" :datum />
