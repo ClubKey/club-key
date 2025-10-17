@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import DataCard from '@/components/dashboard/DataCard.vue';
+import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
@@ -30,13 +31,7 @@ defineProps<{
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl">
             <div v-if="clubUser && clubUser.role === 'admin'" class="grid gap-6 py-6 md:grid-cols-2 lg:grid-cols-3">
-                <Card v-for="(datum, index) in dashboardData" :key="index">
-                    <CardContent class="flex flex-col gap-4">
-                        <div class="text-7xl">{{ datum.value }}</div>
-                        <CardTitle>{{ datum.heading }}</CardTitle>
-                        <p v-if="datum.subheading" class="text-sm text-muted-foreground">{{ datum.subheading }}</p>
-                    </CardContent>
-                </Card>
+                <DataCard v-for="(datum, index) in dashboardData" :key="index" :datum />
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
                 <div class="grid gap-6 xl:grid-cols-2">
@@ -50,13 +45,7 @@ defineProps<{
                     <RewardCardRewards :reward-level="clubUser!.reward_level" class="max-w-none" />
                 </div>
                 <div v-if="dashboardData.length" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <Card v-for="(datum, index) in dashboardData" :key="index" :class="{ 'md:col-span-2 xl:col-span-1': datum.heading === 'Last visit' }">
-                        <CardContent class="flex flex-col gap-2">
-                            <div class="text-4xl font-semibold">{{ datum.value }}</div>
-                            <CardTitle>{{ datum.heading }}</CardTitle>
-                            <p v-if="datum.subheading" class="text-sm text-muted-foreground">{{ datum.subheading }}</p>
-                        </CardContent>
-                    </Card>
+                    <DataCard v-for="(datum, index) in dashboardData" :key="index" :datum />
                 </div>
             </div>
 
