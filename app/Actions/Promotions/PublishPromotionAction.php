@@ -20,6 +20,6 @@ final readonly class PublishPromotionAction
 
         $promotion->save();
 
-        return $promotion->refresh();
+        return $promotion;
     }
 }
