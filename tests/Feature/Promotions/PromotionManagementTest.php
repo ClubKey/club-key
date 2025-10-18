@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Jobs\PublishDuePromotionsJob;
 use App\Models\Promotion;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -159,4 +160,48 @@ it('forbids deleting a promotion that belongs to another club', function (): voi
     $this->assertDatabaseHas('promotions', [
         'id' => $promotion->id,
     ]);
+});
+
+it('publishes active promotions that are ready for publication', function (): void {
+    Carbon::setTestNow(Carbon::create(2024, 1, 1, 12));
+
+    try {
+        $now = Carbon::now();
+
+        $readyPromotion = Promotion::factory()->create([
+            'publish_at' => $now->copy()->subMinutes(5),
+            'published_at' => null,
+            'is_active' => true,
+        ]);
+
+        $inactivePromotion = Promotion::factory()->create([
+            'publish_at' => $now->copy()->subMinutes(10),
+            'published_at' => null,
+            'is_active' => false,
+        ]);
+
+        $futurePromotion = Promotion::factory()->create([
+            'publish_at' => $now->copy()->addMinutes(10),
+            'published_at' => null,
+            'is_active' => true,
+        ]);
+
+        $alreadyPublishedAt = $now->copy()->subMinutes(1)->toImmutable();
+        $alreadyPublishedPromotion = Promotion::factory()->create([
+            'publish_at' => $now->copy()->subMinutes(20),
+            'published_at' => $alreadyPublishedAt,
+            'is_active' => true,
+        ]);
+
+        $expectedPublishedAt = $now->toImmutable();
+
+        PublishDuePromotionsJob::dispatchSync();
+
+        expect($readyPromotion->fresh()->published_at)->toEqual($expectedPublishedAt);
+        expect($inactivePromotion->fresh()->published_at)->toBeNull();
+        expect($futurePromotion->fresh()->published_at)->toBeNull();
+        expect($alreadyPublishedPromotion->fresh()->published_at)->toEqual($alreadyPublishedAt);
+    } finally {
+        Carbon::setTestNow();
+    }
 });

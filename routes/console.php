@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Console\Commands\UpdateClubUsersRewards;
+use App\Jobs\PublishDuePromotionsJob;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -12,3 +13,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(UpdateClubUsersRewards::class)->dailyAt('7:00');
+Schedule::job(PublishDuePromotionsJob::class)->everyThirtyMinutes();
