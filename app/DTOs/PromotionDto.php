@@ -30,7 +30,7 @@ final readonly class PromotionDto implements DTO
             publishedAt: $data['published_at'] ?? null,
             startAt: $data['start_at'] ?? null,
             endAt: $data['end_at'] ?? null,
-            isActive: $data['is_active'] ?? true,
+            isActive: $data['is_active'] ?? null,
             link: $data['link'] ?? null,
         );
     }
@@ -38,7 +38,6 @@ final readonly class PromotionDto implements DTO
     public function toArray(): array
     {
         return [
-            'club_id' => $this->clubId,
             'name' => $this->name,
             'description' => $this->description,
             'publish_now' => $this->publishNow,

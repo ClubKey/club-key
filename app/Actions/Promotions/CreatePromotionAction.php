@@ -33,7 +33,7 @@ final readonly class CreatePromotionAction
                 'published_at' => $data->publishedAt,
                 'start_at' => $data->startAt,
                 'end_at' => $data->endAt,
-                'is_active' => $data->isActive,
+                'is_active' => $data->isActive ?? true,
                 'link' => $data->link,
             ]);
         });

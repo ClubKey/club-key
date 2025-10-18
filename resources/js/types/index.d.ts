@@ -177,12 +177,14 @@ export interface Promotion {
     id: number;
     club_id: number;
     club?: Club;
-    title: string;
+    name: string;
     description: string;
-    image_path: string | null;
-    starts_at: string;
-    ends_at: string | null;
+    publish_at: string | null;
+    published_at: string | null;
+    start_at: string | null;
+    end_at: string | null;
     is_active: boolean;
+    link: string | null;
     created_at: string;
     updated_at: string;
 }
