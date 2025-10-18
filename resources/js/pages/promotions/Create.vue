@@ -2,11 +2,15 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Form, Head, Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
+const publishNow = ref(false);
 </script>
 
 <template>
@@ -53,19 +57,33 @@ import { Form, Head, Link } from '@inertiajs/vue3';
                             {{ errors.description }}
                         </p>
                     </div>
-                    <div class="flex gap-4">
-                        <div class="space-y-2">
-                            <Label for="start_date">Start Date</Label>
-                            <Input name="start_date" required type="date" />
-                            <p v-if="errors.start_date" class="text-sm text-destructive">{{ errors.description }}</p>
-                        </div>
-                        <div class="space-y-2">
-                            <Label for="end_date">End Date (Optional)</Label>
-                            <Input name="end_date" type="date" />
-                            <p v-if="errors.end_date" class="text-sm text-destructive">
-                                {{ errors.end_date }}
-                            </p>
-                        </div>
+                    <div class="space-y-2">
+                        <Label for="start_at">Start At</Label>
+                        <p class="text-sm text-muted-foreground">This is when the banner will become visible in the app on your club's page.</p>
+                        <Input class="w-auto" name="start_at" type="datetime-local" />
+                        <p v-if="errors.start_at" class="text-sm text-destructive">{{ errors.description }}</p>
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="end_at">End At (Optional)</Label>
+                        <p class="text-sm text-muted-foreground">
+                            If you want the promotion banner to end after a certain date, you can specify it here. If not provided, the banner will
+                            stay visible until you publish another promotion.
+                        </p>
+                        <Input class="w-auto" name="end_at" type="datetime-local" />
+                        <p v-if="errors.end_at" class="text-sm text-destructive">
+                            {{ errors.end_at }}
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-semibold">Publish</h3>
+                        <p class="text-sm text-muted-foreground">
+                            Choose when you want to publish this promotion. If you choose to publish it now, it will be visible immediately.
+                        </p>
+                        <Label><Checkbox id="publish" v-model="publishNow" name="publish_now" value="true" />Publish Now?</Label>
+                        <Input v-if="!publishNow" class="w-auto" name="publish_at" type="datetime-local" />
+                        <p v-if="errors.publish_at" class="text-sm text-destructive">
+                            {{ errors.publish_at }}
+                        </p>
                     </div>
 
                     <div class="flex gap-4">

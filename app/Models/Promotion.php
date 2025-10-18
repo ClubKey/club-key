@@ -13,9 +13,10 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $name
  * @property string $description
- * @property Carbon $start_date
- * @property Carbon|null $end_date
- * @property bool $is_active
+ * @property Carbon $publish_at
+ * @property Carbon|null $published_at
+ * @property Carbon $start_at
+ * @property Carbon|null $end_at
  * @property string $link
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -26,17 +27,22 @@ final class Promotion extends Model
     use HasFactory;
 
     protected $fillable = [
+        'club_id',
         'name',
         'description',
-        'start_date',
-        'end_date',
+        'publish_at',
+        'published_at',
+        'start_at',
+        'end_at',
         'is_active',
         'link',
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'publish_at' => 'immutable_datetime',
+        'published_at' => 'immutable_datetime',
+        'start_at' => 'immutable_datetime',
+        'end_at' => 'immutable_datetime',
         'is_active' => 'boolean',
     ];
 

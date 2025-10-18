@@ -21,8 +21,10 @@ return new class extends Migration
                 ->onUpdate('cascade');
             $table->string('name');
             $table->text('description');
-            $table->date('start_date');
-            $table->date('end_date')->nullable();
+            $table->dateTime('publish_at')->nullable();
+            $table->dateTime('published_at')->nullable();
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('link')->nullable();
             $table->timestamps();
