@@ -73,6 +73,48 @@ it('allows a club admin to update a promotion', function (): void {
     ]);
 });
 
+it('handles checkbox payloads when updating scheduling details', function (): void {
+    Carbon::setTestNow(Carbon::create(2024, 1, 1, 9));
+
+    try {
+        $user = User::factory()->withClub()->create();
+        $promotion = Promotion::factory()->create([
+            'club_id' => $user->currentClub->id,
+            'is_active' => true,
+            'publish_at' => Carbon::now()->subDay(),
+        ]);
+
+        $this->actingAs($user);
+
+        $startAt = Carbon::now()->addDay()->format('Y-m-d\TH:i');
+
+        $response = $this->put(route('promotions.update', $promotion), [
+            'name' => 'Checkbox Submission',
+            'description' => 'Ensures checkbox strings are normalized.',
+            'publish_now' => '1',
+            'publish_at' => null,
+            'start_at' => $startAt,
+            'end_at' => null,
+            'is_active' => '0',
+            'link' => '',
+        ]);
+
+        $response->assertRedirect(route('promotions.show', $promotion));
+
+        $promotion->refresh();
+
+        expect($promotion->name)->toBe('Checkbox Submission');
+        expect($promotion->description)->toBe('Ensures checkbox strings are normalized.');
+        expect($promotion->publish_at)->toEqual(Carbon::now()->toImmutable());
+        expect($promotion->start_at)->toEqual(Carbon::parse($startAt)->toImmutable());
+        expect($promotion->end_at)->toBeNull();
+        expect($promotion->is_active)->toBeFalse();
+        expect($promotion->link)->toBeNull();
+    } finally {
+        Carbon::setTestNow();
+    }
+});
+
 it('forbids updating a promotion that belongs to another club', function (): void {
     $user = User::factory()->withClub()->create();
     $promotion = Promotion::factory()->create();

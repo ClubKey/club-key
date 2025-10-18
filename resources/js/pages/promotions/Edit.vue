@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Promotion } from '@/types';
-import { Form, Head, Link } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed, watch } from 'vue';
 
 const props = defineProps<{
     promotion: Promotion;
@@ -29,26 +29,49 @@ const formatDateTimeLocal = (value: string | null) => {
     )}`;
 };
 
-const name = ref(props.promotion.name);
-const description = ref(props.promotion.description);
-const link = ref(props.promotion.link ?? '');
-const publishNow = ref(props.promotion.publish_at === null);
-const publishAt = ref(formatDateTimeLocal(props.promotion.publish_at));
-const startAt = ref(formatDateTimeLocal(props.promotion.start_at));
-const endAt = ref(formatDateTimeLocal(props.promotion.end_at));
-const isActive = ref(props.promotion.is_active);
-
-const headingTitle = computed(() => `Edit ${props.promotion.name}`);
-
-watch(publishNow, (value) => {
-    if (value) {
-        publishAt.value = '';
-    }
+const form = useForm({
+    _method: 'put',
+    name: props.promotion.name,
+    description: props.promotion.description,
+    link: props.promotion.link ?? '',
+    publish_now: props.promotion.publish_at === null,
+    publish_at: formatDateTimeLocal(props.promotion.publish_at),
+    start_at: formatDateTimeLocal(props.promotion.start_at),
+    end_at: formatDateTimeLocal(props.promotion.end_at),
+    is_active: props.promotion.is_active,
 });
 
-if (publishNow.value) {
-    publishAt.value = '';
+const headingTitle = computed(() => `Edit ${form.name}`);
+
+watch(
+    () => form.publish_now,
+    (value) => {
+        if (value) {
+            form.publish_at = '';
+        }
+    }
+);
+
+if (form.publish_now) {
+    form.publish_at = '';
 }
+
+const submit = () => {
+    form.transform((data) => ({
+        ...data,
+        publish_at: data.publish_now ? null : data.publish_at || null,
+        start_at: data.start_at || null,
+        end_at: data.end_at || null,
+        link: data.link || null,
+    }));
+
+    form.post(route('promotions.update', props.promotion.id), {
+        preserveScroll: true,
+        onFinish: () => {
+            form.transform((data) => data);
+        },
+    });
+};
 </script>
 
 <template>
@@ -65,18 +88,20 @@ if (publishNow.value) {
                 <CardDescription>Update the details for this promotion.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Form
-                    #default="{ errors, processing }"
-                    :action="route('promotions.update', promotion.id)"
-                    class="space-y-6"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="put" />
+                <form class="space-y-6" @submit.prevent="submit">
                     <div class="space-y-2">
                         <Label for="name">Promotion Name</Label>
-                        <Input id="name" v-model="name" :error="errors.name" name="name" required type="text" />
-                        <p v-if="errors.name" class="text-sm text-destructive">
-                            {{ errors.name }}
+                        <Input
+                            id="name"
+                            v-model="form.name"
+                            :aria-invalid="Boolean(form.errors.name)"
+                            autocomplete="off"
+                            name="name"
+                            required
+                            type="text"
+                        />
+                        <p v-if="form.errors.name" class="text-sm text-destructive">
+                            {{ form.errors.name }}
                         </p>
                     </div>
 
@@ -87,14 +112,14 @@ if (publishNow.value) {
                         </p>
                         <Input
                             id="link"
-                            v-model="link"
-                            :error="errors.link"
+                            v-model="form.link"
+                            :aria-invalid="Boolean(form.errors.link)"
                             name="link"
                             placeholder="https://example.com"
                             type="text"
                         />
-                        <p v-if="errors.link" class="text-sm text-destructive">
-                            {{ errors.link }}
+                        <p v-if="form.errors.link" class="text-sm text-destructive">
+                            {{ form.errors.link }}
                         </p>
                     </div>
 
@@ -102,14 +127,14 @@ if (publishNow.value) {
                         <Label for="description">Description</Label>
                         <Textarea
                             id="description"
-                            v-model="description"
-                            :error="errors.description"
+                            v-model="form.description"
+                            :aria-invalid="Boolean(form.errors.description)"
                             name="description"
                             placeholder="Describe what this promotion offers..."
                             required
                         />
-                        <p v-if="errors.description" class="text-sm text-destructive">
-                            {{ errors.description }}
+                        <p v-if="form.errors.description" class="text-sm text-destructive">
+                            {{ form.errors.description }}
                         </p>
                     </div>
 
@@ -120,14 +145,14 @@ if (publishNow.value) {
                         </p>
                         <Input
                             id="start_at"
-                            v-model="startAt"
-                            :error="errors.start_at"
+                            v-model="form.start_at"
+                            :aria-invalid="Boolean(form.errors.start_at)"
                             class="w-auto"
                             name="start_at"
                             type="datetime-local"
                         />
-                        <p v-if="errors.start_at" class="text-sm text-destructive">
-                            {{ errors.start_at }}
+                        <p v-if="form.errors.start_at" class="text-sm text-destructive">
+                            {{ form.errors.start_at }}
                         </p>
                     </div>
 
@@ -138,14 +163,14 @@ if (publishNow.value) {
                         </p>
                         <Input
                             id="end_at"
-                            v-model="endAt"
-                            :error="errors.end_at"
+                            v-model="form.end_at"
+                            :aria-invalid="Boolean(form.errors.end_at)"
                             class="w-auto"
                             name="end_at"
                             type="datetime-local"
                         />
-                        <p v-if="errors.end_at" class="text-sm text-destructive">
-                            {{ errors.end_at }}
+                        <p v-if="form.errors.end_at" class="text-sm text-destructive">
+                            {{ form.errors.end_at }}
                         </p>
                     </div>
 
@@ -155,41 +180,39 @@ if (publishNow.value) {
                             Choose when you want to publish this promotion.
                         </p>
                         <Label class="flex items-center gap-2">
-                            <input type="hidden" name="publish_now" :value="publishNow ? 1 : 0" />
-                            <Checkbox id="publish_now" v-model:checked="publishNow" />
+                            <Checkbox id="publish_now" v-model:checked="form.publish_now" />
                             Publish Now?
                         </Label>
                         <Input
-                            v-if="!publishNow"
+                            v-if="!form.publish_now"
                             id="publish_at"
-                            v-model="publishAt"
-                            :error="errors.publish_at"
+                            v-model="form.publish_at"
+                            :aria-invalid="Boolean(form.errors.publish_at)"
                             class="w-auto"
                             name="publish_at"
                             type="datetime-local"
                         />
-                        <p v-if="errors.publish_at" class="text-sm text-destructive">
-                            {{ errors.publish_at }}
+                        <p v-if="form.errors.publish_at" class="text-sm text-destructive">
+                            {{ form.errors.publish_at }}
                         </p>
                     </div>
 
                     <div class="space-y-2">
                         <Label class="flex items-center gap-2">
-                            <input type="hidden" name="is_active" :value="isActive ? 1 : 0" />
-                            <Checkbox id="is_active" v-model:checked="isActive" />
+                            <Checkbox id="is_active" v-model:checked="form.is_active" />
                             Active promotion?
                         </Label>
                     </div>
 
                     <div class="flex gap-4">
-                        <Button :disabled="processing" type="submit">
-                            {{ processing ? 'Updating...' : 'Update Promotion' }}
+                        <Button :disabled="form.processing" type="submit">
+                            {{ form.processing ? 'Updating...' : 'Update Promotion' }}
                         </Button>
                         <Button as-child type="button" variant="outline">
                             <Link :href="route('promotions.show', promotion.id)">Cancel</Link>
                         </Button>
                     </div>
-                </Form>
+                </form>
             </CardContent>
         </Card>
     </AppLayout>

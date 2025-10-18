@@ -29,16 +29,40 @@ final readonly class PromotionDto implements DTO
             $isActive = $filtered !== null ? $filtered : (bool) $value;
         }
 
+        $publishNow = $data['publish_now'] ?? false;
+        if (! is_bool($publishNow)) {
+            $normalizedPublishNow = filter_var($publishNow, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            $publishNow = $normalizedPublishNow !== null ? $normalizedPublishNow : (bool) $publishNow;
+        }
+
+        $publishAt = $data['publish_at'] ?? null;
+        $publishedAt = $data['published_at'] ?? null;
+        $startAt = $data['start_at'] ?? null;
+        $endAt = $data['end_at'] ?? null;
+        $link = $data['link'] ?? null;
+
+        $normalizeNullableString = static function (mixed $value): ?string {
+            if (is_string($value)) {
+                return $value === '' ? null : $value;
+            }
+
+            if ($value instanceof \Stringable) {
+                return (string) $value;
+            }
+
+            return null;
+        };
+
         return new self(
             name: $data['name'],
             description: $data['description'],
-            publishNow: $data['publish_now'] ?? false,
-            publishAt: $data['publish_at'] ?? null,
-            publishedAt: $data['published_at'] ?? null,
-            startAt: $data['start_at'] ?? null,
-            endAt: $data['end_at'] ?? null,
+            publishNow: $publishNow,
+            publishAt: $normalizeNullableString($publishAt),
+            publishedAt: $normalizeNullableString($publishedAt),
+            startAt: $normalizeNullableString($startAt),
+            endAt: $normalizeNullableString($endAt),
             isActive: $isActive,
-            link: $data['link'] ?? null,
+            link: $normalizeNullableString($link),
         );
     }
 
