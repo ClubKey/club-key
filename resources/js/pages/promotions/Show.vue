@@ -3,16 +3,27 @@ import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Promotion } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     promotion: Promotion;
 }>();
 
 const deleteForm = useForm({});
+const isDeleteDialogOpen = ref(false);
 
 const title = computed(() => `${props.promotion.name} Promotion`);
 
@@ -27,13 +38,26 @@ const formatDateTime = (value: string | null, fallback = 'Not set') => {
     return new Date(value).toLocaleString();
 };
 
-const handleDelete = () => {
-    if (!confirm('Are you sure you want to delete this promotion? This action cannot be undone.')) {
-        return;
-    }
+const handleDelete = (event: Event) => {
+    event.preventDefault();
 
-    deleteForm.delete(route('promotions.destroy', props.promotion.id));
+    deleteForm.delete(route('promotions.destroy', props.promotion.id), {
+        onSuccess: () => {
+            isDeleteDialogOpen.value = false;
+        },
+    });
 };
+
+const closeDeleteDialog = () => {
+    deleteForm.clearErrors();
+    deleteForm.reset();
+};
+
+watch(isDeleteDialogOpen, (isOpen) => {
+    if (!isOpen) {
+        closeDeleteDialog();
+    }
+});
 </script>
 
 <template>
@@ -45,9 +69,40 @@ const handleDelete = () => {
                 <Button as-child variant="outline">
                     <Link :href="route('promotions.edit', promotion.id)">Edit Promotion</Link>
                 </Button>
-                <Button :disabled="deleteForm.processing" type="button" variant="destructive" @click="handleDelete">
-                    {{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion' }}
-                </Button>
+                <Dialog v-model:open="isDeleteDialogOpen">
+                    <DialogTrigger as-child>
+                        <Button :disabled="deleteForm.processing" type="button" variant="destructive">
+                            {{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion' }}
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <form class="space-y-6" @submit="handleDelete">
+                            <DialogHeader class="space-y-3">
+                                <DialogTitle>Delete promotion</DialogTitle>
+                                <DialogDescription>
+                                    Are you sure you want to delete this promotion? This action cannot be undone.
+                                </DialogDescription>
+                            </DialogHeader>
+
+                            <div class="rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+                                <div class="space-y-1 text-red-600 dark:text-red-100">
+                                    <p class="font-medium">Warning</p>
+                                    <p class="text-sm">Deleting this promotion will permanently remove it from your club.</p>
+                                </div>
+                            </div>
+
+                            <DialogFooter class="gap-2">
+                                <DialogClose as-child>
+                                    <Button variant="secondary" @click="closeDeleteDialog">Cancel</Button>
+                                </DialogClose>
+
+                                <Button :disabled="deleteForm.processing" type="submit" variant="destructive">
+                                    {{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion' }}
+                                </Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
 

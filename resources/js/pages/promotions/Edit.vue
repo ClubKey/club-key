@@ -8,8 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Promotion } from '@/types';
-import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Form, Head, Link } from '@inertiajs/vue3';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
     promotion: Promotion;
@@ -29,31 +29,26 @@ const formatDateTimeLocal = (value: string | null) => {
     )}`;
 };
 
-const form = useForm({
-    name: props.promotion.name,
-    description: props.promotion.description,
-    link: props.promotion.link ?? '',
-    publish_now: false,
-    publish_at: formatDateTimeLocal(props.promotion.publish_at),
-    start_at: formatDateTimeLocal(props.promotion.start_at),
-    end_at: formatDateTimeLocal(props.promotion.end_at),
-    is_active: props.promotion.is_active,
-});
+const name = ref(props.promotion.name);
+const description = ref(props.promotion.description);
+const link = ref(props.promotion.link ?? '');
+const publishNow = ref(props.promotion.publish_at === null);
+const publishAt = ref(formatDateTimeLocal(props.promotion.publish_at));
+const startAt = ref(formatDateTimeLocal(props.promotion.start_at));
+const endAt = ref(formatDateTimeLocal(props.promotion.end_at));
+const isActive = ref(props.promotion.is_active);
 
 const headingTitle = computed(() => `Edit ${props.promotion.name}`);
 
-const submit = () => {
-    form
-        .transform((data) => ({
-            ...data,
-            link: data.link || null,
-            publish_at: data.publish_now ? null : data.publish_at || null,
-            start_at: data.start_at || null,
-            end_at: data.end_at || null,
-            is_active: data.is_active,
-        }))
-        .put(route('promotions.update', props.promotion.id));
-};
+watch(publishNow, (value) => {
+    if (value) {
+        publishAt.value = '';
+    }
+});
+
+if (publishNow.value) {
+    publishAt.value = '';
+}
 </script>
 
 <template>
@@ -70,12 +65,18 @@ const submit = () => {
                 <CardDescription>Update the details for this promotion.</CardDescription>
             </CardHeader>
             <CardContent>
-                <form class="space-y-6" @submit.prevent="submit">
+                <Form
+                    #default="{ errors, processing }"
+                    :action="route('promotions.update', promotion.id)"
+                    class="space-y-6"
+                    method="post"
+                >
+                    <input type="hidden" name="_method" value="put" />
                     <div class="space-y-2">
                         <Label for="name">Promotion Name</Label>
-                        <Input id="name" v-model="form.name" :error="form.errors.name" required type="text" />
-                        <p v-if="form.errors.name" class="text-sm text-destructive">
-                            {{ form.errors.name }}
+                        <Input id="name" v-model="name" :error="errors.name" name="name" required type="text" />
+                        <p v-if="errors.name" class="text-sm text-destructive">
+                            {{ errors.name }}
                         </p>
                     </div>
 
@@ -84,9 +85,16 @@ const submit = () => {
                         <p class="text-sm text-muted-foreground">
                             Add an external link to more details about this promotion if you want.
                         </p>
-                        <Input id="link" v-model="form.link" :error="form.errors.link" placeholder="https://example.com" type="text" />
-                        <p v-if="form.errors.link" class="text-sm text-destructive">
-                            {{ form.errors.link }}
+                        <Input
+                            id="link"
+                            v-model="link"
+                            :error="errors.link"
+                            name="link"
+                            placeholder="https://example.com"
+                            type="text"
+                        />
+                        <p v-if="errors.link" class="text-sm text-destructive">
+                            {{ errors.link }}
                         </p>
                     </div>
 
@@ -94,13 +102,14 @@ const submit = () => {
                         <Label for="description">Description</Label>
                         <Textarea
                             id="description"
-                            v-model="form.description"
-                            :error="form.errors.description"
+                            v-model="description"
+                            :error="errors.description"
+                            name="description"
                             placeholder="Describe what this promotion offers..."
                             required
                         />
-                        <p v-if="form.errors.description" class="text-sm text-destructive">
-                            {{ form.errors.description }}
+                        <p v-if="errors.description" class="text-sm text-destructive">
+                            {{ errors.description }}
                         </p>
                     </div>
 
@@ -109,9 +118,16 @@ const submit = () => {
                         <p class="text-sm text-muted-foreground">
                             This is when the banner will become visible in the app on your club's page.
                         </p>
-                        <Input id="start_at" v-model="form.start_at" :error="form.errors.start_at" class="w-auto" type="datetime-local" />
-                        <p v-if="form.errors.start_at" class="text-sm text-destructive">
-                            {{ form.errors.start_at }}
+                        <Input
+                            id="start_at"
+                            v-model="startAt"
+                            :error="errors.start_at"
+                            class="w-auto"
+                            name="start_at"
+                            type="datetime-local"
+                        />
+                        <p v-if="errors.start_at" class="text-sm text-destructive">
+                            {{ errors.start_at }}
                         </p>
                     </div>
 
@@ -120,9 +136,16 @@ const submit = () => {
                         <p class="text-sm text-muted-foreground">
                             If you want the promotion banner to end after a certain date, you can specify it here.
                         </p>
-                        <Input id="end_at" v-model="form.end_at" :error="form.errors.end_at" class="w-auto" type="datetime-local" />
-                        <p v-if="form.errors.end_at" class="text-sm text-destructive">
-                            {{ form.errors.end_at }}
+                        <Input
+                            id="end_at"
+                            v-model="endAt"
+                            :error="errors.end_at"
+                            class="w-auto"
+                            name="end_at"
+                            type="datetime-local"
+                        />
+                        <p v-if="errors.end_at" class="text-sm text-destructive">
+                            {{ errors.end_at }}
                         </p>
                     </div>
 
@@ -132,38 +155,41 @@ const submit = () => {
                             Choose when you want to publish this promotion.
                         </p>
                         <Label class="flex items-center gap-2">
-                            <Checkbox id="publish_now" v-model:checked="form.publish_now" name="publish_now" />
+                            <input type="hidden" name="publish_now" :value="publishNow ? 1 : 0" />
+                            <Checkbox id="publish_now" v-model:checked="publishNow" />
                             Publish Now?
                         </Label>
                         <Input
-                            v-if="!form.publish_now"
+                            v-if="!publishNow"
                             id="publish_at"
-                            v-model="form.publish_at"
-                            :error="form.errors.publish_at"
+                            v-model="publishAt"
+                            :error="errors.publish_at"
                             class="w-auto"
+                            name="publish_at"
                             type="datetime-local"
                         />
-                        <p v-if="form.errors.publish_at" class="text-sm text-destructive">
-                            {{ form.errors.publish_at }}
+                        <p v-if="errors.publish_at" class="text-sm text-destructive">
+                            {{ errors.publish_at }}
                         </p>
                     </div>
 
                     <div class="space-y-2">
                         <Label class="flex items-center gap-2">
-                            <Checkbox id="is_active" v-model:checked="form.is_active" name="is_active" />
+                            <input type="hidden" name="is_active" :value="isActive ? 1 : 0" />
+                            <Checkbox id="is_active" v-model:checked="isActive" />
                             Active promotion?
                         </Label>
                     </div>
 
                     <div class="flex gap-4">
-                        <Button :disabled="form.processing" type="submit">
-                            {{ form.processing ? 'Updating...' : 'Update Promotion' }}
+                        <Button :disabled="processing" type="submit">
+                            {{ processing ? 'Updating...' : 'Update Promotion' }}
                         </Button>
                         <Button as-child type="button" variant="outline">
                             <Link :href="route('promotions.show', promotion.id)">Cancel</Link>
                         </Button>
                     </div>
-                </form>
+                </Form>
             </CardContent>
         </Card>
     </AppLayout>
