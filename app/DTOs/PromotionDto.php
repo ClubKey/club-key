@@ -22,6 +22,13 @@ final readonly class PromotionDto implements DTO
 
     public static function fromArray(array $data): self
     {
+        $isActive = null;
+        if (array_key_exists('is_active', $data)) {
+            $value = $data['is_active'];
+            $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            $isActive = $filtered !== null ? $filtered : (bool) $value;
+        }
+
         return new self(
             name: $data['name'],
             description: $data['description'],
@@ -30,7 +37,7 @@ final readonly class PromotionDto implements DTO
             publishedAt: $data['published_at'] ?? null,
             startAt: $data['start_at'] ?? null,
             endAt: $data['end_at'] ?? null,
-            isActive: $data['is_active'] ?? null,
+            isActive: $isActive,
             link: $data['link'] ?? null,
         );
     }

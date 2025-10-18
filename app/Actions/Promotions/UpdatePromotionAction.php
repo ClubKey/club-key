@@ -19,6 +19,11 @@ final readonly class UpdatePromotionAction
         return DB::transaction(function () use ($promotion, $data): Promotion {
             $publishAt = $data->publishNow ? now() : $data->publishAt;
 
+            $isActive = $data->isActive;
+            if ($isActive === null) {
+                $isActive = $promotion->is_active;
+            }
+
             $promotion->update([
                 'name' => $data->name,
                 'description' => $data->description,
@@ -26,7 +31,7 @@ final readonly class UpdatePromotionAction
                 'published_at' => $data->publishedAt ?? $promotion->published_at,
                 'start_at' => $data->startAt,
                 'end_at' => $data->endAt,
-                'is_active' => $data->isActive ?? $promotion->is_active,
+                'is_active' => $isActive,
                 'link' => $data->link,
             ]);
 
