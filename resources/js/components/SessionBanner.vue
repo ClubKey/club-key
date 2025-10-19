@@ -97,7 +97,7 @@ watch(
             void launchConfetti();
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 </script>
 
@@ -110,19 +110,19 @@ watch(
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-        <div
-            v-if="isVisitSuccess && shouldShow"
-            class="fixed inset-0 z-[60] flex items-center justify-center bg-background/80 backdrop-blur"
-        >
-            <div class="mx-4 max-w-2xl rounded-3xl bg-background p-8 text-center shadow-2xl">
-                <p class="text-sm font-semibold uppercase tracking-[0.4em] text-primary">Check-In Complete</p>
-                <h2 class="mt-4 text-balance text-4xl font-bold sm:text-5xl">
-                    Great job! You've checked in, now make sure to show your card to the cashier to claim your rewards.
-                </h2>
-                <p class="mt-4 text-balance text-lg text-muted-foreground">
-                    {{ successMessage }}
-                </p>
-                <Button class="mt-6" size="lg" @click="hideMessage">Celebrate!</Button>
+        <div v-if="isVisitSuccess && shouldShow" class="fixed inset-0 z-[60] flex h-screen w-full flex-col items-center justify-center">
+            <div class="flex max-h-screen flex-col items-center bg-background/80 backdrop-blur">
+                <div class="mx-4 max-w-2xl rounded-3xl bg-background p-8 text-center shadow-2xl">
+                    <p class="text-sm font-semibold tracking-[0.4em] text-primary uppercase">Check-In Complete</p>
+                    <h2 class="mt-4 text-4xl font-bold text-balance sm:text-5xl">Great job! You've checked in!</h2>
+                    <h3 class="mt-4 text-2xl font-bold text-balance sm:text-3xl">
+                        Make sure to show your card to the cashier to claim your rewards.
+                    </h3>
+                    <p class="mt-4 text-lg text-balance text-muted-foreground">
+                        {{ successMessage }}
+                    </p>
+                    <Button class="mt-6" size="lg" @click="hideMessage">Celebrate!</Button>
+                </div>
             </div>
         </div>
     </Transition>
