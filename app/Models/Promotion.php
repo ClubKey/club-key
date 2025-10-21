@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +46,25 @@ final class Promotion extends Model
         'end_at' => 'immutable_datetime',
         'is_active' => 'boolean',
     ];
+
+    public function scopeCurrentlyRunning(Builder $query): Builder
+    {
+        $now = now();
+
+        return $query
+            ->where('is_active', true)
+            ->where(function (Builder $query) use ($now): void {
+                $query->whereNull('publish_at')->orWhere('publish_at', '<=', $now);
+            })
+            ->where(function (Builder $query) use ($now): void {
+                $query->whereNull('start_at')->orWhere('start_at', '<=', $now);
+            })
+            ->where(function (Builder $query) use ($now): void {
+                $query->whereNull('end_at')->orWhere('end_at', '>=', $now);
+            })
+            ->orderByDesc('publish_at')
+            ->orderByDesc('created_at');
+    }
 
     public function club(): BelongsTo
     {

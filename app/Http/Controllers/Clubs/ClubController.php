@@ -77,9 +77,15 @@ final class ClubController extends Controller
             $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
         }
 
+        $promotion = null;
+        if ($clubUser && ! $clubUser->role->isAdmin()) {
+            $promotion = $club->promotions()->currentlyRunning()->first();
+        }
+
         return Inertia::render('clubs/Show', [
             'club' => $club,
             'clubUser' => $clubUser?->fresh(['rewardLevel.rewards', 'nextRewardLevel']),
+            'promotion' => $promotion,
         ]);
     }
 

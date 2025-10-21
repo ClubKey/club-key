@@ -21,18 +21,23 @@ final class DashboardController extends Controller
 
         $adminOverview = null;
         $userOverview = null;
+        $promotion = null;
 
         if ($clubUser && $clubUser->role && $clubUser->role->isAdmin()) {
             $dto = $dashboardService->getAdminOverview($club->id);
             $adminOverview = $dto?->toArray();
         } elseif ($clubUser) {
             $userOverview = $dashboardService->getUserOverview($clubUser)->toArray();
+            if ($club) {
+                $promotion = $club->promotions()->currentlyRunning()->first();
+            }
         }
 
         return Inertia::render('Dashboard', [
             'clubUser' => $clubUser,
             'adminOverview' => $adminOverview,
             'userOverview' => $userOverview,
+            'promotion' => $promotion,
         ]);
     }
 }
