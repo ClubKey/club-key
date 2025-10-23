@@ -10,15 +10,9 @@ final readonly class PublishPromotionAction
 {
     public function handle(Promotion $promotion): Promotion
     {
-        if ($promotion->published_at !== null) {
-            return $promotion;
-        }
-
-        $promotion->forceFill([
-            'published_at' => now()->toImmutable(),
+        $promotion->update([
+            'published_at' => now(),
         ]);
-
-        $promotion->save();
 
         return $promotion;
     }

@@ -3,9 +3,10 @@ import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
+import PromotionBanner from '@/components/promotions/PromotionBanner.vue';
 import { useDate } from '@/composables/useDate';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { AdminOverview, Auth, type BreadcrumbItem, Club, ClubUser, UserOverview } from '@/types';
+import { AdminOverview, Auth, type BreadcrumbItem, Club, ClubUser, Promotion, UserOverview } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '../components/ui/button/Button.vue';
 
@@ -25,6 +26,7 @@ defineProps<{
     clubUser: ClubUser;
     adminOverview: AdminOverview | null;
     userOverview: UserOverview | null;
+    promotion: Promotion | null;
 }>();
 </script>
 
@@ -60,6 +62,7 @@ defineProps<{
                 </Card>
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
+                <PromotionBanner v-if="promotion" :promotion="promotion" />
                 <div class="grid gap-6 xl:grid-cols-2">
                     <RewardProgress :club-user class="w-full xl:col-span-2" />
                     <Card>
