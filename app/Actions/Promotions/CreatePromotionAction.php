@@ -40,9 +40,7 @@ final readonly class CreatePromotionAction
                 'link' => $data->link,
             ]);
 
-            if ($data->publishNow) {
-                $this->publishPromotionAction->handle($promotion);
-            }
+            $this->publishPromotionAction->handle($promotion);
 
             return $promotion;
         });

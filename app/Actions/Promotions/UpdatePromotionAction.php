@@ -11,6 +11,10 @@ use Throwable;
 
 final readonly class UpdatePromotionAction
 {
+    public function __construct(
+        private PublishPromotionAction $publishPromotionAction
+    ) {}
+
     /**
      * @throws Throwable
      */
@@ -35,7 +39,11 @@ final readonly class UpdatePromotionAction
                 'link' => $data->link,
             ]);
 
-            return $promotion->refresh();
+            $promotion->refresh();
+
+            $this->publishPromotionAction->handle($promotion);
+
+            return $promotion->fresh();
         });
     }
 }
