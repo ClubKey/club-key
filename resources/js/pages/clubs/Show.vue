@@ -23,11 +23,12 @@ defineProps<{
             <meta :content="club.description" name="description" />
         </Head>
         <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6 pb-8">
+            <PromotionBanner v-if="promotion" :promotion="promotion" class="w-full" />
+
             <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" class="h-32 overflow-hidden rounded-lg" />
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
             <div v-if="clubUser" class="flex w-full flex-col items-center gap-6">
-                <PromotionBanner v-if="promotion" :promotion="promotion" class="w-full" />
                 <RewardProgress :club-user class="w-full" />
                 <RewardCard :club-user />
                 <RewardCardRewards :reward-level="clubUser.reward_level" />
