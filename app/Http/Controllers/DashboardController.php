@@ -28,9 +28,7 @@ final class DashboardController extends Controller
             $adminOverview = $dto?->toArray();
         } elseif ($clubUser) {
             $userOverview = $dashboardService->getUserOverview($clubUser)->toArray();
-            if ($club) {
-                $promotion = $club->promotions()->currentlyRunning()->first();
-            }
+            $promotion = $club?->promotions()->currentlyRunning()->first();
         }
 
         return Inertia::render('Dashboard', [

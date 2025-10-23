@@ -78,7 +78,7 @@ final class ClubController extends Controller
         }
 
         $promotion = null;
-        if ($clubUser && ! $clubUser->role->isAdmin()) {
+        if ($clubUser) {
             $promotion = $club->promotions()->currentlyRunning()->first();
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,15 +48,12 @@ final class Promotion extends Model
         'is_active' => 'boolean',
     ];
 
-    public function scopeCurrentlyRunning(Builder $query): Builder
+    #[Scope]
+    public function currentlyRunning(Builder $query): void
     {
         $now = now();
 
-        return $query
-            ->where('is_active', true)
-            ->where(function (Builder $query) use ($now): void {
-                $query->whereNull('publish_at')->orWhere('publish_at', '<=', $now);
-            })
+        $query->where('is_active', true)
             ->where(function (Builder $query) use ($now): void {
                 $query->whereNull('start_at')->orWhere('start_at', '<=', $now);
             })
