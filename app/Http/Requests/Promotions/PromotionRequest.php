@@ -33,6 +33,7 @@ final class PromotionRequest extends FormRequest
             'end_at' => ['nullable', 'date'],
             'is_active' => ['nullable', 'boolean'],
             'link' => ['nullable', 'url'],
+            'timezone' => ['required', 'timezone'],
         ];
     }
 

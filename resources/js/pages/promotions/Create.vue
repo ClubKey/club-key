@@ -11,6 +11,7 @@ import { Form, Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
 const publishNow = ref(false);
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 </script>
 
 <template>
@@ -29,6 +30,7 @@ const publishNow = ref(false);
             <CardContent>
                 <Form #default="{ errors, processing }" :action="route('promotions.store')" class="space-y-6"
                       method="post">
+                    <input type="hidden" name="timezone" :value="timezone" />
                     <div class="space-y-2">
                         <Label for="name">Promotion Name</Label>
                         <Input id="name" :error="errors.name" name="name" placeholder="e.g., Fall Seasonal Promo"
