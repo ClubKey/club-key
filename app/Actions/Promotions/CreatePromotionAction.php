@@ -12,6 +12,9 @@ use Throwable;
 
 final readonly class CreatePromotionAction
 {
+    public function __construct(
+        private PublishPromotionAction $publishPromotionAction,
+    ) {}
     /**
      * Execute the action.
      * @throws Throwable
@@ -26,7 +29,7 @@ final readonly class CreatePromotionAction
                 $publishAt = $data->publishAt;
             }
 
-            return $club->promotions()->create([
+            $promotion = $club->promotions()->create([
                 'name' => $data->name,
                 'description' => $data->description,
                 'publish_at' => $publishAt,
@@ -36,6 +39,12 @@ final readonly class CreatePromotionAction
                 'is_active' => $data->isActive ?? true,
                 'link' => $data->link,
             ]);
+
+            if ($data->publishNow) {
+                $this->publishPromotionAction->handle($promotion);
+            }
+
+            return $promotion;
         });
     }
 }

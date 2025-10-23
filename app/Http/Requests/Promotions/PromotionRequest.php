@@ -35,4 +35,12 @@ final class PromotionRequest extends FormRequest
             'link' => ['nullable', 'url'],
         ];
     }
+
+    public function prepareForValidation()
+    {
+        // cast publish_now to boolean
+        $this->merge([
+            'publish_now' => $this->boolean('publish_now'),
+        ]);
+    }
 }
