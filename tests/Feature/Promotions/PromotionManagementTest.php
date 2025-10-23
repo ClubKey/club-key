@@ -45,19 +45,21 @@ it('allows a club admin to update a promotion', function (): void {
 
     $this->actingAs($user);
 
-    $publishAt = Carbon::now()->addDay()->seconds(0);
-    $startAt = Carbon::now()->addDay()->seconds(0);
-    $endAt = Carbon::now()->addDays(2)->seconds(0);
+    $timezone = 'America/New_York';
+    $publishAt = Carbon::create(2024, 1, 10, 12, 0, 0, $timezone);
+    $startAt = Carbon::create(2024, 1, 11, 9, 0, 0, $timezone);
+    $endAt = Carbon::create(2024, 1, 12, 18, 0, 0, $timezone);
 
     $response = $this->put(route('promotions.update', $promotion), [
         'name' => 'Updated Promotion',
         'description' => 'Updated description for the promotion.',
         'publish_now' => false,
-        'publish_at' => $publishAt->toDateTimeString(),
-        'start_at' => $startAt->toDateTimeString(),
-        'end_at' => $endAt->toDateTimeString(),
+        'publish_at' => $publishAt->format('Y-m-d\TH:i'),
+        'start_at' => $startAt->format('Y-m-d\TH:i'),
+        'end_at' => $endAt->format('Y-m-d\TH:i'),
         'is_active' => false,
         'link' => 'https://example.com/promotion',
+        'timezone' => $timezone,
     ]);
 
     $response->assertRedirect(route('promotions.show', $promotion));
@@ -66,9 +68,9 @@ it('allows a club admin to update a promotion', function (): void {
         'id' => $promotion->id,
         'name' => 'Updated Promotion',
         'description' => 'Updated description for the promotion.',
-        'publish_at' => $publishAt->toDateTimeString(),
-        'start_at' => $startAt->toDateTimeString(),
-        'end_at' => $endAt->toDateTimeString(),
+        'publish_at' => $publishAt->copy()->setTimezone('UTC')->toDateTimeString(),
+        'start_at' => $startAt->copy()->setTimezone('UTC')->toDateTimeString(),
+        'end_at' => $endAt->copy()->setTimezone('UTC')->toDateTimeString(),
         'is_active' => false,
         'link' => 'https://example.com/promotion',
     ]);
@@ -87,7 +89,8 @@ it('handles checkbox payloads when updating scheduling details', function (): vo
 
         $this->actingAs($user);
 
-        $startAt = Carbon::now()->addDay()->format('Y-m-d\TH:i');
+        $timezone = 'America/Chicago';
+        $startAt = Carbon::create(2024, 1, 2, 9, 0, 0, $timezone)->format('Y-m-d\TH:i');
 
         $response = $this->put(route('promotions.update', $promotion), [
             'name' => 'Checkbox Submission',
@@ -98,6 +101,7 @@ it('handles checkbox payloads when updating scheduling details', function (): vo
             'end_at' => null,
             'is_active' => '0',
             'link' => '',
+            'timezone' => $timezone,
         ]);
 
         $response->assertRedirect(route('promotions.show', $promotion));
@@ -107,7 +111,9 @@ it('handles checkbox payloads when updating scheduling details', function (): vo
         expect($promotion->name)->toBe('Checkbox Submission');
         expect($promotion->description)->toBe('Ensures checkbox strings are normalized.');
         expect($promotion->publish_at)->toEqual(Carbon::now()->toImmutable());
-        expect($promotion->start_at)->toEqual(Carbon::parse($startAt)->toImmutable());
+        expect($promotion->start_at)->toEqual(
+            Carbon::parse($startAt, $timezone)->setTimezone('UTC')->toImmutable()
+        );
         expect($promotion->end_at)->toBeNull();
         expect($promotion->is_active)->toBeFalse();
         expect($promotion->link)->toBeNull();
@@ -125,6 +131,7 @@ it('forbids updating a promotion that belongs to another club', function (): voi
     $response = $this->put(route('promotions.update', $promotion), [
         'name' => 'Invalid Update',
         'description' => 'Should not be allowed.',
+        'timezone' => 'UTC',
     ]);
 
     $response->assertForbidden();

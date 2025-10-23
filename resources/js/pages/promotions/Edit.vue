@@ -29,6 +29,8 @@ const formatDateTimeLocal = (value: string | null) => {
     )}`;
 };
 
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 const form = useForm({
     _method: 'put',
     name: props.promotion.name,
@@ -39,6 +41,7 @@ const form = useForm({
     start_at: formatDateTimeLocal(props.promotion.start_at),
     end_at: formatDateTimeLocal(props.promotion.end_at),
     is_active: props.promotion.is_active,
+    timezone,
 });
 
 const headingTitle = computed(() => `Edit ${form.name}`);

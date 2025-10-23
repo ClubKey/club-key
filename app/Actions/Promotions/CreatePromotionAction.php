@@ -23,11 +23,7 @@ final readonly class CreatePromotionAction
     {
         return DB::transaction(function () use ($data, $club): Promotion {
 
-            if ($data->publishNow) {
-                $publishAt = now();
-            } else {
-                $publishAt = $data->publishAt;
-            }
+            $publishAt = $data->publishNow ? now()->toImmutable() : $data->publishAt;
 
             $promotion = $club->promotions()->create([
                 'name' => $data->name,

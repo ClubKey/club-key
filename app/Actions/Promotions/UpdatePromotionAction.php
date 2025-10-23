@@ -17,7 +17,7 @@ final readonly class UpdatePromotionAction
     public function handle(Promotion $promotion, PromotionDto $data): Promotion
     {
         return DB::transaction(function () use ($promotion, $data): Promotion {
-            $publishAt = $data->publishNow ? now() : $data->publishAt;
+            $publishAt = $data->publishNow ? now()->toImmutable() : $data->publishAt;
 
             $isActive = $data->isActive;
             if ($isActive === null) {
