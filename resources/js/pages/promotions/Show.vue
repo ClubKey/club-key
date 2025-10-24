@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
     Dialog,
@@ -17,6 +16,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { Promotion } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
+import { Pencil, Trash } from 'lucide-vue-next';
 
 const props = defineProps<{ promotion: Promotion }>();
 
@@ -59,18 +59,25 @@ watch(isDeleteDialogOpen, (isOpen) => {
         <Head :title="title" />
 
         <!-- Top heading and actions -->
-        <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div class="flex flex-col gap-4 flex-row md:items-center md:justify-between">
             <Heading :title="promotion.name" description="Review your promotion details." />
-            <div class="flex flex-wrap gap-3">
-                <Button as-child variant="outline">
-                    <Link :href="route('promotions.edit', promotion.id)">Edit Promotion</Link>
+            <div class="flex gap-2 ml-auto">
+                <Button as-child size="sm" variant="outline">
+                    <Link :href="route('promotions.edit', promotion.id)">
+                        <Pencil />
+                        <span
+                            class="sr-only lg:not-sr-only">Edit Promotion</span>
+                    </Link>
                 </Button>
 
                 <!-- Delete Dialog -->
                 <Dialog v-model:open="isDeleteDialogOpen">
                     <DialogTrigger as-child>
-                        <Button :disabled="deleteForm.processing" type="button" variant="destructive">
-                            {{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion' }}
+                        <Button :disabled="deleteForm.processing" size="sm" type="button" variant="destructive">
+                            <Trash />
+                            <span
+                                class="sr-only lg:not-sr-only">{{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion'
+                                }}</span>
                         </Button>
                     </DialogTrigger>
 
@@ -109,19 +116,17 @@ watch(isDeleteDialogOpen, (isOpen) => {
         </div>
 
         <!-- Summary Card -->
-        <Card>
-            <CardHeader class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                <div>
-                    <CardTitle class="text-xl">Promotion Summary</CardTitle>
-                </div>
+        <div>
+            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between pb-4">
+                <h1 class="text-xl font-semibold">Promotion Summary</h1>
 
                 <div class="flex flex-wrap gap-2">
                     <Badge :variant="isActiveVariant">{{ isActiveLabel }}</Badge>
                     <Badge v-if="isPublished" variant="secondary">Published</Badge>
                 </div>
-            </CardHeader>
+            </div>
 
-            <CardContent class="space-y-6">
+            <div class="space-y-6">
                 <!-- Description -->
                 <section class="space-y-2">
                     <h3 class="text-sm font-medium text-muted-foreground">Description</h3>
@@ -165,7 +170,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
                         {{ promotion.link }}
                     </Link>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     </AppLayout>
 </template>

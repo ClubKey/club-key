@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -62,108 +62,101 @@ const submit = () => {
     <AppLayout>
         <Head :title="headingTitle" />
 
-        <div class="space-y-8 py-10">
-            <Heading :title="headingTitle" description="Update your promotion’s details and scheduling." />
+        <Heading :title="headingTitle" description="Update your promotion’s details and scheduling." />
 
-            <form class="grid grid-cols-1 md:grid-cols-2 gap-6" @submit.prevent="submit">
-                <!-- LEFT COLUMN: Promotion Details -->
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Promotion Details</CardTitle>
-                        <CardDescription>Information shown to users about this promotion.</CardDescription>
-                    </CardHeader>
-                    <CardContent class="space-y-6">
-                        <div class="space-y-2">
-                            <Label for="name">Promotion Name</Label>
-                            <Input id="name" v-model="form.name" autocomplete="off" required />
-                            <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
-                        </div>
+        <form class="grid lg:grid-cols-12 gap-6 max-w-screen-xl py-8" @submit.prevent="submit">
+            <div class="space-y-6 lg:col-span-7">
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <Label for="name">Promotion Name</Label>
+                        <Input id="name" v-model="form.name" autocomplete="off" required />
+                        <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+                    </div>
 
-                        <div class="space-y-2">
-                            <Label for="link">Link (Optional)</Label>
-                            <p class="text-sm text-muted-foreground">
-                                Provide a link with more details about this promotion.
-                            </p>
-                            <Input id="link" v-model="form.link" placeholder="https://example.com" />
-                            <p v-if="form.errors.link" class="text-sm text-destructive">{{ form.errors.link }}</p>
-                        </div>
+                    <div class="space-y-2">
+                        <Label for="link">Link (Optional)</Label>
+                        <p class="text-sm text-muted-foreground">
+                            Provide a link with more details about this promotion.
+                        </p>
+                        <Input id="link" v-model="form.link" placeholder="https://example.com" />
+                        <p v-if="form.errors.link" class="text-sm text-destructive">{{ form.errors.link }}</p>
+                    </div>
 
-                        <div class="space-y-2">
-                            <Label for="description">Description</Label>
-                            <Textarea
-                                id="description"
-                                v-model="form.description"
-                                placeholder="Describe what this promotion offers..."
-                                required
-                            />
-                            <p v-if="form.errors.description" class="text-sm text-destructive">
-                                {{ form.errors.description }}
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
+                    <div class="space-y-2">
+                        <Label for="description">Description</Label>
+                        <Textarea
+                            id="description"
+                            v-model="form.description"
+                            placeholder="Describe what this promotion offers..."
+                            required
+                        />
+                        <p v-if="form.errors.description" class="text-sm text-destructive">
+                            {{ form.errors.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-                <!-- RIGHT COLUMN: Publishing & Activation -->
-                <Card>
-                    <CardHeader class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                        <div>
-                            <CardTitle>Publish & Activation</CardTitle>
-                            <CardDescription>
-                                Control when this promotion goes live and its active state.
-                            </CardDescription>
-                        </div>
-                        <Badge v-if="isPublished" variant="default">Published</Badge>
-                    </CardHeader>
+            <!-- RIGHT COLUMN: Publishing & Activation -->
+            <div class="space-y-6 lg:col-span-5">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <CardTitle>Publish & Activation</CardTitle>
+                        <CardDescription>
+                            Control when this promotion goes live and its active state.
+                        </CardDescription>
+                    </div>
+                    <Badge v-if="isPublished" variant="default">Published</Badge>
+                </div>
 
-                    <CardContent class="space-y-6">
-                        <div class="space-y-2">
-                            <Label for="start_at">Start Date</Label>
-                            <Input id="start_at" v-model="form.start_at" type="datetime-local" />
-                            <p v-if="form.errors.start_at" class="text-sm text-destructive">{{ form.errors.start_at
-                                }}</p>
-                        </div>
+                <div class="space-y-6">
+                    <div class="space-y-2">
+                        <Label for="start_at">Start Date</Label>
+                        <Input id="start_at" v-model="form.start_at" type="datetime-local" />
+                        <p v-if="form.errors.start_at" class="text-sm text-destructive">{{ form.errors.start_at
+                            }}</p>
+                    </div>
 
-                        <div class="space-y-2">
-                            <Label for="end_at">End Date (Optional)</Label>
-                            <Input id="end_at" v-model="form.end_at" type="datetime-local" />
-                            <p v-if="form.errors.end_at" class="text-sm text-destructive">{{ form.errors.end_at }}</p>
-                        </div>
+                    <div class="space-y-2">
+                        <Label for="end_at">End Date (Optional)</Label>
+                        <Input id="end_at" v-model="form.end_at" type="datetime-local" />
+                        <p v-if="form.errors.end_at" class="text-sm text-destructive">{{ form.errors.end_at }}</p>
+                    </div>
 
-                        <!-- Hide publish controls if already published -->
-                        <div v-if="!isPublished" class="space-y-2">
-                            <Label class="flex items-center gap-2">
-                                <Checkbox id="publish_now" v-model:checked="form.publish_now" />
-                                Publish Now
-                            </Label>
+                    <!-- Hide publish controls if already published -->
+                    <div v-if="!isPublished" class="space-y-2">
+                        <Label class="flex items-center gap-2">
+                            <Checkbox id="publish_now" v-model:checked="form.publish_now" />
+                            Publish Now
+                        </Label>
 
-                            <Input
-                                v-if="!form.publish_now"
-                                id="publish_at"
-                                v-model="form.publish_at"
-                                type="datetime-local"
-                            />
-                            <p v-if="form.errors.publish_at" class="text-sm text-destructive">
-                                {{ form.errors.publish_at }}
-                            </p>
-                        </div>
+                        <Input
+                            v-if="!form.publish_now"
+                            id="publish_at"
+                            v-model="form.publish_at"
+                            type="datetime-local"
+                        />
+                        <p v-if="form.errors.publish_at" class="text-sm text-destructive">
+                            {{ form.errors.publish_at }}
+                        </p>
+                    </div>
 
-                        <div class="space-y-2">
-                            <Label class="flex items-center gap-2">
-                                <Checkbox id="is_active" v-model="form.is_active" />
-                                <span>{{ form.is_active ? 'Active' : 'Activate?' }}</span>
-                            </Label>
-                        </div>
-                    </CardContent>
-                    <CardFooter class="flex justify-end gap-4 mt-auto">
-                        <Button :disabled="form.processing || !form.isDirty" type="submit">
-                            {{ form.processing ? 'Updating...' : 'Update Promotion' }}
-                        </Button>
-                        <Button as-child type="button" variant="outline">
-                            <Link :href="route('promotions.show', promotion.id)">Cancel</Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </form>
-        </div>
+                    <div class="space-y-2">
+                        <Label class="flex items-center gap-2">
+                            <Checkbox id="is_active" v-model="form.is_active" />
+                            <span>{{ form.is_active ? 'Active' : 'Activate?' }}</span>
+                        </Label>
+                    </div>
+                </div>
+                <CardFooter class="flex justify-end gap-4 mt-auto">
+                    <Button :disabled="form.processing || !form.isDirty" type="submit">
+                        {{ form.processing ? 'Updating...' : 'Update Promotion' }}
+                    </Button>
+                    <Button as-child type="button" variant="outline">
+                        <Link :href="route('promotions.show', promotion.id)">Cancel</Link>
+                    </Button>
+                </CardFooter>
+            </div>
+        </form>
     </AppLayout>
 </template>
