@@ -142,7 +142,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
                         <dd class="text-base">{{ formatDateTime(promotion.publish_at, 'Not scheduled') }}</dd>
                     </div>
 
-                    <div v-if="!isPublished" class="space-y-1">
+                    <div v-if="isPublished" class="space-y-1">
                         <dt class="text-sm font-medium text-muted-foreground">Published At</dt>
                         <dd class="text-base">{{ formatDateTime(promotion.published_at) }}</dd>
                     </div>
