@@ -12,7 +12,7 @@ final class ClubPolicy
 {
     public function create(User $user): bool
     {
-        return $user->role->canManageAClub();
+        return true;
     }
 
     public function update(User $user, Club $club): bool

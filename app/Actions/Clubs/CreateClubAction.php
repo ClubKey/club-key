@@ -6,6 +6,7 @@ namespace App\Actions\Clubs;
 
 use App\DTOs\ClubDto;
 use App\Enums\ClubRole;
+use App\Actions\Subscriptions\StartClubSubscriptionAction;
 use App\Events\ClubCreated;
 use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,8 @@ final readonly class CreateClubAction
 {
     public function __construct(
         private SwitchCurrentClubAction $switchCurrentClubAction,
-        private VisitQrCodeGeneratorAction $qrCodeGeneratorAction
+        private VisitQrCodeGeneratorAction $qrCodeGeneratorAction,
+        private StartClubSubscriptionAction $startClubSubscriptionAction
     ) {}
 
     /**
@@ -24,27 +26,36 @@ final readonly class CreateClubAction
      *
      * @throws Throwable
      */
-    public function handle(ClubDto $dto): Club
+    public function handle(ClubDto $dto, string $paymentMethod): Club
     {
-        return DB::transaction(function () use ($dto): Club {
+        $user = Auth::user();
+
+        $club = DB::transaction(function () use ($dto, $user): Club {
             $club = Club::create($dto->toArray());
 
-            $club->owner()->associate(Auth::user());
+            $club->owner()->associate($user);
 
             $club->save();
 
-            $club->members()->attach(Auth::id(), ['role' => ClubRole::ADMIN->value]);
+            $club->members()->attach($user?->id, ['role' => ClubRole::ADMIN->value]);
 
-            $this->switchCurrentClubAction->handle(
-                $user = Auth::user(),
-                $club
-            );
+            if ($user) {
+                $this->switchCurrentClubAction->handle($user, $club);
+            }
 
             $this->qrCodeGeneratorAction->handle(club: $club);
 
-            ClubCreated::dispatch($user, $club);
-
             return $club;
         });
+
+        if (! $user) {
+            return $club;
+        }
+
+        $this->startClubSubscriptionAction->handle($user, $club, $paymentMethod);
+
+        ClubCreated::dispatch($user, $club);
+
+        return $club;
     }
 }

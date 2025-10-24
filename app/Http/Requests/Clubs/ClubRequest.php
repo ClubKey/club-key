@@ -17,11 +17,13 @@ final class ClubRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        $user = $this->user();
+
         if ($this->routeIs('clubs.store')) {
-            return Auth::user()->can('create', Club::class);
+            return $user?->can('create', Club::class) ?? false;
         }
 
-        return $this->user()->can('update', $this->route('club'));
+        return $user?->can('update', $this->route('club')) ?? false;
     }
 
     /**
@@ -31,7 +33,7 @@ final class ClubRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', new Slug, 'unique:clubs,slug'.($this->club ? ','.$this->club->id : '')],
             'logo' => ['nullable', 'image', 'max:4000'],
@@ -52,5 +54,11 @@ final class ClubRequest extends FormRequest
             'pinterest' => ['nullable', 'url'],
             'snapchat' => ['nullable', 'url'],
         ];
+
+        if ($this->routeIs('clubs.store')) {
+            $rules['payment_method'] = ['required', 'string'];
+        }
+
+        return $rules;
     }
 }

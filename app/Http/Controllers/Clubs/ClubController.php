@@ -54,7 +54,9 @@ final class ClubController extends Controller
     {
         Gate::authorize('create', Club::class);
 
-        $createClub->handle(ClubDto::fromArray($request->validated()));
+        $data = $request->validated();
+
+        $createClub->handle(ClubDto::fromArray($data), $data['payment_method']);
 
         return to_route('dashboard')
             ->with('success', __('Club created successfully.'));
