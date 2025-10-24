@@ -54,6 +54,7 @@ final class Promotion extends Model
         $now = now();
 
         $query->where('is_active', true)
+            ->where('published_at', '<=', $now)
             ->where(function (Builder $query) use ($now): void {
                 $query->whereNull('start_at')->orWhere('start_at', '<=', $now);
             })
