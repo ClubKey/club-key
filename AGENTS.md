@@ -45,8 +45,6 @@ contributors and agents should follow these guidelines to ensure code quality, m
     - Use proper query optimization and eager loading.
     - Implement caching where appropriate.
     - Optimize queries and indexes.
-    - Use proper query optimization and eager loading.
-    - Implement caching where appropriate.
 - **Vue/TypeScript**:
     - Use `<script setup lang="ts">` and Composition API.
     - Define props and emits with TypeScript interfaces.

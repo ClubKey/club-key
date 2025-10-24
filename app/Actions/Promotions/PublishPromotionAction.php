@@ -14,7 +14,7 @@ final readonly class PublishPromotionAction
 {
     public function handle(Promotion $promotion): Promotion
     {
-        if ($promotion->publish_at <= now()) {
+        if ($promotion->publish_at !== null && $promotion->publish_at <= now()) {
             $promotion->update([
                 'published_at' => now(),
             ]);
