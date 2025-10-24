@@ -73,11 +73,11 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     </CardDescription>
                 </div>
                 <div class="space-y-2">
-                    <Label for="start_at">Start At</Label>
+                    <Label for="start_at">Start At (Optional)</Label>
                     <p class="text-sm text-muted-foreground">This is when the banner will become visible in the
                         app
                         on your club's page.</p>
-                    <Input class="w-auto" name="start_at" type="datetime-local" />
+                    <Input class="sm:w-auto" name="start_at" type="datetime-local" />
                     <p v-if="errors.start_at" class="text-sm text-destructive">{{ errors.start_at }}</p>
                 </div>
                 <div class="space-y-2">
@@ -86,7 +86,7 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         If you want the promotion banner to end after a certain date, you can specify it here.
                         If not provided, the banner will stay visible until you publish another promotion.
                     </p>
-                    <Input class="w-auto" name="end_at" type="datetime-local" />
+                    <Input class="sm:w-auto" name="end_at" type="datetime-local" />
                     <p v-if="errors.end_at" class="text-sm text-destructive">
                         {{ errors.end_at }}
                     </p>
@@ -101,7 +101,7 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                     <Label class="my-2">
                         <Checkbox id="publish" v-model="publishNow" name="publish_now" value="true" />
                         Publish Now?</Label>
-                    <Input v-if="!publishNow" class="w-auto" name="publish_at" type="datetime-local" />
+                    <Input v-if="!publishNow" class="sm:w-auto" name="publish_at" type="datetime-local" />
                     <p v-if="errors.publish_at" class="text-sm text-destructive">
                         {{ errors.publish_at }}
                     </p>

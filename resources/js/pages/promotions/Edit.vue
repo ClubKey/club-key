@@ -111,15 +111,22 @@ const submit = () => {
 
                 <div class="space-y-6">
                     <div class="space-y-2">
-                        <Label for="start_at">Start Date</Label>
-                        <Input id="start_at" v-model="form.start_at" type="datetime-local" />
+                        <Label for="start_at">Start Date (Optional)</Label>
+                        <p class="text-sm text-muted-foreground">This is when the banner will become visible in the
+                            app
+                            on your club's page.</p>
+                        <Input id="start_at" v-model="form.start_at" class="sm:w-auto" type="datetime-local" />
                         <p v-if="form.errors.start_at" class="text-sm text-destructive">{{ form.errors.start_at
                             }}</p>
                     </div>
 
                     <div class="space-y-2">
                         <Label for="end_at">End Date (Optional)</Label>
-                        <Input id="end_at" v-model="form.end_at" type="datetime-local" />
+                        <p class="text-sm text-muted-foreground">
+                            If you want the promotion banner to end after a certain date, you can specify it here.
+                            If not provided, the banner will stay visible until you publish another promotion.
+                        </p>
+                        <Input id="end_at" v-model="form.end_at" class="sm:w-auto" type="datetime-local" />
                         <p v-if="form.errors.end_at" class="text-sm text-destructive">{{ form.errors.end_at }}</p>
                     </div>
 
@@ -129,11 +136,16 @@ const submit = () => {
                             <Checkbox id="publish_now" v-model:checked="form.publish_now" />
                             Publish Now
                         </Label>
-
+                        <p class="text-sm text-muted-foreground">
+                            Choose when you want to publish this promotion. If you choose to publish it now, it will
+                            be
+                            visible immediately.
+                        </p>
                         <Input
                             v-if="!form.publish_now"
                             id="publish_at"
                             v-model="form.publish_at"
+                            class="sm:w-auto"
                             type="datetime-local"
                         />
                         <p v-if="form.errors.publish_at" class="text-sm text-destructive">
