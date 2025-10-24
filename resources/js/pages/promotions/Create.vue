@@ -78,7 +78,7 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                         app
                         on your club's page.</p>
                     <Input class="w-auto" name="start_at" type="datetime-local" />
-                    <p v-if="errors.start_at" class="text-sm text-destructive">{{ errors.description }}</p>
+                    <p v-if="errors.start_at" class="text-sm text-destructive">{{ errors.start_at }}</p>
                 </div>
                 <div class="space-y-2">
                     <Label for="end_at">End At (Optional)</Label>
