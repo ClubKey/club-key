@@ -4,8 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
+import PromotionBanner from '@/components/promotions/PromotionBanner.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Auth, type BreadcrumbItem, Club, ClubUser, DashboardDatum } from '@/types';
+import type { Auth, BreadcrumbItem, Club, ClubUser, DashboardDatum, Promotion } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
 import Button from '../components/ui/button/Button.vue';
 
@@ -20,7 +21,8 @@ defineProps<{
     currentClub: Club;
     auth: Auth;
     clubs: Club[];
-    clubUser: ClubUser | null;
+    clubUser: ClubUser;
+    promotion: Promotion | null;
     dashboardData: DashboardDatum[];
 }>();
 </script>
@@ -34,6 +36,7 @@ defineProps<{
                 <DataCard v-for="(datum, index) in dashboardData" :key="index + datum.heading" :datum />
             </div>
             <div v-else-if="clubUser && currentClub" class="flex flex-col gap-6 py-6">
+                <PromotionBanner v-if="promotion" :promotion="promotion" />
                 <div class="grid gap-6 xl:grid-cols-2">
                     <RewardProgress :club-user class="w-full xl:col-span-2" />
                     <Card>

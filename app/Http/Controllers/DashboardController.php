@@ -20,6 +20,8 @@ final class DashboardController extends Controller
             ->with('rewardLevel.rewards')
             ->first();
 
+        $promotion = $club?->promotions()->currentlyRunning()->first();
+
         $dashboardData = array_map(
             static fn (DashboardDataDto $data) => $data->toArray(),
             $dashboardService->generateDashboardData($clubUser)
@@ -28,6 +30,7 @@ final class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'clubUser' => $clubUser,
             'dashboardData' => $dashboardData,
+            'promotion' => $promotion,
         ]);
     }
 }

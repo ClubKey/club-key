@@ -37,11 +37,19 @@ contributors and agents should follow these guidelines to ensure code quality, m
     - PascalCase for classes and file names, camelCase for methods/variables, snake_case for DB columns.
     - Use enums for status fields and roles.
     - Use Form Requests for validation.
+    - Use Pest PHP for testing.
+    - Use Laravel's exception handling and error pages.
+    - Use Inertia's error handling on the frontend.
+    - Log errors appropriately.
+    - Use proper module resolution and path aliases.
+    - Use proper query optimization and eager loading.
+    - Implement caching where appropriate.
+    - Optimize queries and indexes.
 - **Vue/TypeScript**:
     - Use `<script setup lang="ts">` and Composition API.
     - Define props and emits with TypeScript interfaces.
     - PascalCase for component names and files.
-    - Use Tailwind CSS and shadcn/ui for styling.
+    - Use Tailwind CSS and shadcn/ui vue for styling.
 
 ---
 
