@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\DTOs\DashboardDataDto;
 use App\Models\ClubUser;
 use App\Services\DashboardService;
 use Illuminate\Http\Request;
@@ -19,22 +20,16 @@ final class DashboardController extends Controller
             ->with('rewardLevel.rewards')
             ->first();
 
-        $adminOverview = null;
-        $userOverview = null;
-        $promotion = null;
+        $promotion = $club?->promotions()->currentlyRunning()->first();
 
-        if ($clubUser && $clubUser->role && $clubUser->role->isAdmin()) {
-            $dto = $dashboardService->getAdminOverview($club->id);
-            $adminOverview = $dto?->toArray();
-        } elseif ($clubUser) {
-            $userOverview = $dashboardService->getUserOverview($clubUser)->toArray();
-            $promotion = $club?->promotions()->currentlyRunning()->first();
-        }
+        $dashboardData = array_map(
+            static fn (DashboardDataDto $data) => $data->toArray(),
+            $dashboardService->generateDashboardData($clubUser)
+        );
 
         return Inertia::render('Dashboard', [
             'clubUser' => $clubUser,
-            'adminOverview' => $adminOverview,
-            'userOverview' => $userOverview,
+            'dashboardData' => $dashboardData,
             'promotion' => $promotion,
         ]);
     }

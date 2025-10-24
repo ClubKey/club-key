@@ -4,25 +4,42 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\DTOs\DashboardAdminOverviewDto;
-use App\DTOs\DashboardUserOverviewDto;
+use App\DTOs\DashboardDataDto;
 use App\Models\ClubLocation;
 use App\Models\ClubUser;
 use App\Models\Visit;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 final class DashboardService
 {
-    public function getAdminOverview(int $clubId): ?DashboardAdminOverviewDto
+    /**
+     * @return DashboardDataDto[]
+     */
+    public function generateDashboardData(?ClubUser $clubUser): array
     {
-        // Number of members
+        if (! $clubUser) {
+            return [];
+        }
+
+        if ($clubUser->role->isAdmin()) {
+            return $this->generateAdminDashboardData($clubUser->club_id);
+        }
+
+        return $this->generateMemberDashboardData($clubUser);
+    }
+
+    /**
+     * @return DashboardDataDto[]
+     */
+    private function generateAdminDashboardData(int $clubId): array
+    {
         $numberOfMembers = ClubUser::where('club_id', $clubId)->count();
 
-        // Number of members signed up today
         $numberOfMembersToday = ClubUser::where('club_id', $clubId)
             ->whereDate('created_at', now()->toDateString())
             ->count();
 
-        // Number of check-ins this week
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
         $numberOfVisitsThisWeek = Visit::query()
@@ -30,7 +47,6 @@ final class DashboardService
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
             ->count();
 
-        // Most popular location
         $mostPopularLocation = ClubLocation::query()
             ->whereHas('visits', function ($query) use ($clubId) {
                 $query->where('club_id', $clubId);
@@ -39,17 +55,44 @@ final class DashboardService
             ->orderByDesc('visits_count')
             ->first();
 
-        $mostPopularLocationName = $mostPopularLocation?->name;
+        $dashboardData = [
+            new DashboardDataDto(
+                value: $numberOfMembersToday,
+                heading: sprintf(
+                    'New %s today',
+                    Str::plural('member', $numberOfMembersToday)
+                ),
+            ),
+            new DashboardDataDto(
+                value: $numberOfMembers,
+                heading: sprintf(
+                    'Total %s',
+                    Str::plural('member', $numberOfMembers)
+                ),
+            ),
+            new DashboardDataDto(
+                value: $numberOfVisitsThisWeek,
+                heading: sprintf(
+                    '%s this week',
+                    ucfirst(Str::plural('visit', $numberOfVisitsThisWeek))
+                ),
+            ),
+        ];
 
-        return new DashboardAdminOverviewDto(
-            $numberOfMembers,
-            $numberOfMembersToday,
-            $numberOfVisitsThisWeek,
-            $mostPopularLocationName
-        );
+        if ($mostPopularLocation) {
+            $dashboardData[] = new DashboardDataDto(
+                value: $mostPopularLocation->name,
+                heading: 'Most popular location',
+            );
+        }
+
+        return $dashboardData;
     }
 
-    public function getUserOverview(ClubUser $clubUser): DashboardUserOverviewDto
+    /**
+     * @return DashboardDataDto[]
+     */
+    private function generateMemberDashboardData(ClubUser $clubUser): array
     {
         $baseVisitQuery = Visit::query()
             ->where('club_id', $clubUser->club_id)
@@ -69,7 +112,9 @@ final class DashboardService
             ->latest('created_at')
             ->first();
 
-        $lastVisitedAt = $lastVisit?->created_at?->toIso8601String();
+        $lastVisitedDisplay = $lastVisit?->created_at instanceof Carbon
+            ? $lastVisit->created_at->toDayDateTimeString()
+            : 'Not yet visited';
 
         $visitsPastThirtyDays = (clone $baseVisitQuery)
             ->where('created_at', '>=', now()->subDays(30))
@@ -87,13 +132,55 @@ final class DashboardService
             );
         }
 
-        return new DashboardUserOverviewDto(
-            visitsPastWeek: $visitsPastWeek,
-            visitsThisMonth: $visitsThisMonth,
-            lifetimeVisits: $lifetimeVisits,
-            lastVisitedAt: $lastVisitedAt,
-            visitsUntilNextReward: $visitsUntilNextReward,
-            nextRewardLevelName: $nextRewardLevelName
+        $dashboardData = [
+            new DashboardDataDto(
+                value: $clubUser->rewardLevel?->name ?? 'Member',
+                heading: 'Your reward tier',
+            ),
+            new DashboardDataDto(
+                value: $visitsPastWeek,
+                heading: sprintf(
+                    '%s in the past 7 days',
+                    ucfirst(Str::plural('visit', $visitsPastWeek))
+                ),
+            ),
+            new DashboardDataDto(
+                value: $visitsThisMonth,
+                heading: sprintf(
+                    '%s this month',
+                    ucfirst(Str::plural('visit', $visitsThisMonth))
+                ),
+            ),
+            new DashboardDataDto(
+                value: $lifetimeVisits,
+                heading: sprintf(
+                    'Total %s',
+                    ucfirst(Str::plural('visit', $lifetimeVisits))
+                ),
+            ),
+        ];
+
+        if ($visitsUntilNextReward !== null) {
+            $dashboardData[] = new DashboardDataDto(
+                value: $visitsUntilNextReward,
+                heading: sprintf(
+                    '%s until next reward',
+                    ucfirst(Str::plural('visit', $visitsUntilNextReward))
+                ),
+                subheading: $nextRewardLevelName ? "Next up: {$nextRewardLevelName}" : null,
+            );
+        } else {
+            $dashboardData[] = new DashboardDataDto(
+                value: '🎉',
+                heading: "You're at the top tier!",
+            );
+        }
+
+        $dashboardData[] = new DashboardDataDto(
+            value: $lastVisitedDisplay,
+            heading: 'Last visit',
         );
+
+        return $dashboardData;
     }
 }
