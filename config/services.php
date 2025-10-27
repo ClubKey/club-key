@@ -37,4 +37,13 @@ return [
         ],
     ],
 
+    'vonage' => [
+        'key' => env('VONAGE_KEY'),
+        'secret' => env('VONAGE_SECRET'),
+        'application_id' => env('VONAGE_APPLICATION_ID'),
+        'private_key' => env('VONAGE_PRIVATE_KEY'),
+        'signature_secret' => env('VONAGE_SIGNATURE_SECRET'),
+        'signature_method' => env('VONAGE_SIGNATURE_METHOD'),
+    ],
+
 ];

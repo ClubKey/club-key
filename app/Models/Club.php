@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,6 +61,11 @@ use Illuminate\Support\Facades\Storage;
  * @property-read int|null $club_users_count
  * @property-read Collection<int, Promotion> $promotions
  * @property-read int|null $promotions_count
+ * @property-read ClubSmsSetting|null $smsSetting
+ * @property-read Collection<int, TextSubscription> $textSubscriptions
+ * @property-read int|null $text_subscriptions_count
+ * @property-read Collection<int, SmsMessage> $smsMessages
+ * @property-read int|null $sms_messages_count
  *
  * @method static Builder<static>|Club newModelQuery()
  * @method static Builder<static>|Club newQuery()
@@ -151,6 +157,21 @@ final class Club extends Model
     public function promotions(): HasMany
     {
         return $this->hasMany(Promotion::class);
+    }
+
+    public function smsSetting(): HasOne
+    {
+        return $this->hasOne(ClubSmsSetting::class);
+    }
+
+    public function textSubscriptions(): HasMany
+    {
+        return $this->hasMany(TextSubscription::class);
+    }
+
+    public function smsMessages(): HasMany
+    {
+        return $this->hasMany(SmsMessage::class);
     }
 
     public function logoPath(): Attribute

@@ -44,6 +44,8 @@ use Illuminate\Notifications\Notifiable;
  * @property-read Collection<int, Club> $clubs
  * @property-read int|null $clubs_count
  * @property-read ?Club $currentClub
+ * @property-read Collection<int, TextSubscription> $textSubscriptions
+ * @property-read int|null $text_subscriptions_count
  *
  * @method static UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
@@ -146,6 +148,11 @@ final class User extends Authenticatable
     public function belongsToClub(Club $club): bool
     {
         return $this->clubs()->where('club_id', $club->id)->exists();
+    }
+
+    public function textSubscriptions(): HasMany
+    {
+        return $this->hasMany(TextSubscription::class);
     }
 
     public function clubRole(): Attribute

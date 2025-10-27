@@ -20,7 +20,8 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "nunomaduro/essentials": "0.1",
         "resend/resend-laravel": "^0.21.0",
-        "tightenco/ziggy": "^2.4"
+        "tightenco/ziggy": "^2.4",
+        "vonage/client": "^4.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
