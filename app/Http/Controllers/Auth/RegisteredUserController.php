@@ -53,7 +53,7 @@ final class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        Auth::login($user, true);
 
         return redirect()->intended(route('dashboard'));
     }
