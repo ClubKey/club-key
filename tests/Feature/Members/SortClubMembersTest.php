@@ -79,13 +79,11 @@ test('members can be sorted by most check-ins', function () {
     $response->assertInertia(function (AssertableInertia $inertia) {
         $inertia->component('club-users/Index')
             ->has('clubUsers.data', 4) // 3 members + 1 admin
-            ->where('sort', 'most_checkins');
-
-        // Verify user3 (15 visits) is first, then user2 (10), then user1 (5), then admin (0)
-        $data = $inertia->toArray()['clubUsers']['data'];
-        expect($data[0]['user_id'])->toBe($this->user3->id);
-        expect($data[1]['user_id'])->toBe($this->user2->id);
-        expect($data[2]['user_id'])->toBe($this->user1->id);
+            ->where('sort', 'most_checkins')
+            // Verify user3 (15 visits) is first, then user2 (10), then user1 (5)
+            ->where('clubUsers.data.0.user_id', $this->user3->id)
+            ->where('clubUsers.data.1.user_id', $this->user2->id)
+            ->where('clubUsers.data.2.user_id', $this->user1->id);
     });
 });
 
@@ -98,13 +96,11 @@ test('members can be sorted by most recent visit', function () {
     $response->assertInertia(function (AssertableInertia $inertia) {
         $inertia->component('club-users/Index')
             ->has('clubUsers.data', 4)
-            ->where('sort', 'recent_visit');
-
-        // Verify user3 (1 day ago) is first, then user2 (5 days), then user1 (10 days)
-        $data = $inertia->toArray()['clubUsers']['data'];
-        expect($data[0]['user_id'])->toBe($this->user3->id);
-        expect($data[1]['user_id'])->toBe($this->user2->id);
-        expect($data[2]['user_id'])->toBe($this->user1->id);
+            ->where('sort', 'recent_visit')
+            // Verify user3 (1 day ago) is first, then user2 (5 days), then user1 (10 days)
+            ->where('clubUsers.data.0.user_id', $this->user3->id)
+            ->where('clubUsers.data.1.user_id', $this->user2->id)
+            ->where('clubUsers.data.2.user_id', $this->user1->id);
     });
 });
 
@@ -117,13 +113,11 @@ test('members can be sorted by highest reward level', function () {
     $response->assertInertia(function (AssertableInertia $inertia) {
         $inertia->component('club-users/Index')
             ->has('clubUsers.data', 4)
-            ->where('sort', 'reward_level');
-
-        // Verify user3 (Gold, order 3) is first, then user2 (Silver, order 2), then user1 (Bronze, order 1)
-        $data = $inertia->toArray()['clubUsers']['data'];
-        expect($data[0]['user_id'])->toBe($this->user3->id);
-        expect($data[1]['user_id'])->toBe($this->user2->id);
-        expect($data[2]['user_id'])->toBe($this->user1->id);
+            ->where('sort', 'reward_level')
+            // Verify user3 (Gold, order 3) is first, then user2 (Silver, order 2), then user1 (Bronze, order 1)
+            ->where('clubUsers.data.0.user_id', $this->user3->id)
+            ->where('clubUsers.data.1.user_id', $this->user2->id)
+            ->where('clubUsers.data.2.user_id', $this->user1->id);
     });
 });
 
