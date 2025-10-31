@@ -32,6 +32,7 @@ final class ClubUser extends Pivot
         'role',
         'reward_level_id',
         'next_reward_level_id',
+        'visits_past_30_days',
     ];
 
     protected $casts = [
