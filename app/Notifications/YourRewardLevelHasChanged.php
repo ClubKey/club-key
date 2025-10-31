@@ -48,6 +48,18 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
             ->line($this->endingLine());
     }
 
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(object $notifiable): array
+    {
+        return [
+            //
+        ];
+    }
+
     private function subject(): string
     {
         if ($this->hasIncreasedRewards()) {
@@ -97,17 +109,5 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
         $clubName = $this->clubName();
 
         return "Thanks so much for being a loyal member of $clubName. We truly appreciate your continued support and enthusiasm. Hope to see you soon!";
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
     }
 }
