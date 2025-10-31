@@ -78,14 +78,21 @@ final class ClubController extends Controller
         }
 
         $promotion = null;
+        $visits = null;
         if ($clubUser) {
             $promotion = $club->promotions()->currentlyRunning()->first();
+            $visits = Inertia::scroll(fn () => $user->visitsForClub($club)
+                ->with('clubLocation')
+                ->latest()
+                ->paginate(20)
+            );
         }
 
         return Inertia::render('clubs/Show', [
             'club' => $club,
             'clubUser' => $clubUser?->fresh(['rewardLevel.rewards', 'nextRewardLevel']),
             'promotion' => $promotion,
+            'visits' => $visits,
         ]);
     }
 

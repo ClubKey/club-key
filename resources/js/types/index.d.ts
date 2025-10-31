@@ -179,6 +179,16 @@ export interface Promotion {
     updated_at: string;
 }
 
+export interface Visit {
+    id: number;
+    user_id: number;
+    club_id: number;
+    club_location_id: number | null;
+    club_location?: ClubLocation;
+    created_at: string;
+    updated_at: string;
+}
+
 export type BreadcrumbItemType = BreadcrumbItem;
 
 export interface Paginator<T> {
