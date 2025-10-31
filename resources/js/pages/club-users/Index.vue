@@ -33,7 +33,7 @@ const handleSortChange = (value: string) => {
     router.get(
         route('members.index'),
         { 
-            sort: value,
+            sort: value === 'default' ? undefined : value,
             search: props.search || undefined,
         },
         {
