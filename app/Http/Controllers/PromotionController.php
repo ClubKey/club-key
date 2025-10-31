@@ -14,8 +14,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Response;
-
 use Throwable;
+
 use function inertia;
 use function to_route;
 
