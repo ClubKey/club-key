@@ -36,6 +36,7 @@ final class SendSiteDomainUpdate extends Command
         foreach ($users as $user) {
             $user->notify(new OurWebsiteDomainHasUpdated($user));
             $this->info("Notification sent to user ID: {$user->id}, Email: {$user->email}");
+            //needed for resend
             sleep(1);
         }
     }
