@@ -28,7 +28,11 @@ watchEffect((cleanupFn) => {
 <template>
     <div class="flex flex-col items-center gap-2 text-center">
         <h2 class="text-2xl font-bold">Your progress to more rewards:</h2>
+        <p class="text-sm text-muted-foreground">ClubKey counts visits on a per month basis. Your visit count relates to
+            how
+            many visits you've made in the past 30 days.</p>
         <Progress v-model="progress" />
+
         <div class="flex w-full flex-wrap items-center justify-between gap-2">
             <h3 v-if="clubUser.reward_level" class="font-semibold">
                 {{
@@ -36,7 +40,8 @@ watchEffect((cleanupFn) => {
                 }}
             </h3>
             <h3 v-if="clubUser.next_reward_level" class="ml-auto font-semibold">
-                {{ `${clubUser.next_reward_level?.name} ${clubUser.visits_past_30_days}/${clubUser.next_reward_level?.min_visits_per_month}` }}
+                {{ `${clubUser.next_reward_level?.name} ${clubUser.visits_past_30_days}/${clubUser.next_reward_level?.min_visits_per_month}`
+                }}
             </h3>
         </div>
     </div>
