@@ -33,8 +33,8 @@ function formatDate(dateString: string) {
                 <div>
                     <div class="font-medium text-foreground">{{ visit.club_location.name }}</div>
                     <div class="text-sm">
-                        {{ visit.club_location.street_address }}, {{ visit.club_location.city }},
-                        {{ visit.club_location.state }} {{ visit.club_location.zip }}
+                        {{ visit.club_location.street_address }}, {{ visit.club_location.city }}, {{ visit.club_location.state }}
+                        {{ visit.club_location.zip }}
                     </div>
                 </div>
             </CardDescription>
