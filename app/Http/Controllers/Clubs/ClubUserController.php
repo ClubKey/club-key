@@ -22,12 +22,12 @@ final class ClubUserController extends Controller
         Gate::authorize('viewAny', [ClubUser::class, $request->user()->currentClub]);
         $search = $request->input('search');
         $sort = $request->input('sort');
-        
+
         $query = $request->user()
             ->currentClub
             ->clubUsers()
             ->search($search);
-        
+
         // Apply sorting
         match ($sort) {
             'most_checkins' => $query->orderBy('club_user.visits_past_30_days', 'desc'),
@@ -53,7 +53,7 @@ final class ClubUserController extends Controller
                 ->orderByDesc('reward_level_order'),
             default => $query->orderBy('club_user.id', 'asc'),
         };
-        
+
         $clubUsers = Inertia::scroll(fn () => $query->with('user')->paginate(40));
 
         return Inertia::render('club-users/Index', [

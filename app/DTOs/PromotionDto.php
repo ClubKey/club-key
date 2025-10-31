@@ -6,6 +6,7 @@ namespace App\DTOs;
 
 use App\Contracts\DTO;
 use Carbon\CarbonImmutable;
+use Stringable;
 use Throwable;
 
 final readonly class PromotionDto implements DTO
@@ -61,7 +62,7 @@ final readonly class PromotionDto implements DTO
                 return $value === '' ? null : $value;
             }
 
-            if ($value instanceof \Stringable) {
+            if ($value instanceof Stringable) {
                 return (string) $value;
             }
 

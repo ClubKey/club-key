@@ -15,8 +15,10 @@ final readonly class CreatePromotionAction
     public function __construct(
         private PublishPromotionAction $publishPromotionAction,
     ) {}
+
     /**
      * Execute the action.
+     *
      * @throws Throwable
      */
     public function handle(PromotionDto $data, Club $club): Promotion

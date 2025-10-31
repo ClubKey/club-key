@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Promotions;
 
 use App\Models\Promotion;
+
 use function now;
 
 /**
