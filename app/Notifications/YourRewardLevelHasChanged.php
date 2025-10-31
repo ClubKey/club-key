@@ -42,10 +42,61 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
     {
         return (new MailMessage)
             ->subject($this->subject())
-            ->greeting("Hey {$this->clubUser->user->first_name},")
             ->line($this->subject())
             ->line($this->newRewardLine())
-            ->line('Thanks so much for being a loyal member of our club. We truly appreciate your continued support and enthusiasm. Hope to see you soon!');
+            ->line("ClubKey tracks visits per month and gives you a discount on your service. When you visit and show us your card, you'll get rewards and discounts. The more you visit, the more you'll get. When you visit not as much as you did previously, you can lose previous discounts.")
+            ->line($this->endingLine());
+    }
+
+    private function subject(): string
+    {
+        if ($this->hasIncreasedRewards()) {
+            return "Congratulations! You're getting rewarded for being so loyal to {$this->clubName()}!";
+        }
+
+        if ($this->clubUser->rewardLevel === null) {
+            return "Bummer, you've lost your rewards for now.";
+        }
+
+        return "Bummer, you've been downgraded to a lower reward level.";
+    }
+
+    private function hasIncreasedRewards(): bool
+    {
+        if ($this->previousRewardLevel === null && $this->clubUser->rewardLevel !== null) {
+            return true;
+        }
+
+        if ($this->clubUser->rewardLevel === null) {
+            return false;
+        }
+
+        if ($this->previousRewardLevel->min_visits_per_month > $this->clubUser->rewardLevel->min_visits_per_month) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function clubName(): string
+    {
+        return $this->clubUser->club->name;
+    }
+
+    private function newRewardLine(): string
+    {
+        if ($this->hasIncreasedRewards() || $this->clubUser->rewardLevel === null) {
+            return "You're now a {$this->clubUser->rewardLevel->name} member at {$this->clubName()}, enjoy your new perks! When you visit and show us your card, you'll get {$this->clubUser->rewardLevel->percentage_discount}% off your service.";
+        }
+
+        return 'Check in on your next visit to continue earning rewards.';
+    }
+
+    private function endingLine(): string
+    {
+        $clubName = $this->clubName();
+
+        return "Thanks so much for being a loyal member of $clubName. We truly appreciate your continued support and enthusiasm. Hope to see you soon!";
     }
 
     /**
@@ -58,35 +109,5 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
         return [
             //
         ];
-    }
-
-    private function subject(): string
-    {
-        if ($this->previousRewardLevel === null && $this->clubUser->rewardLevel !== null) {
-            return "Congratulations! You've reached a new reward level!";
-        }
-
-        if ($this->clubUser->rewardLevel === null) {
-            return "Bummer, you've lost your rewards for now. Visit us more often to regain them!";
-        }
-
-        if ($this->previousRewardLevel->min_visits_per_month > $this->clubUser->rewardLevel->min_visits_per_month) {
-            return "Bummer, you've been downgraded to a lower reward level. Visit us more often to regain your previous status!";
-        }
-
-        return "Great news! You've been upgraded to a higher reward level!";
-    }
-
-    private function newRewardLine(): string
-    {
-        if ($this->previousRewardLevel !== null && $this->clubUser->rewardLevel !== null) {
-            return "You're now a {$this->clubUser->rewardLevel->name} member, enjoy your new perks! When you visit and show us your card, you'll get {$this->clubUser->rewardLevel->percentage_discount}% off your service.";
-        }
-
-        if ($this->clubUser->rewardLevel !== null) {
-            return "You're now a {$this->clubUser->rewardLevel->name} member, enjoy your perks! When you visit and show us your card, you'll get {$this->clubUser->rewardLevel->percentage_discount}% off your service.";
-        }
-
-        return '';
     }
 }
