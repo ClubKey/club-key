@@ -9,7 +9,7 @@ import { type BreadcrumbItem, type Club, ClubUser, Paginator } from '@/types';
 import { Form, Head, InfiniteScroll, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     club: Club;
     clubUsers: Paginator<ClubUser>;
     search: string;
@@ -32,7 +32,10 @@ const handleSubmit = debounce(() => {
 const handleSortChange = (value: string) => {
     router.get(
         route('members.index'),
-        { sort: value },
+        { 
+            sort: value,
+            search: props.search || undefined,
+        },
         {
             preserveScroll: true,
             preserveState: true,
@@ -60,6 +63,7 @@ const handleSortChange = (value: string) => {
                     method="get"
                 >
                     <Input :default-value="search" name="search" placeholder="Search members..." type="search" @input="handleSubmit" />
+                    <input v-if="sort" name="sort" type="hidden" :value="sort" />
                     <button class="hidden" type="submit">Search</button>
                 </Form>
                 
