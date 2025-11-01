@@ -72,6 +72,6 @@ final class PromotionPublished extends Notification implements ShouldQueue
     {
         $link = $this->promotion->link ?: $this->promotion->club->route;
 
-        return "{$this->promotion->name} {$this->promotion->description} {$link}";
+        return "{$this->promotion->name} {$this->promotion->description} {$link}, from {$this->promotion->club->name}";
     }
 }
