@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 test('profile page is displayed', function () {
     $user = User::factory()->create();
@@ -22,7 +23,7 @@ test('profile information can be updated', function () {
         ->patch('/settings/profile', [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'phone' => '1234567890',
+            'phone' => '5097373245',
         ]);
 
     $response
@@ -33,7 +34,7 @@ test('profile information can be updated', function () {
 
     expect($user->name)->toBe('Test User');
     expect($user->email)->toBe('test@example.com');
-    expect($user->phone)->toBe('1234567890');
+    expect($user->phone)->toBe('+15097373245'); // casted
     expect($user->email_verified_at)->toBeNull();
 });
 
@@ -61,7 +62,7 @@ test('user can delete their account', function () {
     $response = $this
         ->actingAs($user)
         ->delete('/settings/profile', [
-            'password' => 'password',
+            'password' => UserFactory::DEFAULT_PASSWORD,
         ]);
 
     $response

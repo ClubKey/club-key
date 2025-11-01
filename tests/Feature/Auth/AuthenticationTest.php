@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -15,7 +16,7 @@ test('users can authenticate using the login screen', function () {
 
     $response = $this->post('/login', [
         'email' => $user->email,
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $this->assertAuthenticated();

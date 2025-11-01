@@ -6,18 +6,25 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Translation\PotentiallyTranslatedString;
+use libphonenumber\NumberParseException;
+use libphonenumber\PhoneNumberUtil;
 
 final class Phone implements ValidationRule
 {
-    /**
-     * Run the validation rule.
-     *
-     * @param  Closure(string, ?string=): PotentiallyTranslatedString  $fail
-     */
+    public function __construct(
+        private readonly ?string $defaultRegion = 'US'
+    ) {}
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! preg_match('/^\+?[1-9]\d{1,14}$/', $value)) {
+        $phoneUtil = PhoneNumberUtil::getInstance();
+
+        try {
+            $number = $phoneUtil->parse($value, $this->defaultRegion);
+            if (! $phoneUtil->isValidNumber($number)) {
+                $fail('The :attribute must be a valid phone number.');
+            }
+        } catch (NumberParseException) {
             $fail('The :attribute must be a valid phone number.');
         }
     }

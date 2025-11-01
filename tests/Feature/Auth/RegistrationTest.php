@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Database\Factories\UserFactory;
+
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
@@ -12,11 +14,11 @@ test('new users can register', function () {
     $response = $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
-        'phone' => '1234567890',
+        'phone' => UserFactory::DEFAULT_PHONE,
         'accept_terms' => true,
         'accept_marketing' => true,
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
+        'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $this->assertAuthenticated();
