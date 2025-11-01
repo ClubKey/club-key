@@ -8,6 +8,7 @@ use App\Models\Promotion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 final class PromotionPublished extends Notification implements ShouldQueue
@@ -30,7 +31,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['mail', 'vonage'];
     }
 
     /**
@@ -44,7 +45,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
             ->line($this->promotion->name)
             ->line($this->promotion->description)
-            ->action('View Club', url(route('clubs.show', $this->promotion->club->slug)))
+            ->action('View Your Card', url(route('clubs.show', $this->promotion->club->slug)))
             ->line('Hope you love it!');
     }
 
@@ -58,5 +59,19 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return [
             //
         ];
+    }
+
+    public function toVonage(object $notifiable): VonageMessage
+    {
+        return (new VonageMessage)
+            ->clientReference($this->promotion->club->slug)
+            ->content($this->getTextContent());
+    }
+
+    private function getTextContent(): string
+    {
+        $link = $this->promotion->link ?: $this->promotion->club->route;
+
+        return "{$this->promotion->name} {$this->promotion->description} {$link}";
     }
 }
