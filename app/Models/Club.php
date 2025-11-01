@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int|null $owner_id
  * @property string $name
  * @property string|null $visit_qr_code_path
+ * @property-read string $route
  * @property string $slug
  * @property string|null $logo_path
  * @property string|null $description
@@ -99,6 +100,13 @@ final class Club extends Model
         'created_at' => 'immutable_datetime',
         'updated_at' => 'immutable_datetime',
     ];
+
+    public function route(): Attribute
+    {
+        return new Attribute(
+            get: fn () => route('clubs.show', $this->slug),
+        );
+    }
 
     public function getRouteKeyName(): string
     {

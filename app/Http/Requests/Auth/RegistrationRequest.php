@@ -31,7 +31,7 @@ final class RegistrationRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'phone' => ['required', 'string', 'max:255', new Phone],
-            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->uncompromised()],
+            'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()],
             'accept_terms' => ['accepted'],
             'accept_marketing' => ['accepted'],
         ];
