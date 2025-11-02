@@ -36,7 +36,7 @@ final readonly class VisitClubAction
                 ->whereClubLocationId($clubLocation?->id)
                 ->where('created_at', '>', now()->subHours(2));
 
-            if (true || $visitsInLastTwoHours->doesntExist()) {
+            if ($visitsInLastTwoHours->doesntExist()) {
                 Visit::create([
                     'user_id' => $user->id,
                     'club_id' => $club->id,
