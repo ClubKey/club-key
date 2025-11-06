@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\ClubRole;
+use App\Models\Scopes\OrderDescending;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @property-read RewardLevel $rewardLevel
  * @property-read RewardLevel $nextRewardLevel
  */
+#[ScopedBy(OrderDescending::class)]
 final class ClubUser extends Pivot
 {
     protected $with = ['user', 'club', 'rewardLevel', 'nextRewardLevel'];

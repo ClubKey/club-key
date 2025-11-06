@@ -51,7 +51,7 @@ final class ClubUserController extends Controller
                     },
                 ])
                 ->orderByDesc('reward_level_order'),
-            default => $query->orderBy('club_user.id', 'asc'),
+            default => $query,
         };
 
         $clubUsers = Inertia::scroll(fn () => $query->with('user')->paginate(40));

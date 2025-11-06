@@ -31,7 +31,7 @@ final readonly class VisitClubAction
                 $this->joinClubAction->handle($user, $club);
             }
 
-            // Base visits query for this user + club within last 10 minutes
+            // Base visits query for this user + club within the last 10 minutes
             $visitsQuery = $user->visits()
                 ->whereClubId($club->id)
                 ->where('created_at', '>', now()->subMinutes(10));

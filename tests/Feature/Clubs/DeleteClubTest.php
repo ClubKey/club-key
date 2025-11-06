@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 use App\Models\Club;
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 test('a user can delete their own club', function () {
     $user = User::factory()->withClub()->create([
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $this->actingAs($user);
@@ -15,7 +16,7 @@ test('a user can delete their own club', function () {
     $club = $user->currentClub;
 
     $response = $this->delete(route('clubs.destroy', $club), [
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $response->assertRedirect(route('dashboard'));
@@ -33,14 +34,14 @@ test('a user can delete their own club', function () {
 
 test('a user cannot delete a club they do not own', function () {
     $user = User::factory()->create([
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
     $this->actingAs($user);
 
     $club = Club::factory()->create();
 
     $response = $this->delete(route('clubs.destroy', $club), [
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $response->assertForbidden();
@@ -53,7 +54,7 @@ test('a user cannot delete a club they do not own', function () {
 
 test('a user must provide their password to delete a club', function () {
     $user = User::factory()->withClub()->create([
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
     $this->actingAs($user);
 
