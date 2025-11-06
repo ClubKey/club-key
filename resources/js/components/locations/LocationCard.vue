@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ClubLocation } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { Download, MapPin, Phone, SquarePen } from 'lucide-vue-next';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     location: ClubLocation;
@@ -13,6 +13,8 @@ const props = defineProps<{
 }>();
 
 const copyText = ref('Copy Check-In Tap Link');
+
+const linkToGoogleAddress = computed(() => `https://www.google.com/maps/search/?api=1&query=${props.location.full_address}`);
 
 function formatAddress(location: ClubLocation) {
     return `${location.street_address}, ${location.city}, ${location.state} ${location.zip}`;
@@ -49,23 +51,35 @@ function copyVisitLink() {
                 <span>{{ location.phone }}</span>
             </div>
             <div v-if="canEdit" class="flex flex-col items-start gap-2">
-                <Button v-if="location.visit_tap_link" size="sm" variant="outline" @click="copyVisitLink">{{ copyText }}</Button>
+                <Button v-if="location.visit_tap_link" size="sm" variant="outline" @click="copyVisitLink">{{ copyText
+                    }}
+                </Button>
 
                 <Button as-child size="sm">
-                    <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download target="_blank">
+                    <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download
+                       target="_blank">
                         <Download />
                         Download Check In Code</a
                     >
                 </Button>
             </div>
         </CardContent>
-        <CardFooter class="border-t">
-            <div class="flex w-full gap-2">
-                <Button v-if="canEdit" as-child class="flex-1" variant="outline">
-                    <Link :href="route('locations.edit', location.id)"><SquarePen /> Edit</Link>
+        <CardFooter class="border-t mt-auto">
+            <div v-if="canEdit" class="flex w-full gap-2">
+                <Button as-child class="flex-1" variant="outline">
+                    <Link :href="route('locations.edit', location.id)">
+                        <SquarePen />
+                        Edit
+                    </Link>
                 </Button>
-                <DeleteLocation v-if="canEdit" :location="location" />
+                <DeleteLocation :location="location" />
             </div>
+            <a v-else :href="linkToGoogleAddress"
+               class="flex w-full items-center justify-center gap-2 hover:underline transition duration-200 ease-in-out"
+               target="_blank">
+                <MapPin class="h-4 w-4" />
+                Get Directions
+            </a>
         </CardFooter>
     </Card>
 </template>

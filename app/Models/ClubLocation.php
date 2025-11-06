@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\URL;
  * @property string|null $name
  * @property string|null $visit_qr_code_path
  * @property-read string|null $visit_tap_link
+ * @property-read string|null $full_address
  * @property string|null $phone
  * @property string $street_address
  * @property string $city
@@ -55,6 +56,8 @@ final class ClubLocation extends Model
         'updated_at' => 'immutable_datetime',
     ];
 
+    protected $appends = ['full_address'];
+
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
@@ -79,6 +82,13 @@ final class ClubLocation extends Model
                 'club' => $this->club->slug,
                 'clubLocation' => $this->id,
             ]),
+        );
+    }
+
+    public function fullAddress(): Attribute
+    {
+        return new Attribute(
+            get: fn () => "{$this->street_address}, {$this->city}, {$this->state} {$this->zip}",
         );
     }
 }
