@@ -9,10 +9,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberUtil;
 
-final class Phone implements ValidationRule
+final readonly class Phone implements ValidationRule
 {
     public function __construct(
-        private readonly ?string $defaultRegion = 'US'
+        private ?string $defaultRegion = 'US'
     ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
