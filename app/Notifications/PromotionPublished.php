@@ -11,6 +11,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
+use function is_vonage_available;
+
 final class PromotionPublished extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -31,7 +33,13 @@ final class PromotionPublished extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'vonage'];
+        $channels = ['mail'];
+
+        if (is_vonage_available()) {
+            $channels[] = 'vonage';
+        }
+
+        return $channels;
     }
 
     /**
@@ -72,6 +80,6 @@ final class PromotionPublished extends Notification implements ShouldQueue
     {
         $link = $this->promotion->link ?: $this->promotion->club->route;
 
-        return "{$this->promotion->name} {$this->promotion->description} {$link}, from {$this->promotion->club->name}";
+        return "{$this->promotion->description} {$link}, from {$this->promotion->club->name}";
     }
 }

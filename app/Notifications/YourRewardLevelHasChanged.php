@@ -12,6 +12,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
+use function is_vonage_available;
+
 final class YourRewardLevelHasChanged extends Notification implements ShouldQueue
 {
     use Queueable;
@@ -33,7 +35,13 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'vonage'];
+        $channels = ['mail'];
+
+        if (is_vonage_available()) {
+            $channels[] = 'vonage';
+        }
+
+        return $channels;
     }
 
     /**

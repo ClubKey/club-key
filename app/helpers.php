@@ -44,3 +44,12 @@ if (! function_exists('format_phone_number')) {
         }
     }
 }
+
+if (! function_exists('is_vonage_available')) {
+    function is_vonage_available(): bool
+    {
+        return config('vonage.api_key') &&
+            config('vonage.api_secret') &&
+            config('vonage.sms_from');
+    }
+}
