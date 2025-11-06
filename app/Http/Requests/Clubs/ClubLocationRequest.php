@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Clubs;
 
 use App\Models\ClubLocation;
+use App\Rules\Phone;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -35,7 +36,7 @@ final class ClubLocationRequest extends FormRequest
             'city' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'zip' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255', new Phone],
         ];
     }
 }

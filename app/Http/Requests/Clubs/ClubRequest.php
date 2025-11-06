@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Clubs;
 
 use App\Models\Club;
+use App\Rules\Phone;
 use App\Rules\Slug;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,7 +39,7 @@ final class ClubRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'website' => ['nullable', 'url'],
             'email' => ['nullable', 'email'],
-            'phone' => ['nullable', 'string'],
+            'phone' => ['nullable', 'string', new Phone],
             'street_address' => ['nullable', 'string'],
             'city' => ['nullable', 'string'],
             'state' => ['nullable', 'string'],

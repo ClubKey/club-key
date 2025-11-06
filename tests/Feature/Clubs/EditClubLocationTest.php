@@ -6,6 +6,7 @@ use App\Enums\ClubRole;
 use App\Models\Club;
 use App\Models\ClubLocation;
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'club_admin']);
@@ -33,7 +34,7 @@ test('users can update location', function () {
         'city' => 'Los Angeles',
         'state' => 'CA',
         'zip' => '90210',
-        'phone' => '(555) 987-6543',
+        'phone' => UserFactory::DEFAULT_PHONE,
     ];
 
     $response = $this->actingAs($this->user)
@@ -50,7 +51,7 @@ test('users can update location', function () {
         'city' => 'Los Angeles',
         'state' => 'CA',
         'zip' => '90210',
-        'phone' => '(555) 987-6543',
+        'phone' => UserFactory::DEFAULT_PHONE,
     ])->exists())->toBeTrue();
 });
 
