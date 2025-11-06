@@ -36,7 +36,7 @@ watchEffect((cleanupFn) => {
         <div class="flex w-full flex-wrap items-center justify-between gap-2">
             <h3 v-if="clubUser.reward_level" class="font-semibold">
                 {{
-                    `${clubUser.reward_level?.name} (Current Reward Level) ${clubUser.visits_past_30_days}/${clubUser.reward_level?.min_visits_per_month}`
+                    `${clubUser.reward_level?.name} (Current Reward Level) ${clubUser.reward_level?.min_visits_per_month}/${clubUser.reward_level?.min_visits_per_month}`
                 }}
             </h3>
             <h3 v-if="clubUser.next_reward_level" class="ml-auto font-semibold">
