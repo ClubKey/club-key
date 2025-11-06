@@ -37,7 +37,7 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
     {
         $channels = ['mail'];
 
-        if (is_vonage_available()) {
+        if (is_vonage_available() && $notifiable->phone) {
             $channels[] = 'vonage';
         }
 

@@ -35,7 +35,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
     {
         $channels = ['mail'];
 
-        if (is_vonage_available()) {
+        if (is_vonage_available() && $notifiable->phone) {
             $channels[] = 'vonage';
         }
 
