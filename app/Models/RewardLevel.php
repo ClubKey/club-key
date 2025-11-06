@@ -67,4 +67,12 @@ final class RewardLevel extends Model
     {
         return $this->belongsToMany(User::class, ClubUser::class, 'next_reward_level_id');
     }
+
+    protected static function booted(): void
+    {
+        self::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('min_visits_per_month')
+                ->orderBy('order');
+        });
+    }
 }

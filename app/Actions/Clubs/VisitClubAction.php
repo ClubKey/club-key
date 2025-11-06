@@ -31,19 +31,28 @@ final readonly class VisitClubAction
                 $this->joinClubAction->handle($user, $club);
             }
 
-            $visitsInLastTwoHours = $user->visits()
+            // Base visits query for this user + club within last 10 minutes
+            $visitsQuery = $user->visits()
                 ->whereClubId($club->id)
-                ->whereClubLocationId($clubLocation?->id)
-                ->where('created_at', '>', now()->subHours(2));
+                ->where('created_at', '>', now()->subMinutes(10));
 
-            if ($visitsInLastTwoHours->doesntExist()) {
+            // Only filter by club_location if provided
+            if ($clubLocation !== null) {
+                $visitsQuery->whereClubLocationId($clubLocation->id);
+            }
+
+            if ($visitsQuery->doesntExist()) {
                 Visit::create([
                     'user_id' => $user->id,
                     'club_id' => $club->id,
                     'club_location_id' => $clubLocation?->id,
                 ]);
 
-                $this->updateUserRewardLevelAction->handle(ClubUser::whereClubId($club->id)->whereUserId($user->id)->first());
+                // Ensure a ClubUser instance is provided
+                $clubUser = ClubUser::whereClubId($club->id)->whereUserId($user->id)->first();
+                if ($clubUser) {
+                    $this->updateUserRewardLevelAction->handle($clubUser);
+                }
             }
         });
     }
