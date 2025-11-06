@@ -48,6 +48,14 @@ final class RewardLevel extends Model
         'percentage_discount',
     ];
 
+    protected static function booted(): void
+    {
+        self::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('min_visits_per_month')
+                ->orderBy('order');
+        });
+    }
+
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
