@@ -103,9 +103,28 @@ export interface Club {
     linkedin?: string;
     pinterest?: string;
     snapchat?: string;
+    stripe_id?: string;
+    pm_type?: string;
+    pm_last_four?: string;
+    trial_ends_at?: string;
     created_at: string;
     updated_at: string;
     owner?: User;
+    subscription?: Subscription;
+}
+
+export interface Subscription {
+    id: number;
+    club_id: number;
+    type: string;
+    stripe_id: string;
+    stripe_status: string;
+    stripe_price?: string;
+    quantity?: number;
+    trial_ends_at?: string;
+    ends_at?: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface DashboardDatum {

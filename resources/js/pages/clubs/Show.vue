@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import PromotionBanner from '@/components/promotions/PromotionBanner.vue';
+import SubscriptionCard from '@/components/subscriptions/SubscriptionCard.vue';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
@@ -7,15 +8,24 @@ import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
 import VisitCard from '@/components/visits/VisitCard.vue';
 import ClubLayout from '@/layouts/ClubLayout.vue';
-import { Club, ClubUser, Paginator, Promotion, Visit } from '@/types';
-import { Head, InfiniteScroll, Link } from '@inertiajs/vue3';
+import { Club, ClubUser, Paginator, Promotion, Subscription, Visit } from '@/types';
+import { Head, InfiniteScroll, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
     club: Club;
     clubUser?: ClubUser;
     promotion?: Promotion | null;
     visits?: Paginator<Visit> | null;
+    subscription?: Subscription | null;
 }>();
+
+const page = usePage();
+const isAdmin = computed(() => {
+    const user = page.props.auth?.user;
+    if (!user || !props.clubUser) return false;
+    return props.clubUser.role === 'admin';
+});
 </script>
 
 <template>
@@ -31,6 +41,14 @@ defineProps<{
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
             <div v-if="clubUser" class="flex w-full flex-col items-center gap-6">
+                <!-- Admin-only subscription card -->
+                <SubscriptionCard 
+                    v-if="isAdmin" 
+                    :club="club" 
+                    :subscription="subscription" 
+                    class="w-full"
+                />
+
                 <RewardProgress :club-user class="w-full" />
                 <RewardCard :club-user />
                 <RewardCardRewards :reward-level="clubUser.reward_level" />

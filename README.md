@@ -43,6 +43,7 @@ Visit `http://localhost:8000` to see the application.
 ### Reference Documentation
 
 - **[Common Patterns](docs/common-patterns.md)** - Practical examples and reusable patterns
+- **[Subscription Management](docs/SUBSCRIPTIONS.md)** - Billing and subscription setup guide
 - **[Troubleshooting Guide](docs/troubleshooting.md)** - Solutions for common issues
 
 ## 🛠 Tech Stack
@@ -178,13 +179,15 @@ php artisan view:cache
 
 ## 📖 Key Features
 
-- **Club Management** - Create and manage clubs with member roles
+- **Club Management** - Any user can create and manage clubs with member roles
+- **Subscription Billing** - Stripe-powered subscriptions ($50/month base + $10 per extra admin)
 - **Visit Tracking** - Track member visits to club locations
 - **Reward System** - Implement points-based reward levels
 - **User Authentication** - Secure user registration and login
 - **Role-Based Access** - Admin, member, and guest roles
 - **File Uploads** - Club logo and image management
 - **Real-time Updates** - Inertia.js for seamless UX
+- **Automated Billing** - Subscriptions automatically adjust when admins are added/removed
 
 ## 🔒 Security
 

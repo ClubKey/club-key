@@ -88,11 +88,18 @@ final class ClubController extends Controller
             );
         }
 
+        // Load subscription data for club admins
+        $subscription = null;
+        if ($user && $user->hasRoleInClub($club, \App\Enums\ClubRole::ADMIN)) {
+            $subscription = $club->subscription('default');
+        }
+
         return Inertia::render('clubs/Show', [
             'club' => $club,
             'clubUser' => $clubUser?->fresh(['rewardLevel.rewards', 'nextRewardLevel']),
             'promotion' => $promotion,
             'visits' => $visits,
+            'subscription' => $subscription,
         ]);
     }
 
