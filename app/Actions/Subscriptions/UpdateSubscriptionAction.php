@@ -31,8 +31,8 @@ final readonly class UpdateSubscriptionAction
             $adminCount = $club->getAdminCount();
 
             // Update subscription quantity
-            // Base subscription includes 3 admins, charge for extras
-            $quantity = max(0, $adminCount - 3);
+            // Base subscription includes defined number of admins, charge for extras
+            $quantity = max(0, $adminCount - Club::SUBSCRIPTION_INCLUDED_ADMINS);
 
             $subscription->updateQuantity($quantity);
 

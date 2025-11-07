@@ -10,6 +10,7 @@ use App\Actions\Clubs\SwitchCurrentClubAction;
 use App\Actions\Clubs\UpdateClubAction;
 use App\Actions\Clubs\UpdateUserRewardLevelAction;
 use App\DTOs\ClubDto;
+use App\Enums\ClubRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Clubs\ClubRequest;
 use App\Http\Requests\Clubs\DeleteClubRequest;
@@ -90,7 +91,7 @@ final class ClubController extends Controller
 
         // Load subscription data for club admins
         $subscription = null;
-        if ($user && $user->hasRoleInClub($club, \App\Enums\ClubRole::ADMIN)) {
+        if ($user && $user->hasRoleInClub($club, ClubRole::ADMIN)) {
             $subscription = $club->subscription('default');
         }
 
