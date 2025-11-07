@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Cashier\Billable;
 
 /**
  * @property int $id
@@ -70,7 +71,7 @@ use Illuminate\Support\Facades\Storage;
  */
 final class Club extends Model
 {
-    use HasFactory;
+    use Billable, HasFactory;
 
     protected $fillable = [
         'owner_id',
@@ -94,11 +95,16 @@ final class Club extends Model
         'linkedin',
         'pinterest',
         'snapchat',
+        'stripe_id',
+        'pm_type',
+        'pm_last_four',
+        'trial_ends_at',
     ];
 
     protected $casts = [
         'created_at' => 'immutable_datetime',
         'updated_at' => 'immutable_datetime',
+        'trial_ends_at' => 'immutable_datetime',
     ];
 
     public function route(): Attribute
@@ -208,5 +214,24 @@ final class Club extends Model
         return new Attribute(
             get: fn ($path) => $path ? Storage::disk('public')->url($path) : null,
         );
+    }
+
+    public function getAdminCount(): int
+    {
+        return $this->admins()->count();
+    }
+
+    public function calculateSubscriptionPrice(): int
+    {
+        $basePrice = 5000; // $50.00 in cents
+        $adminCount = $this->getAdminCount();
+        $includedAdmins = 3;
+        
+        if ($adminCount > $includedAdmins) {
+            $extraAdmins = $adminCount - $includedAdmins;
+            $basePrice += ($extraAdmins * 1000); // $10.00 per extra admin in cents
+        }
+
+        return $basePrice;
     }
 }

@@ -14,6 +14,7 @@
     "endroid/qr-code": "^6.0",
     "giggsey/libphonenumber-for-php": "^9.0",
     "inertiajs/inertia-laravel": "^2.0",
+    "laravel/cashier": "*",
     "laravel/framework": "^12.0",
     "laravel/nightwatch": "^1.13",
     "laravel/octane": "^2.12",

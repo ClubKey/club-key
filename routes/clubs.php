@@ -13,6 +13,7 @@ use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use App\Http\Controllers\Clubs\VisitController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\Subscriptions\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -56,6 +57,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
 
     Route::resource('promotions', PromotionController::class);
+
+    // Subscriptions
+    Route::get('clubs/{club}/subscription/create', [SubscriptionController::class, 'create'])
+        ->name('clubs.subscription.create');
+    Route::post('clubs/{club}/subscription', [SubscriptionController::class, 'store'])
+        ->name('clubs.subscription.store');
+    Route::get('clubs/{club}/billing-portal', [SubscriptionController::class, 'portal'])
+        ->name('clubs.billing-portal');
 });
 
 Route::get('{club}', [ClubController::class, 'show'])
