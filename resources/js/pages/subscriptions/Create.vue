@@ -12,6 +12,7 @@ interface Props {
     club: Club;
     adminCount: number;
     subscriptionPrice: number;
+    priceId: string;
 }
 
 const props = defineProps<Props>();
@@ -33,7 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const form = useForm({
     payment_method: '',
-    price_id: 'price_club_base',
+    price_id: props.priceId,
 });
 
 const submit = () => {

@@ -15,8 +15,10 @@ final readonly class CreateSubscriptionAction
      *
      * @throws Throwable
      */
-    public function handle(Club $club, string $paymentMethod, string $priceId = 'price_club_base'): void
+    public function handle(Club $club, string $paymentMethod, ?string $priceId = null): void
     {
+        $priceId = $priceId ?? config('subscriptions.prices.club_base');
+
         try {
             // Create customer in Stripe if not exists
             if (! $club->hasStripeId()) {

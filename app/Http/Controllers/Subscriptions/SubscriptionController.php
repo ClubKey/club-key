@@ -29,6 +29,7 @@ final class SubscriptionController extends Controller
             'club' => $club,
             'adminCount' => $club->getAdminCount(),
             'subscriptionPrice' => $club->calculateSubscriptionPrice(),
+            'priceId' => config('subscriptions.prices.club_base'),
         ]);
     }
 
