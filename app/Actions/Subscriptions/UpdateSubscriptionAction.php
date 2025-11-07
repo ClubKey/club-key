@@ -32,7 +32,7 @@ final readonly class UpdateSubscriptionAction
 
             // Update subscription quantity
             // Base subscription includes 3 admins, charge for extras
-            $quantity = max(1, $adminCount - 3);
+            $quantity = max(0, $adminCount - 3);
 
             $subscription->updateQuantity($quantity);
 

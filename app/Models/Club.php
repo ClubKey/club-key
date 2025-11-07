@@ -73,6 +73,13 @@ final class Club extends Model
 {
     use Billable, HasFactory;
 
+    // Subscription pricing constants (in cents)
+    public const SUBSCRIPTION_BASE_PRICE = 5000; // $50.00
+
+    public const SUBSCRIPTION_INCLUDED_ADMINS = 3;
+
+    public const SUBSCRIPTION_EXTRA_ADMIN_PRICE = 1000; // $10.00
+
     protected $fillable = [
         'owner_id',
         'name',
@@ -223,13 +230,13 @@ final class Club extends Model
 
     public function calculateSubscriptionPrice(): int
     {
-        $basePrice = 5000; // $50.00 in cents
+        $basePrice = self::SUBSCRIPTION_BASE_PRICE;
         $adminCount = $this->getAdminCount();
-        $includedAdmins = 3;
-        
+        $includedAdmins = self::SUBSCRIPTION_INCLUDED_ADMINS;
+
         if ($adminCount > $includedAdmins) {
             $extraAdmins = $adminCount - $includedAdmins;
-            $basePrice += ($extraAdmins * 1000); // $10.00 per extra admin in cents
+            $basePrice += ($extraAdmins * self::SUBSCRIPTION_EXTRA_ADMIN_PRICE);
         }
 
         return $basePrice;

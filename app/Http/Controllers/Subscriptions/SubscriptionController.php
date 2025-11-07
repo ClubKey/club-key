@@ -42,10 +42,12 @@ final class SubscriptionController extends Controller
         Gate::authorize('update', $club);
 
         try {
+            $priceId = $request->input('price_id', config('subscriptions.prices.club_base'));
+
             $createSubscriptionAction->handle(
                 $club,
                 $request->input('payment_method'),
-                $request->input('price_id', 'price_club_base')
+                $priceId
             );
 
             return to_route('clubs.show', $club)

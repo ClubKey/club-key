@@ -26,6 +26,28 @@ Add the following to your `.env` file:
 STRIPE_KEY=your_stripe_publishable_key
 STRIPE_SECRET=your_stripe_secret_key
 STRIPE_WEBHOOK_SECRET=your_webhook_secret
+STRIPE_PRICE_CLUB_BASE=price_xxx_base_subscription_id
+STRIPE_PRICE_EXTRA_ADMIN=price_xxx_extra_admin_id
+```
+
+Create the corresponding products and prices in your Stripe dashboard:
+- **Base Subscription**: $50/month recurring (includes 3 admins)
+- **Extra Admin**: $10/month per admin (metered or as quantity)
+
+## Configuration
+
+The subscription settings can be configured in `config/subscriptions.php`:
+
+```php
+return [
+    'prices' => [
+        'club_base' => env('STRIPE_PRICE_CLUB_BASE', 'price_club_base'),
+        'extra_admin' => env('STRIPE_PRICE_EXTRA_ADMIN', 'price_extra_admin'),
+    ],
+    'base_price' => 5000, // $50.00 in cents
+    'included_admins' => 3,
+    'extra_admin_price' => 1000, // $10.00 in cents
+];
 ```
 
 ## Key Features
@@ -91,6 +113,8 @@ Set Stripe to test mode and use test payment methods:
 - Test card: `4242 4242 4242 4242`
 - Any future expiry date
 - Any CVC
+
+**Note**: The current implementation requires manually entering a payment method ID. This is for demonstration purposes. In production, integrate Stripe Elements or Stripe Checkout for a complete payment flow.
 
 ## Database Schema
 

@@ -87,7 +87,12 @@ const formatPrice = (cents: number): string => {
                         required
                     />
                     <p class="text-sm text-muted-foreground mt-1">
-                        Enter your Stripe payment method ID. You can obtain this from your Stripe
+                        <strong>Note:</strong> This is a simplified implementation for demonstration. 
+                        In production, you should integrate Stripe Elements or Stripe Checkout 
+                        for secure payment method collection instead of manually entering IDs.
+                    </p>
+                    <p class="text-sm text-muted-foreground mt-1">
+                        For testing: Enter your Stripe payment method ID. You can obtain this from your Stripe
                         dashboard or by setting up a payment form with Stripe Elements.
                     </p>
                     <p v-if="form.errors.payment_method" class="text-sm text-destructive mt-1">
