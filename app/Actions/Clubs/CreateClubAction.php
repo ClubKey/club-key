@@ -6,6 +6,7 @@ namespace App\Actions\Clubs;
 
 use App\DTOs\ClubDto;
 use App\Enums\ClubRole;
+use App\Events\AdminAddedToClub;
 use App\Events\ClubCreated;
 use App\Models\Club;
 use Illuminate\Support\Facades\Auth;
@@ -43,6 +44,9 @@ final readonly class CreateClubAction
             $this->qrCodeGeneratorAction->handle(club: $club);
 
             ClubCreated::dispatch($user, $club);
+            
+            // Dispatch AdminAddedToClub event for the owner
+            AdminAddedToClub::dispatch($club, $user);
 
             return $club;
         });
