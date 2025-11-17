@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Hash;
 
 test('password can be updated', function () {
@@ -12,16 +13,16 @@ test('password can be updated', function () {
         ->actingAs($user)
         ->from('/settings/password')
         ->put('/settings/password', [
-            'current_password' => 'password',
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
+            'current_password' => UserFactory::DEFAULT_PASSWORD,
+            'password' => UserFactory::UPDATE_PASSWORD,
+            'password_confirmation' => UserFactory::UPDATE_PASSWORD,
         ]);
 
     $response
         ->assertSessionHasNoErrors()
         ->assertRedirect('/settings/password');
 
-    expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check(UserFactory::UPDATE_PASSWORD, $user->refresh()->password))->toBeTrue();
 });
 
 test('correct password must be provided to update password', function () {
@@ -31,9 +32,9 @@ test('correct password must be provided to update password', function () {
         ->actingAs($user)
         ->from('/settings/password')
         ->put('/settings/password', [
-            'current_password' => 'wrong-password',
-            'password' => 'new-password',
-            'password_confirmation' => 'new-password',
+            'current_password' => UserFactory::WRONG_PASSWORD,
+            'password' => UserFactory::UPDATE_PASSWORD,
+            'password_confirmation' => UserFactory::UPDATE_PASSWORD,
         ]);
 
     $response

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Club;
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 pest()->group('clubs', 'visits');
 
@@ -52,9 +53,9 @@ test('when a guest visits a club, they will be redirected to login, then after l
     $response = $this->post(route('register'), [
         'name' => 'John Doe',
         'email' => 'test@test.com',
-        'phone' => '1234567890',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'phone' => UserFactory::DEFAULT_PHONE,
+        'password' => UserFactory::DEFAULT_PASSWORD,
+        'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
         'accept_terms' => true,
         'accept_marketing' => true,
     ]);

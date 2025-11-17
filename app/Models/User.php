@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Casts\PhoneNumber;
 use App\Enums\AppRole;
 use App\Enums\ClubRole;
 use Carbon\CarbonImmutable;
@@ -21,6 +22,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 
 /**
  * @property int $id
@@ -103,7 +105,16 @@ final class User extends Authenticatable
         'accepted_terms' => 'immutable_datetime',
         'accepted_marketing' => 'immutable_datetime',
         'role' => AppRole::class,
+        'phone' => PhoneNumber::class,
     ];
+
+    /**
+     * Route notifications for the Vonage channel.
+     */
+    public function routeNotificationForVonage(Notification $notification): string
+    {
+        return $this->phone;
+    }
 
     public function firstName(): Attribute
     {

@@ -6,6 +6,7 @@ use App\Enums\ClubRole;
 use App\Models\AdminInvitation;
 use App\Models\Club;
 use App\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 
@@ -236,9 +237,9 @@ test('new users can register and accept invitation automatically', function () {
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'newuser@example.com',
-        'phone' => '+1234567890',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'phone' => UserFactory::DEFAULT_PHONE,
+        'password' => UserFactory::DEFAULT_PASSWORD,
+        'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
         'accept_terms' => true,
         'accept_marketing' => true,
     ]);
@@ -262,7 +263,7 @@ test('existing users can login and accept invitation automatically', function ()
     $club = Club::factory()->create();
     $user = User::factory()->create([
         'email' => 'existing@example.com',
-        'password' => bcrypt('password'),
+        'password' => bcrypt(UserFactory::DEFAULT_PASSWORD),
     ]);
     $adminInvitation = AdminInvitation::factory()->for($club)->create([
         'email' => 'existing@example.com',
@@ -281,7 +282,7 @@ test('existing users can login and accept invitation automatically', function ()
     // Login with the invited email, maintaining the cookie
     $response = $this->post(route('login'), [
         'email' => 'existing@example.com',
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $response->assertRedirect($route);
@@ -330,8 +331,8 @@ test('invalid invitation tokens are handled gracefully', function () {
         ->post(route('register'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => UserFactory::DEFAULT_PASSWORD,
+            'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
         ]);
 
     $response->assertRedirect(route('dashboard'));
@@ -358,9 +359,9 @@ test('new users can register with different email and accept invitation automati
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'different@example.com',
-        'phone' => '1234567890',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'phone' => UserFactory::DEFAULT_PHONE,
+        'password' => UserFactory::DEFAULT_PASSWORD,
+        'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
         'accept_terms' => true,
         'accept_marketing' => true,
     ]);
@@ -462,9 +463,9 @@ test('invitation is deleted when new user registers with invitation token', func
     $response = $this->post(route('register'), [
         'name' => 'New User',
         'email' => 'newuser@example.com',
-        'phone' => '1234567890',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'phone' => UserFactory::DEFAULT_PHONE,
+        'password' => UserFactory::DEFAULT_PASSWORD,
+        'password_confirmation' => UserFactory::DEFAULT_PASSWORD,
         'accept_terms' => true,
         'accept_marketing' => true,
     ]);
@@ -493,7 +494,7 @@ test('invitation is deleted when existing user logs in with invitation token', f
     $club = Club::factory()->create();
     $user = User::factory()->create([
         'email' => 'existing@example.com',
-        'password' => bcrypt('password'),
+        'password' => bcrypt(UserFactory::DEFAULT_PASSWORD),
     ]);
     $adminInvitation = AdminInvitation::factory()->for($club)->create([
         'email' => 'existing@example.com',
@@ -509,7 +510,7 @@ test('invitation is deleted when existing user logs in with invitation token', f
 
     $response = $this->post(route('login'), [
         'email' => 'existing@example.com',
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $response->assertRedirect($route);

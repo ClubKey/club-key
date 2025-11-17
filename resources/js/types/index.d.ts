@@ -134,6 +134,7 @@ export interface ClubLocation {
     name: string;
     visit_qr_code_path: string;
     visit_tap_link?: string;
+    full_address: string;
     street_address: string;
     city: string;
     state: string;
@@ -175,6 +176,16 @@ export interface Promotion {
     end_at: string | null;
     is_active: boolean;
     link: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Visit {
+    id: number;
+    user_id: number;
+    club_id: number;
+    club_location_id: number | null;
+    club_location?: ClubLocation;
     created_at: string;
     updated_at: string;
 }

@@ -15,22 +15,21 @@ defineProps<{
 
 const form = useForm({
     name: '',
-    icon_name: '',
     min_visits_per_month: '',
     color: '#6b7280',
     description: '',
-    percentage_discount: '',
+    percentage_discount: ''
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reward Levels',
-        href: route('reward-levels.index'),
+        href: route('reward-levels.index')
     },
     {
         title: 'Create Reward Level',
-        href: route('reward-levels.create'),
-    },
+        href: route('reward-levels.create')
+    }
 ];
 
 const submit = () => {
@@ -52,23 +51,10 @@ const submit = () => {
                 <form class="space-y-6" @submit.prevent="submit">
                     <div class="space-y-2">
                         <Label for="name">Level Name</Label>
-                        <Input id="name" v-model="form.name" :error="form.errors.name" placeholder="e.g., Bronze, Silver, Gold" type="text" />
+                        <Input id="name" v-model="form.name" :error="form.errors.name"
+                               placeholder="e.g., Bronze, Silver, Gold" type="text" />
                         <p v-if="form.errors.name" class="text-sm text-destructive">
                             {{ form.errors.name }}
-                        </p>
-                    </div>
-
-                    <div class="space-y-2">
-                        <Label for="icon_name">Icon Name (Optional)</Label>
-                        <Input
-                            id="icon_name"
-                            v-model="form.icon_name"
-                            :error="form.errors.icon_name"
-                            placeholder="e.g., trophy, star, crown"
-                            type="text"
-                        />
-                        <p v-if="form.errors.icon_name" class="text-sm text-destructive">
-                            {{ form.errors.icon_name }}
                         </p>
                     </div>
 

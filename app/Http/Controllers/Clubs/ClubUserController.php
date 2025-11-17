@@ -21,18 +21,46 @@ final class ClubUserController extends Controller
     {
         Gate::authorize('viewAny', [ClubUser::class, $request->user()->currentClub]);
         $search = $request->input('search');
-        $clubUsers = Inertia::scroll(fn () => $request->user()
+        $sort = $request->input('sort');
+
+        $query = $request->user()
             ->currentClub
             ->clubUsers()
-            ->search($search)
-            ->with('user')
-            ->paginate(40)
-        );
+            ->search($search);
+
+        // Apply sorting
+        match ($sort) {
+            'most_checkins' => $query->orderBy('club_user.visits_past_30_days', 'desc'),
+            'recent_visit' => $query
+                ->addSelect([
+                    'last_visit_at' => function ($query) use ($request) {
+                        $query->selectRaw('MAX(created_at)')
+                            ->from('visits')
+                            ->whereColumn('visits.user_id', 'club_user.user_id')
+                            ->where('visits.club_id', $request->user()->currentClub->id);
+                    },
+                ])
+                ->orderByDesc('last_visit_at'),
+            'reward_level' => $query
+                ->addSelect([
+                    'reward_level_order' => function ($query) {
+                        $query->select('order')
+                            ->from('reward_levels')
+                            ->whereColumn('reward_levels.id', 'club_user.reward_level_id')
+                            ->limit(1);
+                    },
+                ])
+                ->orderByDesc('reward_level_order'),
+            default => $query,
+        };
+
+        $clubUsers = Inertia::scroll(fn () => $query->with('user')->paginate(40));
 
         return Inertia::render('club-users/Index', [
             'club' => $request->user()->currentClub,
             'clubUsers' => $clubUsers,
             'search' => $search,
+            'sort' => $sort,
         ]);
     }
 

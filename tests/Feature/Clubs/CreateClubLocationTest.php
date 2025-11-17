@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\ClubRole;
 use App\Models\Club;
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 beforeEach(function () {
     $this->user = User::factory()->create(['role' => 'club_admin']);
@@ -30,7 +31,7 @@ test('users can create location', function () {
         'city' => 'New York',
         'state' => 'NY',
         'zip' => '10001',
-        'phone' => '(555) 123-4567',
+        'phone' => UserFactory::DEFAULT_PHONE,
     ];
 
     $response = $this->actingAs($this->user)
@@ -46,7 +47,7 @@ test('users can create location', function () {
         'city' => 'New York',
         'state' => 'NY',
         'zip' => '10001',
-        'phone' => '(555) 123-4567',
+        'phone' => UserFactory::DEFAULT_PHONE,
     ])->exists())->toBeTrue();
 });
 

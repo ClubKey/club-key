@@ -20,12 +20,13 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     accept_terms: false,
-    accept_marketing: false,
+    accept_marketing: false
 });
 
 const readyForSecondPage = computed(() => {
     return form.name && form.email && form.phone;
 });
+
 function next() {
     step.value = 2;
 }
@@ -44,7 +45,8 @@ function back() {
             <div v-show="step === 1 || form.hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name*</Label>
-                    <Input id="name" v-model="form.name" :tabindex="1" autocomplete="name" name="name" placeholder="Full name" required type="text" />
+                    <Input id="name" v-model="form.name" :tabindex="1" autocomplete="name" name="name"
+                           placeholder="Full name" required type="text" />
                     <InputError :message="form.errors.name" />
                 </div>
 
@@ -78,15 +80,20 @@ function back() {
                     <InputError :message="form.errors.phone" />
                 </div>
 
-                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button" @click="next"
-                    >Next<ArrowRight
-                /></Button>
+                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button"
+                        @click="next"
+                >Next
+                    <ArrowRight
+                    />
+                </Button>
             </div>
 
             <!-- Section 2: Security & consent -->
             <div v-show="step === 2 || form.hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="password">Password*</Label>
+                    <p class="text-sm text-muted-foreground">Your password needs to have a lowercase and uppercase
+                        letter, and number.</p>
                     <Input
                         id="password"
                         v-model="form.password"
@@ -118,7 +125,11 @@ function back() {
                 <div class="grid gap-2">
                     <div class="flex items-center gap-4">
                         <Label class="gap-1" for="accept_terms"
-                            >Accept our applications<Terms><Button class="px-0 underline" variant="link">terms?*</Button></Terms></Label
+                        >Accept our applications
+                            <Terms>
+                                <Button class="px-0 underline" variant="link">terms?*</Button>
+                            </Terms>
+                        </Label
                         >
                         <Checkbox id="accept_terms" v-model="form.accept_terms" name="accept_terms"></Checkbox>
                     </div>
@@ -126,15 +137,20 @@ function back() {
                 </div>
                 <div class="grid gap-2">
                     <div class="flex items-start gap-4">
-                        <Label for="accept_marketing">Okay with getting emails or texts with offers and reminders?*</Label>
-                        <Checkbox id="accept_marketing" v-model="form.accept_marketing" name="accept_marketing"></Checkbox>
+                        <Label for="accept_marketing">Okay with getting emails or texts with offers and
+                            reminders?*</Label>
+                        <Checkbox id="accept_marketing" v-model="form.accept_marketing"
+                                  name="accept_marketing"></Checkbox>
                     </div>
 
                     <p class="text-sm text-muted-foreground">This is required to join a club and receive rewards.</p>
                     <InputError :message="form.errors.accept_marketing" />
                 </div>
                 <div class="grid gap-2">
-                    <Button v-if="!form.hasErrors" type="button" variant="outline" @click="back"><ArrowLeft />Back</Button>
+                    <Button v-if="!form.hasErrors" type="button" variant="outline" @click="back">
+                        <ArrowLeft />
+                        Back
+                    </Button>
                     <Button :disabled="form.processing" class="mt-2 w-full" tabindex="6" type="submit">
                         <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
                         Create account

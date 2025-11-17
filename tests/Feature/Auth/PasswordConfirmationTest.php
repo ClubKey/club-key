@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Database\Factories\UserFactory;
 
 test('confirm password screen can be rendered', function () {
     $user = User::factory()->create();
@@ -16,7 +17,7 @@ test('password can be confirmed', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->post('/confirm-password', [
-        'password' => 'password',
+        'password' => UserFactory::DEFAULT_PASSWORD,
     ]);
 
     $response->assertRedirect();

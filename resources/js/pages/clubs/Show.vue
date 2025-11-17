@@ -5,14 +5,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
+import VisitCard from '@/components/visits/VisitCard.vue';
 import ClubLayout from '@/layouts/ClubLayout.vue';
-import { Club, ClubUser, Promotion } from '@/types';
-import { Head, Link } from '@inertiajs/vue3';
+import { Club, ClubUser, Paginator, Promotion, Visit } from '@/types';
+import { Head, InfiniteScroll, Link } from '@inertiajs/vue3';
 
 defineProps<{
     club: Club;
     clubUser?: ClubUser;
     promotion?: Promotion | null;
+    visits?: Paginator<Visit> | null;
 }>();
 </script>
 
@@ -32,6 +34,13 @@ defineProps<{
                 <RewardProgress :club-user class="w-full" />
                 <RewardCard :club-user />
                 <RewardCardRewards :reward-level="clubUser.reward_level" />
+
+                <div v-if="visits && visits.data.length > 0" class="w-full">
+                    <h2 class="mb-4 text-2xl font-bold">Your Visit History</h2>
+                    <InfiniteScroll :buffer="100" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data="visits">
+                        <VisitCard v-for="visit in visits.data" :key="visit.id" :visit />
+                    </InfiniteScroll>
+                </div>
             </div>
             <Card v-else>
                 <CardContent class="flex flex-col items-center gap-2 text-center">

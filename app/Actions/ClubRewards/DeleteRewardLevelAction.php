@@ -13,8 +13,8 @@ use Throwable;
 final readonly class DeleteRewardLevelAction
 {
     public function __construct(
-        protected UpdateUserRewardLevelAction $updateUserRewardLevelAction,
-        protected DeleteRewardAction $deleteRewardAction,
+        private UpdateUserRewardLevelAction $updateUserRewardLevelAction,
+        private DeleteRewardAction $deleteRewardAction,
     ) {}
 
     /**

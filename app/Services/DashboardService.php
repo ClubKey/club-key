@@ -8,7 +8,6 @@ use App\DTOs\DashboardDataDto;
 use App\Models\ClubLocation;
 use App\Models\ClubUser;
 use App\Models\Visit;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 final class DashboardService
@@ -112,10 +111,6 @@ final class DashboardService
             ->latest('created_at')
             ->first();
 
-        $lastVisitedDisplay = $lastVisit?->created_at instanceof Carbon
-            ? $lastVisit->created_at->toDayDateTimeString()
-            : 'Not yet visited';
-
         $visitsPastThirtyDays = (clone $baseVisitQuery)
             ->where('created_at', '>=', now()->subDays(30))
             ->count();
@@ -175,11 +170,6 @@ final class DashboardService
                 heading: "You're at the top tier!",
             );
         }
-
-        $dashboardData[] = new DashboardDataDto(
-            value: $lastVisitedDisplay,
-            heading: 'Last visit',
-        );
 
         return $dashboardData;
     }

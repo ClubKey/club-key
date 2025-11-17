@@ -17,6 +17,14 @@ use Illuminate\Support\Str;
  */
 final class UserFactory extends Factory
 {
+    public const DEFAULT_PHONE = '5092344456';
+
+    public const DEFAULT_PASSWORD = 'TestingPassword54!';
+
+    public const UPDATE_PASSWORD = 'TestingPassword55!';
+
+    public const WRONG_PASSWORD = 'TestingPassword567!';
+
     /**
      * The current password being used by the factory.
      */
@@ -33,8 +41,8 @@ final class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'phone' => '+15091234567',
-            'password' => self::$password ??= Hash::make('password'),
+            'phone' => self::DEFAULT_PHONE,
+            'password' => self::$password ??= Hash::make(self::DEFAULT_PASSWORD),
             'remember_token' => Str::random(10),
             'current_club_id' => null,
             'role' => AppRole::CLUB_ADMIN,
