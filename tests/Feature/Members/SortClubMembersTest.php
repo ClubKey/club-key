@@ -16,19 +16,22 @@ beforeEach(function () {
     $this->bronzeLevel = RewardLevel::factory()->create([
         'club_id' => $this->club->id,
         'name' => 'Bronze',
+        'min_visits_per_month' => 5,
         'order' => 1,
     ]);
 
     $this->silverLevel = RewardLevel::factory()->create([
         'club_id' => $this->club->id,
         'name' => 'Silver',
+        'min_visits_per_month' => 10,
         'order' => 2,
     ]);
 
     $this->goldLevel = RewardLevel::factory()->create([
         'club_id' => $this->club->id,
         'name' => 'Gold',
-        'order' => 3,
+        'min_visits_per_month' => 15,
+        'order' => 1,
     ]);
 
     // Create three users with different check-in counts

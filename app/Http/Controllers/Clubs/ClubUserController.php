@@ -44,7 +44,7 @@ final class ClubUserController extends Controller
             'reward_level' => $query
                 ->addSelect([
                     'reward_level_order' => function ($query) {
-                        $query->select('order')
+                        $query->select('min_visits_per_month')
                             ->from('reward_levels')
                             ->whereColumn('reward_levels.id', 'club_user.reward_level_id')
                             ->limit(1);
