@@ -24,8 +24,6 @@ final readonly class SendPromotionEmailAction
             foreach ($members as $member) {
                 try {
                     SendMemberPromotionEmail::dispatch($member, $promotion);
-                    // needed for resend
-                    sleep(1);
                 } catch (Exception $exception) {
                     report($exception);
                 }
