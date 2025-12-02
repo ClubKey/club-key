@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Promotions;
 
 use App\Actions\Promotions\CreatePromotionAction;
 use App\Actions\Promotions\DeletePromotionAction;
 use App\Actions\Promotions\UpdatePromotionAction;
 use App\DTOs\PromotionDto;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotions\PromotionRequest;
 use App\Models\Promotion;
 use Illuminate\Http\RedirectResponse;

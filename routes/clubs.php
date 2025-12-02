@@ -12,7 +12,8 @@ use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use App\Http\Controllers\Clubs\VisitController;
-use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\Promotions\PromotionController;
+use App\Http\Controllers\Promotions\ResendPromotionNotification;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -56,6 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
 
     Route::resource('promotions', PromotionController::class);
+    Route::post('promotions/{promotion}/resend', ResendPromotionNotification::class)->name('promotions.resend');
 });
 
 Route::get('{club}', [ClubController::class, 'show'])

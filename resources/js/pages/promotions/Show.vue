@@ -18,10 +18,14 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import { Pencil, Trash } from 'lucide-vue-next';
 
-const props = defineProps<{ promotion: Promotion }>();
+const props = defineProps<{
+    promotion: Promotion,
+}>();
 
 const deleteForm = useForm({});
 const isDeleteDialogOpen = ref(false);
+
+const resendForm = useForm({});
 
 const title = computed(() => `${props.promotion.name} Promotion`);
 
@@ -41,6 +45,13 @@ const handleDelete = (event: Event) => {
         onSuccess: () => {
             isDeleteDialogOpen.value = false;
         }
+    });
+};
+
+const handleResend = () => {
+    resendForm.post(route('promotions.resend', props.promotion.id), {
+        preserveScroll: true,
+        preserveState: false
     });
 };
 
@@ -170,6 +181,28 @@ watch(isDeleteDialogOpen, (isOpen) => {
                         {{ promotion.link }}
                     </Link>
                 </div>
+                <Dialog v-if="promotion.published_at">
+                    <DialogTrigger>
+                        <Button>Resend Promotion?</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader class="space-y-2">
+                            <DialogTitle>Want to resend the promotion notification?</DialogTitle>
+                            <p>You can resend your promotion notification to your members with this option. Only resend
+                                if you
+                                need to! Don't want to spam your members.</p>
+                        </DialogHeader>
+                        <DialogFooter class="gap-2">
+                            <DialogClose as-child>
+                                <Button>No, Cancel</Button>
+                            </DialogClose>
+                            <Button :disabled="resendForm.processing" variant="destructive"
+                                    @click="handleResend">
+                                {{ resendForm.processing ? 'Resending Promotion...' : 'Yes, Resend Promotion' }}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     </AppLayout>
