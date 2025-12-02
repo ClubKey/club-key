@@ -224,9 +224,8 @@ it('does not publish promotions that are already published', function (): void {
 
     PublishDuePromotionsJob::dispatchSync();
 
-    // expect the promotions published_at date to not be updated
-    // ensure even if the date is of a different format it is still treated as the same date
-    expect($promotion->fresh()->published_at)->toEqual($publishAtDate);
+    expect($promotion->fresh()->published_at)->toEqual($publishAtDate)
+        ->and($promotion->published_at)->not->toBeNull();
 });
 
 it('does not publish promotions that are scheduled for the future', function (): void {

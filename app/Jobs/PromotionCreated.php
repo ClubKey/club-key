@@ -28,8 +28,8 @@ final class PromotionCreated implements ShouldQueue
      *
      * @throws Throwable
      */
-    public function handle(): void
+    public function handle(PublishPromotionAction $publishPromotionAction): void
     {
-        app(PublishPromotionAction::class)->handle($this->promotion);
+        $publishPromotionAction->handle($this->promotion);
     }
 }
