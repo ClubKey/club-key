@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Actions\Promotions;
 
-use App\Actions\SendPromotionEmailAction;
 use App\Models\Promotion;
+use Throwable;
 
 use function now;
 
@@ -18,6 +18,9 @@ final readonly class PublishPromotionAction
         private SendPromotionEmailAction $sendPromotionEmailAction,
     ) {}
 
+    /**
+     * @throws Throwable
+     */
     public function handle(Promotion $promotion): Promotion
     {
         if ($promotion->publish_at !== null && $promotion->publish_at <= now()) {
