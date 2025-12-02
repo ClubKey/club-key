@@ -12,6 +12,8 @@ use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 use function is_vonage_available;
+use function route;
+use function url;
 
 final class PromotionPublished extends Notification implements ShouldQueue
 {
@@ -53,7 +55,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
             ->line($this->promotion->name)
             ->line($this->promotion->description)
-            ->action('View Your Card', url(route('clubs.show', $this->promotion->club->slug)))
+            ->action($this->actionText(), $this->actionLink())
             ->line('Hope you love it!');
     }
 
@@ -81,5 +83,23 @@ final class PromotionPublished extends Notification implements ShouldQueue
         $link = $this->promotion->link ?: $this->promotion->club->route;
 
         return "{$this->promotion->description} {$link}, from {$this->promotion->club->name}";
+    }
+
+    private function actionText(): string
+    {
+        if ($this->promotion->link) {
+            return 'Check it out';
+        }
+
+        return 'View Your Card';
+    }
+
+    private function actionLink(): string
+    {
+        if ($this->promotion->link) {
+            return $this->promotion->link;
+        }
+
+        return url(route('clubs.show', $this->promotion->club->slug));
     }
 }
