@@ -70,7 +70,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
         <Head :title="title" />
 
         <!-- Top heading and actions -->
-        <div class="flex flex-col gap-4 flex-row md:items-center md:justify-between">
+        <div class="flex gap-4 items-center justify-between">
             <Heading :title="promotion.name" description="Review your promotion details." />
             <div class="flex gap-2 ml-auto">
                 <Button as-child size="sm" variant="outline">
