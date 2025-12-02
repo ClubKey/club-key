@@ -172,14 +172,14 @@ watch(isDeleteDialogOpen, (isOpen) => {
                 <!-- Link -->
                 <div v-if="promotion.link" class="space-y-2">
                     <h3 class="text-sm font-medium text-muted-foreground">Link</h3>
-                    <Link
+                    <a
                         :href="promotion.link"
                         class="text-primary hover:underline"
                         rel="noopener noreferrer"
                         target="_blank"
                     >
                         {{ promotion.link }}
-                    </Link>
+                    </a>
                 </div>
                 <Dialog v-if="promotion.published_at">
                     <DialogTrigger>
