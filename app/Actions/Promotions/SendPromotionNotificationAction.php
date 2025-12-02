@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Actions\Promotions;
 
-use App\Jobs\SendMemberPromotionEmail;
+use App\Jobs\SendMemberPromotionNotification;
 use App\Models\Promotion;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-final readonly class SendPromotionEmailAction
+final readonly class SendPromotionNotificationAction
 {
     /**
      * Execute the action.
@@ -21,9 +21,9 @@ final readonly class SendPromotionEmailAction
     {
         DB::transaction(function () use ($promotion): void {
             $members = $promotion->club->members;
-            foreach ($members as $member) {
+            foreach ($members as $index => $member) {
                 try {
-                    SendMemberPromotionEmail::dispatch($member, $promotion);
+                    SendMemberPromotionNotification::dispatch($member, $promotion)->delay(now()->addSeconds($index));
                 } catch (Exception $exception) {
                     report($exception);
                 }

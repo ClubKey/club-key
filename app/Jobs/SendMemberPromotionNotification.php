@@ -11,7 +11,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\Middleware\RateLimited;
 
-final class SendMemberPromotionEmail implements ShouldQueue
+final class SendMemberPromotionNotification implements ShouldQueue
 {
     use Queueable;
 

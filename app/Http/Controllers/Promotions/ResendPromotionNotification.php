@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Promotions;
 
-use App\Actions\Promotions\SendPromotionEmailAction;
+use App\Actions\Promotions\SendPromotionNotificationAction;
 use App\Http\Controllers\Controller;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
@@ -18,7 +18,7 @@ final class ResendPromotionNotification extends Controller
      *
      * @throws Throwable
      */
-    public function __invoke(Request $request, Promotion $promotion, SendPromotionEmailAction $action)
+    public function __invoke(Request $request, Promotion $promotion, SendPromotionNotificationAction $action)
     {
         Gate::authorize('update', $promotion);
 

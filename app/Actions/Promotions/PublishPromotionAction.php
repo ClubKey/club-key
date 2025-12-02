@@ -15,7 +15,7 @@ use function now;
 final readonly class PublishPromotionAction
 {
     public function __construct(
-        private SendPromotionEmailAction $sendPromotionEmailAction,
+        private SendPromotionNotificationAction $sendPromotionEmailAction,
     ) {}
 
     /**
