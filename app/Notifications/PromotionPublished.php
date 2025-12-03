@@ -50,6 +50,8 @@ final class PromotionPublished extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->from('contact@promotions.clubkey.site', 'ClubKey Deals')
+            ->replyTo($this->promotion->club->email, $this->promotion->club->name)
             ->subject("{$this->promotion->club->name} has something for you.")
             ->greeting("Hey {$notifiable->name},")
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
@@ -78,13 +80,6 @@ final class PromotionPublished extends Notification implements ShouldQueue
             ->content($this->getTextContent());
     }
 
-    private function getTextContent(): string
-    {
-        $link = $this->promotion->link ?: $this->promotion->club->route;
-
-        return "{$this->promotion->description} {$link}, from {$this->promotion->club->name}";
-    }
-
     private function actionText(): string
     {
         if ($this->promotion->link) {
@@ -101,5 +96,12 @@ final class PromotionPublished extends Notification implements ShouldQueue
         }
 
         return url(route('clubs.show', $this->promotion->club->slug));
+    }
+
+    private function getTextContent(): string
+    {
+        $link = $this->promotion->link ?: $this->promotion->club->route;
+
+        return "{$this->promotion->description} {$link}, from {$this->promotion->club->name}";
     }
 }
