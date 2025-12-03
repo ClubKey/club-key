@@ -23,7 +23,7 @@ final readonly class SendPromotionNotificationAction
             $members = $promotion->club->members;
             foreach ($members as $index => $member) {
                 try {
-                    SendMemberPromotionNotification::dispatch($member, $promotion)->delay(now()->addSeconds($index));
+                    SendMemberPromotionNotification::dispatch($member, $promotion)->delay($index);
                 } catch (Exception $exception) {
                     report($exception);
                 }
