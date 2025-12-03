@@ -27,7 +27,7 @@ final class AppServiceProvider extends ServiceProvider
         Model::preventLazyLoading();
 
         RateLimiter::for('emails', function () {
-            return Limit::perMinute(1);
+            return Limit::perSecond(1);
         });
     }
 }
