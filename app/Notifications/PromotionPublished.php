@@ -52,7 +52,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new MailMessage)
             ->from('contact@promotions.clubkey.site', 'ClubKey Deals')
             ->replyTo($this->promotion->club->email, $this->promotion->club->name)
-            ->subject("{$this->promotion->club->name} has something for you.")
+            ->subject($this->promotion->name)
             ->greeting("Hey {$notifiable->name},")
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
             ->line($this->promotion->name)
