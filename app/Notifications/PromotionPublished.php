@@ -12,7 +12,6 @@ use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 use function is_vonage_available;
-use function route;
 use function url;
 
 final class PromotionPublished extends Notification implements ShouldQueue
@@ -91,11 +90,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
 
     private function actionLink(): string
     {
-        if ($this->promotion->link) {
-            return $this->promotion->link;
-        }
-
-        return url(route('clubs.show', $this->promotion->club->slug));
+        return url($this->promotion->public_link);
     }
 
     private function getTextContent(): string
