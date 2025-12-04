@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Notifications\PromotionPublished;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\Middleware\RateLimited;
 
 final class SendMemberPromotionNotification implements ShouldQueue
 {
@@ -31,12 +30,5 @@ final class SendMemberPromotionNotification implements ShouldQueue
     public function handle(): void
     {
         $this->member->notify(new PromotionPublished($this->promotion));
-    }
-
-    public function middleware(): array
-    {
-        return [
-            new RateLimited('emails'),
-        ];
     }
 }
