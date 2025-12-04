@@ -51,13 +51,27 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new MailMessage)
             ->from('contact@promotions.clubkey.site', 'ClubKey Deals')
             ->replyTo($this->promotion->club->email, $this->promotion->club->name)
-            ->subject($this->promotion->name)
+            ->subject("{$this->promotion->club->name} has an exclusive deal for you!")
             ->greeting("Hey {$notifiable->name},")
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
             ->line($this->promotion->name)
             ->line($this->promotion->description)
             ->action($this->actionText(), $this->actionLink())
             ->line('Hope you love it!');
+    }
+
+    private function actionText(): string
+    {
+        if ($this->promotion->link) {
+            return 'Check it out';
+        }
+
+        return 'View Your Card';
+    }
+
+    private function actionLink(): string
+    {
+        return url($this->promotion->public_link);
     }
 
     /**
@@ -77,20 +91,6 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new VonageMessage)
             ->clientReference($this->promotion->club->slug)
             ->content($this->getTextContent());
-    }
-
-    private function actionText(): string
-    {
-        if ($this->promotion->link) {
-            return 'Check it out';
-        }
-
-        return 'View Your Card';
-    }
-
-    private function actionLink(): string
-    {
-        return url($this->promotion->public_link);
     }
 
     private function getTextContent(): string
