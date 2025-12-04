@@ -60,20 +60,6 @@ final class PromotionPublished extends Notification implements ShouldQueue
             ->line('Hope you love it!');
     }
 
-    private function actionText(): string
-    {
-        if ($this->promotion->link) {
-            return 'Check it out';
-        }
-
-        return 'View Your Card';
-    }
-
-    private function actionLink(): string
-    {
-        return url($this->promotion->public_link);
-    }
-
     /**
      * Get the array representation of the notification.
      *
@@ -91,6 +77,20 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new VonageMessage)
             ->clientReference($this->promotion->club->slug)
             ->content($this->getTextContent());
+    }
+
+    private function actionText(): string
+    {
+        if ($this->promotion->link) {
+            return 'Check it out';
+        }
+
+        return 'View Your Card';
+    }
+
+    private function actionLink(): string
+    {
+        return url($this->promotion->public_link);
     }
 
     private function getTextContent(): string
