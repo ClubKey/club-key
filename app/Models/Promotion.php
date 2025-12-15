@@ -8,9 +8,11 @@ use App\Models\Scopes\OrderDescending;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,6 +24,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon $start_at
  * @property Carbon|null $end_at
  * @property string $link
+ * @property bool $is_active
+ * @property-read HasMany<Visit> $visits
+ * @property-read int|null $visits_count
+ * @property-read string $public_link
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Club $club
@@ -71,5 +77,12 @@ final class Promotion extends Model
     public function club(): BelongsTo
     {
         return $this->belongsTo(Club::class);
+    }
+
+    public function publicLink(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route('promotions.public-link', $this->id),
+        );
     }
 }

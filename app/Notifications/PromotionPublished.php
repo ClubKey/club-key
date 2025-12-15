@@ -12,6 +12,7 @@ use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
 use function is_vonage_available;
+use function url;
 
 final class PromotionPublished extends Notification implements ShouldQueue
 {
@@ -48,12 +49,14 @@ final class PromotionPublished extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("{$this->promotion->club->name} has something for you.")
+            ->from('contact@promotions.clubkey.site', 'ClubKey Deals')
+            ->replyTo($this->promotion->club->email, $this->promotion->club->name)
+            ->subject("{$this->promotion->club->name} has an exclusive deal for you!")
             ->greeting("Hey {$notifiable->name},")
             ->line("{$this->promotion->club->name} has something for you since you are part of their club.")
             ->line($this->promotion->name)
             ->line($this->promotion->description)
-            ->action('View Your Card', url(route('clubs.show', $this->promotion->club->slug)))
+            ->action($this->actionText(), $this->actionLink())
             ->line('Hope you love it!');
     }
 
@@ -74,6 +77,20 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new VonageMessage)
             ->clientReference($this->promotion->club->slug)
             ->content($this->getTextContent());
+    }
+
+    private function actionText(): string
+    {
+        if ($this->promotion->link) {
+            return 'Check it out';
+        }
+
+        return 'View Your Card';
+    }
+
+    private function actionLink(): string
+    {
+        return url($this->promotion->public_link);
     }
 
     private function getTextContent(): string

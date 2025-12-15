@@ -30,27 +30,9 @@ final class ClubUserController extends Controller
 
         // Apply sorting
         match ($sort) {
-            'most_checkins' => $query->orderBy('club_user.visits_past_30_days', 'desc'),
-            'recent_visit' => $query
-                ->addSelect([
-                    'last_visit_at' => function ($query) use ($request) {
-                        $query->selectRaw('MAX(created_at)')
-                            ->from('visits')
-                            ->whereColumn('visits.user_id', 'club_user.user_id')
-                            ->where('visits.club_id', $request->user()->currentClub->id);
-                    },
-                ])
-                ->orderByDesc('last_visit_at'),
-            'reward_level' => $query
-                ->addSelect([
-                    'reward_level_order' => function ($query) {
-                        $query->select('order')
-                            ->from('reward_levels')
-                            ->whereColumn('reward_levels.id', 'club_user.reward_level_id')
-                            ->limit(1);
-                    },
-                ])
-                ->orderByDesc('reward_level_order'),
+            'most_checkins' => $query->byMostVisits(),
+            'recent_visit' => $query->byMostRecentVisits(),
+            'reward_level' => $query->byHighestRewardLevel(),
             default => $query,
         };
 

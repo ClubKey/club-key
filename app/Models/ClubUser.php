@@ -75,4 +75,34 @@ final class ClubUser extends Pivot
                 ->orWhere('phone', 'like', "%{$search}%");
         });
     }
+
+    #[Scope]
+    public function byHighestRewardLevel(Builder $query): void
+    {
+        $query->orderByDesc(
+            RewardLevel::select('min_visits_per_month')
+                ->whereColumn('reward_levels.id', 'reward_level_id')
+                ->limit(1)
+        );
+    }
+
+    #[Scope]
+    public function byMostRecentVisits(Builder $query): void
+    {
+        $query->addSelect([
+            'last_visit_at' => function ($query) {
+                $query->selectRaw('MAX(created_at)')
+                    ->from('visits')
+                    ->whereColumn('visits.user_id', 'club_user.user_id')
+                    ->whereColumn('visits.club_id', 'club_user.club_id');
+            },
+        ])
+            ->orderByDesc('last_visit_at');
+    }
+
+    #[Scope]
+    public function byMostVisits(Builder $query): void
+    {
+        $query->orderByDesc('visits_past_30_days');
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Promotions;
 
 use App\DTOs\PromotionDto;
+use App\Jobs\PromotionCreated;
 use App\Models\Club;
 use App\Models\Promotion;
 use Illuminate\Support\Facades\DB;
@@ -12,10 +13,6 @@ use Throwable;
 
 final readonly class CreatePromotionAction
 {
-    public function __construct(
-        private PublishPromotionAction $publishPromotionAction,
-    ) {}
-
     /**
      * Execute the action.
      *
@@ -38,7 +35,7 @@ final readonly class CreatePromotionAction
                 'link' => $data->link,
             ]);
 
-            $this->publishPromotionAction->handle($promotion);
+            PromotionCreated::dispatch($promotion);
 
             return $promotion;
         });

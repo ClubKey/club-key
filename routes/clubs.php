@@ -12,7 +12,9 @@ use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use App\Http\Controllers\Clubs\VisitController;
-use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\Promotions\PromotionController;
+use App\Http\Controllers\Promotions\PublicPromotionLinkController;
+use App\Http\Controllers\Promotions\ResendPromotionNotification;
 use App\Http\Controllers\Subscriptions\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
 
     Route::resource('promotions', PromotionController::class);
+    Route::post('promotions/{promotion}/resend', ResendPromotionNotification::class)->name('promotions.resend');
 
     // Subscriptions
     Route::get('clubs/{club}/subscription/create', [SubscriptionController::class, 'create'])
@@ -69,3 +72,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::get('{club}', [ClubController::class, 'show'])
     ->name('clubs.show');
+
+Route::get('promotions/{promotion}/view', PublicPromotionLinkController::class)->name('promotions.public-link');

@@ -19,7 +19,7 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         <Head title="Create" />
         <Heading
             class="max-w-2xl"
-            description="Promotions are short updates you can send to your club members. You can choose to send them out via email, or just as an in-app banner they'll see when the check in."
+            description="Promotions are short updates you can send to your club members. Once a promotion is published, it will be sent in an email to all your club members, and display on your club page. Make sure you have proof read your promotion before publishing it."
             title="Create a promotion"
         />
 

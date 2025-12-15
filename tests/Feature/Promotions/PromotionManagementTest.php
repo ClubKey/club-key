@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Jobs\PromotionCreated;
 use App\Jobs\PublishDuePromotionsJob;
 use App\Models\Promotion;
 use App\Models\User;
@@ -204,11 +205,99 @@ it('publishes active promotions that are ready for publication', function (): vo
 
         PublishDuePromotionsJob::dispatchSync();
 
-        expect($readyPromotion->fresh()->published_at)->toEqual($expectedPublishedAt);
-        expect($inactivePromotion->fresh()->published_at)->toBeNull();
-        expect($futurePromotion->fresh()->published_at)->toBeNull();
-        expect($alreadyPublishedPromotion->fresh()->published_at)->toEqual($alreadyPublishedAt);
+        expect($readyPromotion->fresh()->published_at)->toEqual($expectedPublishedAt)
+            ->and($inactivePromotion->fresh()->published_at)->toBeNull()
+            ->and($futurePromotion->fresh()->published_at)->toBeNull()
+            ->and($alreadyPublishedPromotion->fresh()->published_at)->toEqual($alreadyPublishedAt);
     } finally {
         Carbon::setTestNow();
     }
+});
+
+it('does not publish promotions that are already published', function (): void {
+    // without seconds
+    $publishAtDate = now()->subMinutes()->toDateTimeString();
+    $promotion = Promotion::factory()->create([
+        'publish_at' => now()->subMinutes(1),
+        'published_at' => $publishAtDate,
+    ]);
+
+    PublishDuePromotionsJob::dispatchSync();
+
+    expect($promotion->fresh()->published_at)->toEqual($publishAtDate)
+        ->and($promotion->published_at)->not->toBeNull();
+});
+
+it('does not publish promotions that are scheduled for the future', function (): void {
+    $promotion = Promotion::factory()->create([
+        'publish_at' => now()->addMinutes(1),
+    ]);
+
+    PublishDuePromotionsJob::dispatchSync();
+
+    expect($promotion->fresh()->published_at)->toBeNull();
+});
+
+it('does not republish promotions that have already been published', function (): void {
+    $promotion = Promotion::factory()->create([
+        'publish_at' => now()->subMinutes(1),
+        'published_at' => now()->subMinutes(1),
+    ]);
+
+    PublishDuePromotionsJob::dispatchSync();
+});
+
+test('when a promotion is created with the publish_now checkbox checked, it is published immediately', function (): void {
+    $user = User::factory()->withClub()->create();
+    $club = $user->currentClub;
+
+    $response = $this->actingAs($user)->post(route('promotions.store'), [
+        'name' => 'Publish Now Promotion',
+        'description' => 'This promotion should be published immediately.',
+        'publish_now' => '1',
+        'timezone' => 'UTC',
+    ]);
+
+    $response->assertRedirect('/promotions/');
+
+    $this->assertDatabaseHas('promotions', [
+        'name' => 'Publish Now Promotion',
+        'description' => 'This promotion should be published immediately.',
+    ]);
+
+    expect($club->promotions()->count())->toBe(1)
+        ->and($club->promotions()->first()->published_at)->not->toBeNull();
+});
+
+test('when a promotion club has thousands of members, the response is still fast as the promotion is published in a queue event', function (): void {
+    Queue::fake();
+    config(['queue.default' => 'database']);
+
+    $user = User::factory()->withClub()->create();
+    $club = $user->currentClub;
+
+    // Create 1000 members for the club
+    User::factory()->count(1000)->create()->each(function ($member) use ($club) {
+        $club->members()->attach($member);
+    });
+
+    $startTime = microtime(true);
+
+    $response = $this->actingAs($user)->post(route('promotions.store'), [
+        'name' => 'Mass Member Promotion',
+        'description' => 'Testing promotion creation with many members',
+        'publish_now' => '1',
+        'timezone' => 'UTC',
+    ]);
+
+    $endTime = microtime(true);
+    $executionTime = ($endTime - $startTime);
+
+    $response->assertRedirect('/promotions/');
+
+    // Assert the response was fast (under 1 second)
+    expect($executionTime)->toBeLessThan(1.0);
+
+    // Assert the job was queued
+    Queue::assertPushed(PromotionCreated::class);
 });

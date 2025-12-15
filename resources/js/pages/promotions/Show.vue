@@ -18,10 +18,14 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref, watch } from 'vue';
 import { Pencil, Trash } from 'lucide-vue-next';
 
-const props = defineProps<{ promotion: Promotion }>();
+const props = defineProps<{
+    promotion: Promotion,
+}>();
 
 const deleteForm = useForm({});
 const isDeleteDialogOpen = ref(false);
+
+const resendForm = useForm({});
 
 const title = computed(() => `${props.promotion.name} Promotion`);
 
@@ -44,6 +48,13 @@ const handleDelete = (event: Event) => {
     });
 };
 
+const handleResend = () => {
+    resendForm.post(route('promotions.resend', props.promotion.id), {
+        preserveScroll: true,
+        preserveState: false
+    });
+};
+
 const closeDeleteDialog = () => {
     deleteForm.clearErrors();
     deleteForm.reset();
@@ -59,7 +70,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
         <Head :title="title" />
 
         <!-- Top heading and actions -->
-        <div class="flex flex-col gap-4 flex-row md:items-center md:justify-between">
+        <div class="flex gap-4 items-center justify-between">
             <Heading :title="promotion.name" description="Review your promotion details." />
             <div class="flex gap-2 ml-auto">
                 <Button as-child size="sm" variant="outline">
@@ -161,15 +172,37 @@ watch(isDeleteDialogOpen, (isOpen) => {
                 <!-- Link -->
                 <div v-if="promotion.link" class="space-y-2">
                     <h3 class="text-sm font-medium text-muted-foreground">Link</h3>
-                    <Link
+                    <a
                         :href="promotion.link"
                         class="text-primary hover:underline"
                         rel="noopener noreferrer"
                         target="_blank"
                     >
                         {{ promotion.link }}
-                    </Link>
+                    </a>
                 </div>
+                <Dialog v-if="promotion.published_at">
+                    <DialogTrigger>
+                        <Button>Resend Promotion?</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader class="space-y-2">
+                            <DialogTitle>Want to resend the promotion notification?</DialogTitle>
+                            <p>You can resend your promotion notification to your members with this option. Only resend
+                                if you
+                                need to! Don't want to spam your members.</p>
+                        </DialogHeader>
+                        <DialogFooter class="gap-2">
+                            <DialogClose as-child>
+                                <Button>No, Cancel</Button>
+                            </DialogClose>
+                            <Button :disabled="resendForm.processing" variant="destructive"
+                                    @click="handleResend">
+                                {{ resendForm.processing ? 'Resending Promotion...' : 'Yes, Resend Promotion' }}
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     </AppLayout>
