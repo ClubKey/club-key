@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogClose,
@@ -10,16 +10,16 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Promotion } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { computed, ref, watch } from 'vue';
 import { Pencil, Trash } from 'lucide-vue-next';
+import { computed, ref, watch } from 'vue';
 
 const props = defineProps<{
-    promotion: Promotion,
+    promotion: Promotion;
 }>();
 
 const deleteForm = useForm({});
@@ -44,14 +44,14 @@ const handleDelete = (event: Event) => {
     deleteForm.delete(route('promotions.destroy', props.promotion.id), {
         onSuccess: () => {
             isDeleteDialogOpen.value = false;
-        }
+        },
     });
 };
 
 const handleResend = () => {
     resendForm.post(route('promotions.resend', props.promotion.id), {
         preserveScroll: true,
-        preserveState: false
+        preserveState: false,
     });
 };
 
@@ -70,14 +70,13 @@ watch(isDeleteDialogOpen, (isOpen) => {
         <Head :title="title" />
 
         <!-- Top heading and actions -->
-        <div class="flex gap-4 items-center justify-between">
+        <div class="flex items-center justify-between gap-4">
             <Heading :title="promotion.name" description="Review your promotion details." />
-            <div class="flex gap-2 ml-auto">
+            <div class="ml-auto flex gap-2">
                 <Button as-child size="sm" variant="outline">
                     <Link :href="route('promotions.edit', promotion.id)">
                         <Pencil />
-                        <span
-                            class="sr-only lg:not-sr-only">Edit Promotion</span>
+                        <span class="sr-only lg:not-sr-only">Edit Promotion</span>
                     </Link>
                 </Button>
 
@@ -86,9 +85,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
                     <DialogTrigger as-child>
                         <Button :disabled="deleteForm.processing" size="sm" type="button" variant="destructive">
                             <Trash />
-                            <span
-                                class="sr-only lg:not-sr-only">{{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion'
-                                }}</span>
+                            <span class="sr-only lg:not-sr-only">{{ deleteForm.processing ? 'Deleting...' : 'Delete Promotion' }}</span>
                         </Button>
                     </DialogTrigger>
 
@@ -96,18 +93,13 @@ watch(isDeleteDialogOpen, (isOpen) => {
                         <form class="space-y-6" @submit="handleDelete">
                             <DialogHeader class="space-y-3">
                                 <DialogTitle>Delete promotion</DialogTitle>
-                                <DialogDescription>
-                                    Are you sure you want to delete this promotion? This action cannot be undone.
-                                </DialogDescription>
+                                <DialogDescription> Are you sure you want to delete this promotion? This action cannot be undone. </DialogDescription>
                             </DialogHeader>
 
-                            <div
-                                class="rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
+                            <div class="rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                                 <div class="space-y-1 text-red-600 dark:text-red-100">
                                     <p class="font-medium">Warning</p>
-                                    <p class="text-sm">
-                                        Deleting this promotion will permanently remove it from your club.
-                                    </p>
+                                    <p class="text-sm">Deleting this promotion will permanently remove it from your club.</p>
                                 </div>
                             </div>
 
@@ -128,7 +120,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
 
         <!-- Summary Card -->
         <div>
-            <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between pb-4">
+            <div class="flex flex-col gap-2 pb-4 md:flex-row md:items-center md:justify-between">
                 <h1 class="text-xl font-semibold">Promotion Summary</h1>
 
                 <div class="flex flex-wrap gap-2">
@@ -172,12 +164,7 @@ watch(isDeleteDialogOpen, (isOpen) => {
                 <!-- Link -->
                 <div v-if="promotion.link" class="space-y-2">
                     <h3 class="text-sm font-medium text-muted-foreground">Link</h3>
-                    <a
-                        :href="promotion.link"
-                        class="text-primary hover:underline"
-                        rel="noopener noreferrer"
-                        target="_blank"
-                    >
+                    <a :href="promotion.link" class="text-primary hover:underline" rel="noopener noreferrer" target="_blank">
                         {{ promotion.link }}
                     </a>
                 </div>
@@ -188,16 +175,16 @@ watch(isDeleteDialogOpen, (isOpen) => {
                     <DialogContent>
                         <DialogHeader class="space-y-2">
                             <DialogTitle>Want to resend the promotion notification?</DialogTitle>
-                            <p>You can resend your promotion notification to your members with this option. Only resend
-                                if you
-                                need to! Don't want to spam your members.</p>
+                            <p>
+                                You can resend your promotion notification to your members with this option. Only resend if you need to! Don't want to
+                                spam your members.
+                            </p>
                         </DialogHeader>
                         <DialogFooter class="gap-2">
                             <DialogClose as-child>
                                 <Button>No, Cancel</Button>
                             </DialogClose>
-                            <Button :disabled="resendForm.processing" variant="destructive"
-                                    @click="handleResend">
+                            <Button :disabled="resendForm.processing" variant="destructive" @click="handleResend">
                                 {{ resendForm.processing ? 'Resending Promotion...' : 'Yes, Resend Promotion' }}
                             </Button>
                         </DialogFooter>

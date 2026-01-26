@@ -24,13 +24,11 @@ const columns = [
     },
     {
         header: 'Publishes At',
-        accessorFn: (row: Promotion) =>
-            row.publish_at ? new Date(row.publish_at).toLocaleString() : 'Not scheduled',
+        accessorFn: (row: Promotion) => (row.publish_at ? new Date(row.publish_at).toLocaleString() : 'Not scheduled'),
     },
     {
         header: 'Ends At',
-        accessorFn: (row: Promotion) =>
-            row.end_at ? new Date(row.end_at).toLocaleDateString() : 'No end date',
+        accessorFn: (row: Promotion) => (row.end_at ? new Date(row.end_at).toLocaleDateString() : 'No end date'),
     },
     {
         header: 'Actions',
@@ -43,7 +41,7 @@ const columns = [
                         href: route('promotions.show', row.original.id),
                         class: 'text-sm font-medium text-primary hover:underline',
                     },
-                    () => 'View'
+                    () => 'View',
                 ),
                 h(
                     Link,
@@ -51,7 +49,7 @@ const columns = [
                         href: route('promotions.edit', row.original.id),
                         class: 'text-sm font-medium text-muted-foreground hover:text-primary',
                     },
-                    () => 'Edit'
+                    () => 'Edit',
                 ),
             ]),
     },

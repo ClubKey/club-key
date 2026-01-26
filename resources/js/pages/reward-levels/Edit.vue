@@ -9,7 +9,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogTitle
+    AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,18 +32,18 @@ const form = useForm({
     min_visits_per_month: props.rewardLevel.min_visits_per_month.toString(),
     color: props.rewardLevel.color || '#6b7280',
     description: props.rewardLevel.description || '',
-    percentage_discount: props.rewardLevel.percentage_discount.toString()
+    percentage_discount: props.rewardLevel.percentage_discount.toString(),
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Reward Levels',
-        href: route('reward-levels.index')
+        href: route('reward-levels.index'),
     },
     {
         title: 'Edit Reward Level',
-        href: route('reward-levels.edit', props.rewardLevel.id)
-    }
+        href: route('reward-levels.edit', props.rewardLevel.id),
+    },
 ];
 
 const rewardToDelete = ref<Reward | null>(null);
@@ -100,8 +100,7 @@ const confirmDeleteReward = () => {
                         <form class="space-y-6" @submit.prevent="submit">
                             <div class="space-y-2">
                                 <Label for="name">Level Name</Label>
-                                <Input id="name" v-model="form.name" :error="form.errors.name"
-                                       placeholder="e.g., Bronze, Silver, Gold" type="text" />
+                                <Input id="name" v-model="form.name" :error="form.errors.name" placeholder="e.g., Bronze, Silver, Gold" type="text" />
                                 <p v-if="form.errors.name" class="text-sm text-destructive">
                                     {{ form.errors.name }}
                                 </p>
@@ -175,16 +174,14 @@ const confirmDeleteReward = () => {
                     <CardHeader>
                         <CardTitle>Rewards</CardTitle>
                         <CardDescription
-                        >Rewards are benefits that members get when they reach this reward level. You can add anything
-                            here.
+                            >Rewards are benefits that members get when they reach this reward level. You can add anything here.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div v-if="!rewardLevel.rewards || rewardLevel.rewards.length === 0" class="py-8 text-center">
                             <Gift class="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
                             <HeadingSmall title="No rewards yet" />
-                            <p class="mt-2 text-sm text-muted-foreground">Add rewards that members can earn at this
-                                level.</p>
+                            <p class="mt-2 text-sm text-muted-foreground">Add rewards that members can earn at this level.</p>
                             <Button as-child class="mt-4">
                                 <Link :href="route('reward-levels.rewards.create', rewardLevel.id)">
                                     <Plus />
@@ -208,8 +205,7 @@ const confirmDeleteReward = () => {
                                             <Edit />
                                         </Link>
                                     </Button>
-                                    <Button class="text-destructive" size="sm" variant="outline"
-                                            @click="deleteReward(reward)">
+                                    <Button class="text-destructive" size="sm" variant="outline" @click="deleteReward(reward)">
                                         <Trash2 />
                                     </Button>
                                 </div>
@@ -226,14 +222,12 @@ const confirmDeleteReward = () => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Delete Reward</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Are you sure you want to delete "{{ rewardToDelete?.description }}"? This action cannot be
-                        undone.
+                        Are you sure you want to delete "{{ rewardToDelete?.description }}"? This action cannot be undone.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction class="bg-red-600 hover:bg-red-700" @click="confirmDeleteReward">Delete
-                    </AlertDialogAction>
+                    <AlertDialogAction class="bg-red-600 hover:bg-red-700" @click="confirmDeleteReward">Delete </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

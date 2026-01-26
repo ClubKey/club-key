@@ -56,6 +56,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Club Members
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
+    Route::post('members/{member}/visits', [VisitController::class, 'createForMember'])
+        ->name('members.visits.create');
 
     Route::resource('promotions', PromotionController::class);
 

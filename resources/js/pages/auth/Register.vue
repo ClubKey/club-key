@@ -20,7 +20,7 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     accept_terms: false,
-    accept_marketing: false
+    accept_marketing: false,
 });
 
 const readyForSecondPage = computed(() => {
@@ -45,8 +45,7 @@ function back() {
             <div v-show="step === 1 || form.hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="name">Name*</Label>
-                    <Input id="name" v-model="form.name" :tabindex="1" autocomplete="name" name="name"
-                           placeholder="Full name" required type="text" />
+                    <Input id="name" v-model="form.name" :tabindex="1" autocomplete="name" name="name" placeholder="Full name" required type="text" />
                     <InputError :message="form.errors.name" />
                 </div>
 
@@ -80,11 +79,9 @@ function back() {
                     <InputError :message="form.errors.phone" />
                 </div>
 
-                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button"
-                        @click="next"
-                >Next
-                    <ArrowRight
-                    />
+                <Button v-if="!form.hasErrors" :disabled="!readyForSecondPage" class="mt-2 w-full" type="button" @click="next"
+                    >Next
+                    <ArrowRight />
                 </Button>
             </div>
 
@@ -92,8 +89,7 @@ function back() {
             <div v-show="step === 2 || form.hasErrors" class="grid gap-6">
                 <div class="grid gap-2">
                     <Label for="password">Password*</Label>
-                    <p class="text-sm text-muted-foreground">Your password needs to have a lowercase and uppercase
-                        letter, and number.</p>
+                    <p class="text-sm text-muted-foreground">Your password needs to have a lowercase and uppercase letter, and number.</p>
                     <Input
                         id="password"
                         v-model="form.password"
@@ -125,22 +121,19 @@ function back() {
                 <div class="grid gap-2">
                     <div class="flex items-center gap-4">
                         <Label class="gap-1" for="accept_terms"
-                        >Accept our applications
+                            >Accept our applications
                             <Terms>
                                 <Button class="px-0 underline" variant="link">terms?*</Button>
                             </Terms>
-                        </Label
-                        >
+                        </Label>
                         <Checkbox id="accept_terms" v-model="form.accept_terms" name="accept_terms"></Checkbox>
                     </div>
                     <InputError :message="form.errors.accept_terms" />
                 </div>
                 <div class="grid gap-2">
                     <div class="flex items-start gap-4">
-                        <Label for="accept_marketing">Okay with getting emails or texts with offers and
-                            reminders?*</Label>
-                        <Checkbox id="accept_marketing" v-model="form.accept_marketing"
-                                  name="accept_marketing"></Checkbox>
+                        <Label for="accept_marketing">Okay with getting emails or texts with offers and reminders?*</Label>
+                        <Checkbox id="accept_marketing" v-model="form.accept_marketing" name="accept_marketing"></Checkbox>
                     </div>
 
                     <p class="text-sm text-muted-foreground">This is required to join a club and receive rewards.</p>

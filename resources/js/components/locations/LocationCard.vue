@@ -51,20 +51,17 @@ function copyVisitLink() {
                 <span>{{ location.phone }}</span>
             </div>
             <div v-if="canEdit" class="flex flex-col items-start gap-2">
-                <Button v-if="location.visit_tap_link" size="sm" variant="outline" @click="copyVisitLink">{{ copyText
-                    }}
-                </Button>
+                <Button v-if="location.visit_tap_link" size="sm" variant="outline" @click="copyVisitLink">{{ copyText }} </Button>
 
                 <Button as-child size="sm">
-                    <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download
-                       target="_blank">
+                    <a :href="location.visit_qr_code_path" :title="`${location.name} Visit Code`" download target="_blank">
                         <Download />
                         Download Check In Code</a
                     >
                 </Button>
             </div>
         </CardContent>
-        <CardFooter class="border-t mt-auto">
+        <CardFooter class="mt-auto border-t">
             <div v-if="canEdit" class="flex w-full gap-2">
                 <Button as-child class="flex-1" variant="outline">
                     <Link :href="route('locations.edit', location.id)">
@@ -74,9 +71,12 @@ function copyVisitLink() {
                 </Button>
                 <DeleteLocation :location="location" />
             </div>
-            <a v-else :href="linkToGoogleAddress"
-               class="flex w-full items-center justify-center gap-2 hover:underline transition duration-200 ease-in-out"
-               target="_blank">
+            <a
+                v-else
+                :href="linkToGoogleAddress"
+                class="flex w-full items-center justify-center gap-2 transition duration-200 ease-in-out hover:underline"
+                target="_blank"
+            >
                 <MapPin class="h-4 w-4" />
                 Get Directions
             </a>
