@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useDate } from '@/composables/useDate';
 import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem, ClubUser, User } from '@/types';
-import { Head, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { Head, router, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = defineProps<{
     clubUser: ClubUser;
@@ -34,6 +35,22 @@ const visitText = computed(() => {
         ? `${props.clubUser.user.name} has visited the club once in the past 30 days.`
         : `${props.clubUser.user.name} has visited the club ${props.clubUser.visits_past_30_days} times in the past 30 days.`;
 });
+
+const isLoggingVisit = ref(false);
+
+const logVisit = () => {
+    isLoggingVisit.value = true;
+    router.post(
+        route('members.visits.create', props.clubUser.id),
+        {},
+        {
+            preserveScroll: true,
+            onFinish: () => {
+                isLoggingVisit.value = false;
+            },
+        },
+    );
+};
 </script>
 
 <template>
@@ -52,9 +69,12 @@ const visitText = computed(() => {
                         <CardTitle class="text-2xl">{{ user.name }} {{ authUser.id === user.id ? '(You)' : '' }} </CardTitle>
                         <CardDescription class="text-base">{{ user.email }}</CardDescription>
                     </div>
-                    <Badge :variant="clubUser.role == 'admin' ? 'default' : 'secondary'">
-                        {{ clubUser.role === 'admin' ? 'Admin' : 'Member' }}
-                    </Badge>
+                    <div class="flex items-center gap-2">
+                        <Badge :variant="clubUser.role == 'admin' ? 'default' : 'secondary'">
+                            {{ clubUser.role === 'admin' ? 'Admin' : 'Member' }}
+                        </Badge>
+                        <Button :disabled="isLoggingVisit" @click="logVisit"> + Log Visit </Button>
+                    </div>
                 </div>
             </CardHeader>
             <CardContent class="space-y-6">

@@ -32,7 +32,7 @@ const handleSubmit = debounce(() => {
 const handleSortChange = (value: string) => {
     router.get(
         route('members.index'),
-        { 
+        {
             sort: value === 'default' ? undefined : value,
             search: props.search || undefined,
         },
@@ -66,7 +66,7 @@ const handleSortChange = (value: string) => {
                     <input v-if="sort" name="sort" type="hidden" :value="sort" />
                     <button class="hidden" type="submit">Search</button>
                 </Form>
-                
+
                 <Select :default-value="sort" @update:model-value="handleSortChange">
                     <SelectTrigger class="w-full sm:w-[220px]">
                         <SelectValue placeholder="Sort by..." />

@@ -2,9 +2,9 @@
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { usePage } from '@inertiajs/vue3';
+import confetti from 'canvas-confetti';
 import { AlertCircle, Info, Rocket, TriangleAlert, X } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
-import confetti from 'canvas-confetti';
 
 const page = usePage();
 
@@ -77,8 +77,8 @@ const launchConfetti = async () => {
             gravity: 0.9,
             origin: {
                 x: Math.random(),
-                y: Math.random() * 0.3
-            }
+                y: Math.random() * 0.3,
+            },
         });
 
         if (Date.now() < animationEnd) {
@@ -96,7 +96,7 @@ watch(
             void launchConfetti();
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 </script>
 
@@ -109,8 +109,7 @@ watch(
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
     >
-        <div v-if="isVisitSuccess && shouldShow"
-             class="fixed inset-0 z-[1000] flex h-screen w-full flex-col items-center justify-center">
+        <div v-if="isVisitSuccess && shouldShow" class="fixed inset-0 z-[1000] flex h-screen w-full flex-col items-center justify-center">
             <div class="flex max-h-screen flex-col items-center bg-background/80 backdrop-blur">
                 <div class="mx-4 max-w-2xl rounded-3xl bg-background p-8 text-center shadow-2xl">
                     <p class="text-sm font-semibold tracking-[0.4em] text-primary uppercase">Check-In Complete</p>

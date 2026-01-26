@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import DataCard from '@/components/dashboard/DataCard.vue';
+import PromotionBanner from '@/components/promotions/PromotionBanner.vue';
 import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
-import PromotionBanner from '@/components/promotions/PromotionBanner.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Auth, BreadcrumbItem, Club, ClubUser, DashboardDatum, Promotion } from '@/types';
 import { Head, Link } from '@inertiajs/vue3';
