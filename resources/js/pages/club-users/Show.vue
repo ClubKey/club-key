@@ -38,6 +38,8 @@ const visitText = computed(() => {
 
 const isLoggingVisit = ref(false);
 
+const logVisitAriaLabel = computed(() => `Log a visit for ${props.user.name}`);
+
 const logVisit = () => {
     isLoggingVisit.value = true;
     router.post(
@@ -73,7 +75,9 @@ const logVisit = () => {
                         <Badge :variant="clubUser.role == 'admin' ? 'default' : 'secondary'">
                             {{ clubUser.role === 'admin' ? 'Admin' : 'Member' }}
                         </Badge>
-                        <Button :disabled="isLoggingVisit" @click="logVisit"> + Log Visit </Button>
+                        <Button :aria-label="logVisitAriaLabel" :disabled="isLoggingVisit" @click="logVisit">
+                            {{ isLoggingVisit ? 'Logging Visit...' : '+ Log Visit' }}
+                        </Button>
                     </div>
                 </div>
             </CardHeader>
