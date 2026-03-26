@@ -206,12 +206,12 @@ const removeManualEntry = (index: number) => {
         </div>
 
         <div
-            v-if="page.props.flash.errors && Array.isArray(page.props.flash.errors) && page.props.flash.errors.length > 0"
+            v-if="page.props.flash.error_messages && Array.isArray(page.props.flash.error_messages) && page.props.flash.error_messages.length > 0"
             class="rounded-lg bg-red-50 p-4"
         >
             <h4 class="font-semibold text-red-800">Import Errors:</h4>
             <ul class="mt-2 list-inside list-disc text-red-700">
-                <li v-for="(error, index) in page.props.flash.errors" :key="index">Row {{ error.row }}:
+                <li v-for="(error, index) in page.props.flash.error_messages" :key="index">Row {{ error.row }}:
                     {{ error.error }}
                 </li>
             </ul>

@@ -76,7 +76,7 @@ final class SubscriberImportController extends Controller
 
         return back()->with([
             'success' => "Successfully imported {$result->success} subscriptions.",
-            'errors' => $errorsArray,
+            'error_messages' => $errorsArray,
         ]);
     }
 
