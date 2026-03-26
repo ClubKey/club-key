@@ -52,11 +52,17 @@ final class ClubUserController extends Controller
     public function show(Request $request, ClubUser $member): Response
     {
         Gate::authorize('view', $member);
+        $visits = Inertia::scroll(fn () => $member->user->visitsForClub($member->club)
+            ->with('clubLocation')
+            ->latest()
+            ->paginate(20)
+        );
 
         return inertia('club-users/Show', [
             'clubUser' => $member,
             'user' => $member->user,
             'club' => $member->club,
+            'visits' => $visits,
         ]);
     }
 }

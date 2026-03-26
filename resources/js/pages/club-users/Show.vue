@@ -6,13 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useDate } from '@/composables/useDate';
 import { getInitials } from '@/composables/useInitials';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem, ClubUser, User } from '@/types';
+import { BreadcrumbItem, ClubUser, Paginator, User, Visit } from '@/types';
 import { Head, router, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { Plus } from 'lucide-vue-next';
+import VisitList from '@/components/visits/VisitList.vue';
 
 const props = defineProps<{
     clubUser: ClubUser;
     user: User;
+    visits?: Paginator<Visit> | null;
 }>();
 
 const { formatDate } = useDate();
@@ -22,12 +25,12 @@ const authUser = usePage().props.auth.user;
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Members',
-        href: route('members.index'),
+        href: route('members.index')
     },
     {
         title: 'Member Profile',
-        href: route('members.show', props.clubUser.id),
-    },
+        href: route('members.show', props.clubUser.id)
+    }
 ];
 
 const visitText = computed(() => {
@@ -49,8 +52,8 @@ const logVisit = () => {
             preserveScroll: true,
             onFinish: () => {
                 isLoggingVisit.value = false;
-            },
-        },
+            }
+        }
     );
 };
 </script>
@@ -68,15 +71,17 @@ const logVisit = () => {
                         </AvatarFallback>
                     </Avatar>
                     <div class="flex-1">
-                        <CardTitle class="text-2xl">{{ user.name }} {{ authUser.id === user.id ? '(You)' : '' }} </CardTitle>
+                        <CardTitle class="text-2xl">{{ user.name }} {{ authUser.id === user.id ? '(You)' : '' }}
+                        </CardTitle>
                         <CardDescription class="text-base">{{ user.email }}</CardDescription>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-4">
                         <Badge :variant="clubUser.role == 'admin' ? 'default' : 'secondary'">
                             {{ clubUser.role === 'admin' ? 'Admin' : 'Member' }}
                         </Badge>
-                        <Button :aria-label="logVisitAriaLabel" :disabled="isLoggingVisit" @click="logVisit">
-                            {{ isLoggingVisit ? 'Logging Visit...' : '+ Log Visit' }}
+                        <Button :aria-label="logVisitAriaLabel" :disabled="isLoggingVisit" size="sm" @click="logVisit">
+                            <Plus />
+                            {{ isLoggingVisit ? 'Logging Visit...' : 'Log Visit' }}
                         </Button>
                     </div>
                 </div>
@@ -92,6 +97,10 @@ const logVisit = () => {
                         <dt class="text-sm font-medium">Account Created</dt>
                         <dd class="text-sm">{{ formatDate(user.created_at) }}</dd>
                     </dl>
+                </div>
+                <div v-if="visits && visits.data.length > 0" class="w-full">
+                    <h2 class="mb-4 text-2xl font-bold">User Visit History</h2>
+                    <VisitList :visits="visits" />
                 </div>
             </CardContent>
         </Card>

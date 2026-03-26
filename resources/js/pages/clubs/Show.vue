@@ -5,10 +5,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import RewardCard from '@/components/user-rewards/RewardCard.vue';
 import RewardCardRewards from '@/components/user-rewards/RewardCardRewards.vue';
 import RewardProgress from '@/components/user-rewards/RewardProgress.vue';
-import VisitCard from '@/components/visits/VisitCard.vue';
 import ClubLayout from '@/layouts/ClubLayout.vue';
 import { Club, ClubUser, Paginator, Promotion, Visit } from '@/types';
-import { Head, InfiniteScroll, Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import VisitList from '@/components/visits/VisitList.vue';
 
 defineProps<{
     club: Club;
@@ -27,7 +27,8 @@ defineProps<{
         <div class="mx-auto flex w-full max-w-screen-lg flex-col items-center gap-6 pb-8">
             <PromotionBanner v-if="promotion" :promotion="promotion" class="w-full" />
 
-            <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!" class="h-32 overflow-hidden rounded-lg" />
+            <img v-if="club.logo_path" :alt="club.name" :src="club.logo_path!"
+                 class="h-32 overflow-hidden rounded-lg" />
             <h1 class="text-5xl font-bold">{{ club.name }}</h1>
             <p v-if="club.description" class="max-w-2xl text-center text-accent-foreground">{{ club.description }}</p>
             <div v-if="clubUser" class="flex w-full flex-col items-center gap-6">
@@ -37,9 +38,7 @@ defineProps<{
 
                 <div v-if="visits && visits.data.length > 0" class="w-full">
                     <h2 class="mb-4 text-2xl font-bold">Your Visit History</h2>
-                    <InfiniteScroll :buffer="100" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data="visits">
-                        <VisitCard v-for="visit in visits.data" :key="visit.id" :visit />
-                    </InfiniteScroll>
+                    <VisitList :visits="visits" />
                 </div>
             </div>
             <Card v-else>
