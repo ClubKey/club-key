@@ -1,4 +1,11 @@
 {
+  "permissions": {
+    "allow": [
+      "mcp__laravel-boost__last-error",
+      "Bash(php artisan:*)",
+      "mcp__laravel-boost__tinker"
+    ]
+  },
   "enabledMcpjsonServers": [
     "laravel-boost",
     "herd"
