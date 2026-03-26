@@ -21,13 +21,15 @@ export interface Paginator<T extends Record<unknown>> {
     current_page: number;
     data: T[];
     first_page_url: string;
-    from: number;
+    from: number | null;
     last_page: number;
     last_page_url: string;
     links: any[];
     next_page_url: string | null;
     path: string;
     per_page: number;
+    to: number | null;
+    total: number;
 }
 
 export type AppPageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -186,6 +188,23 @@ export interface Visit {
     club_id: number;
     club_location_id: number | null;
     club_location?: ClubLocation;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface CommunicationSubscription {
+    id: number;
+    user_id: number | null;
+    club_id: number;
+    contact_type: 'email' | 'sms' | 'push' | 'whatsapp';
+    contact_value: string;
+    topic: 'promotions' | 'notifications';
+    status: 'subscribed' | 'unsubscribed' | 'pending';
+    subscribed_at: string | null;
+    unsubscribed_at: string | null;
+    unsubscribe_reason: string | null;
+    source: string | null;
+    user?: User | null;
     created_at: string;
     updated_at: string;
 }

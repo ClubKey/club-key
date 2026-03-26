@@ -53,6 +53,7 @@ use Illuminate\Notifications\Notification;
  * @method static Builder<static>|User query()
  * @method static Builder<static>|User whereCreatedAt($value)
  * @method static Builder<static>|User whereEmail($value)
+ * @method static Builder<static>|User wherePhone($value)
  * @method static Builder<static>|User whereEmailVerifiedAt($value)
  * @method static Builder<static>|User whereId($value)
  * @method static Builder<static>|User whereName($value)

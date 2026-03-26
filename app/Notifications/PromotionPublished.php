@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Enums\ContactType;
+use App\Enums\Topic;
+use App\Models\CommunicationSubscription;
 use App\Models\Promotion;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
+use function can_send_notification;
 use function is_vonage_available;
 use function url;
 
@@ -34,9 +39,16 @@ final class PromotionPublished extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        $channels = ['mail'];
+        $channels = [];
 
-        if (is_vonage_available() && $notifiable->phone) {
+        // Check email subscription
+        if (can_send_notification($notifiable, $this->promotion->club, ContactType::EMAIL, Topic::PROMOTIONS)) {
+            $channels[] = 'mail';
+        }
+
+        // Check SMS subscription
+        if (is_vonage_available() && $notifiable->phone &&
+            can_send_notification($notifiable, $this->promotion->club, ContactType::SMS, Topic::PROMOTIONS)) {
             $channels[] = 'vonage';
         }
 
@@ -48,7 +60,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        $message = (new MailMessage)
             ->from('contact@promotions.clubkey.site', 'ClubKey Deals')
             ->replyTo($this->promotion->club->email, $this->promotion->club->name)
             ->subject("{$this->promotion->club->name} has an exclusive deal for you!")
@@ -58,6 +70,15 @@ final class PromotionPublished extends Notification implements ShouldQueue
             ->line($this->promotion->description)
             ->action($this->actionText(), $this->actionLink())
             ->line('Hope you love it!');
+
+        // Add unsubscribe link if subscription exists
+        $subscription = $this->getSubscription($notifiable);
+        if ($subscription) {
+            $unsubscribeUrl = URL::signedRoute('unsubscribe.email', ['subscription' => $subscription->id]);
+            $message->line("If you no longer wish to receive these emails, you can [unsubscribe]({$unsubscribeUrl}).");
+        }
+
+        return $message;
     }
 
     /**
@@ -77,6 +98,19 @@ final class PromotionPublished extends Notification implements ShouldQueue
         return (new VonageMessage)
             ->clientReference($this->promotion->club->slug)
             ->content($this->getTextContent());
+    }
+
+    private function getSubscription(object $notifiable): ?CommunicationSubscription
+    {
+        if (! $notifiable->email) {
+            return null;
+        }
+
+        return CommunicationSubscription::where('club_id', $this->promotion->club->id)
+            ->where('contact_type', ContactType::EMAIL)
+            ->where('contact_value', mb_strtolower($notifiable->email))
+            ->where('topic', Topic::PROMOTIONS)
+            ->first();
     }
 
     private function actionText(): string

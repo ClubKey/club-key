@@ -53,3 +53,40 @@ if (! function_exists('is_vonage_available')) {
             config('vonage.sms_from');
     }
 }
+
+if (! function_exists('can_send_notification')) {
+    /**
+     * Check if a notification can be sent to a user for a specific club, contact type, and topic.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Club  $club
+     * @param  \App\Enums\ContactType  $contactType
+     */
+    function can_send_notification($user, $club, $contactType, \App\Enums\Topic $topic): bool
+    {
+        $contactValue = match ($contactType) {
+            \App\Enums\ContactType::EMAIL => $user->email,
+            \App\Enums\ContactType::SMS => $user->phone,
+            default => null,
+        };
+
+        if (! $contactValue) {
+            return false;
+        }
+
+        $normalizedValue = \App\Models\CommunicationSubscription::normalizeContactValue($contactType, $contactValue);
+
+        $subscription = \App\Models\CommunicationSubscription::where('club_id', $club->id)
+            ->where('contact_type', $contactType)
+            ->where('contact_value', $normalizedValue)
+            ->where('topic', $topic)
+            ->first();
+
+        // If no subscription exists, default to allowing (for backward compatibility)
+        if (! $subscription) {
+            return true;
+        }
+
+        return $subscription->status === \App\Enums\SubscriptionStatus::SUBSCRIBED;
+    }
+}

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Enums\ContactType;
+use App\Enums\Topic;
 use App\Models\ClubUser;
 use App\Models\RewardLevel;
 use Illuminate\Bus\Queueable;
@@ -12,6 +14,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 
+use function can_send_notification;
 use function is_vonage_available;
 
 final class YourRewardLevelHasChanged extends Notification implements ShouldQueue
@@ -35,9 +38,16 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
      */
     public function via(object $notifiable): array
     {
-        $channels = ['mail'];
+        $channels = [];
 
-        if (is_vonage_available() && $notifiable->phone) {
+        // Check email subscription
+        if (can_send_notification($notifiable, $this->clubUser->club, ContactType::EMAIL, Topic::NOTIFICATIONS)) {
+            $channels[] = 'mail';
+        }
+
+        // Check SMS subscription
+        if (is_vonage_available() && $notifiable->phone &&
+            can_send_notification($notifiable, $this->clubUser->club, ContactType::SMS, Topic::NOTIFICATIONS)) {
             $channels[] = 'vonage';
         }
 

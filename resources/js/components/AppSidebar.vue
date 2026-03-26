@@ -2,7 +2,15 @@
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    Sidebar,
+    SidebarContent,
+    SidebarFooter,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Eye, Gift, LayoutGrid, MapPin, Trophy, User } from 'lucide-vue-next';
 import { computed } from 'vue';
@@ -17,32 +25,37 @@ const mainNavItems = computed(() => {
         {
             title: 'Dashboard',
             href: '/dashboard',
-            icon: LayoutGrid,
-        },
+            icon: LayoutGrid
+        }
     ];
 
     if (user.current_club_id) {
         items.push({
             title: 'Locations',
             href: '/locations',
-            icon: MapPin,
+            icon: MapPin
         });
     }
     if (user.club_role === 'admin' && user.current_club_id) {
         items.push({
             title: 'Reward Levels',
             href: '/reward-levels',
-            icon: Trophy,
+            icon: Trophy
         });
         items.push({
             title: 'Members',
             href: '/members',
-            icon: User,
+            icon: User
+        });
+        items.push({
+            title: 'Subscribers',
+            href: '/subscribers',
+            icon: User
         });
         items.push({
             title: 'Promotions',
             href: '/promotions',
-            icon: Gift,
+            icon: Gift
         });
     }
 
@@ -55,8 +68,8 @@ const footerNavItems = computed(() => {
             {
                 title: 'View Club',
                 href: `/${club.slug}`,
-                icon: Eye,
-            },
+                icon: Eye
+            }
         ];
     }
     return [];
