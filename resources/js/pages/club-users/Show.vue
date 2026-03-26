@@ -15,7 +15,7 @@ import VisitList from '@/components/visits/VisitList.vue';
 const props = defineProps<{
     clubUser: ClubUser;
     user: User;
-    visits?: Paginator<Visit> | null;
+    visits: Paginator<Visit>;
 }>();
 
 const { formatDate } = useDate();
