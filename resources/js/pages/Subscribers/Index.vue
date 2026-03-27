@@ -11,6 +11,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { debounce } from '@/lib/utils';
 import { type BreadcrumbItem, type Club, type CommunicationSubscription, type Paginator } from '@/types';
 import { Form, Head, Link, router } from '@inertiajs/vue3';
+import { ArrowLeft } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -30,7 +31,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: `/clubs/${props.club.slug}/edit`
     },
     {
-        title: 'Subscribers',
+        title: 'Notification Subscriptions',
         href: route('subscribers.index')
     }
 ];
@@ -79,12 +80,20 @@ const getStatusBadgeClass = (status: string): string => {
 
 <template>
     <AppLayout :breadcrumbs>
-        <Head :title="`Subscribers - ${club.name}`" />
+        <Head :title="`Notification Subscriptions - ${club.name}`" />
+        <div class="mb-4 flex flex-col items-start gap-4">
+            <Button as-child variant="outline">
+                <Link :href="route('members.index')">
+                    <ArrowLeft />
+                    Members
+                </Link>
+            </Button>
+        </div>
         <div class="mb-4 flex items-center justify-between">
-            <Heading :title="`Subscribers - ${club.name}`"
-                     description="Manage and view all communication subscriptions for your club." />
+            <Heading :title="`Notification Subscriptions - ${club.name}`"
+                     description="Manage and view all notification subscriptions for your club." />
             <Button as-child>
-                <Link :href="route('subscribers.import')">Import Subscribers</Link>
+                <Link :href="route('subscribers.import')">Import Notification Subscriptions</Link>
             </Button>
         </div>
 
@@ -168,12 +177,12 @@ const getStatusBadgeClass = (status: string): string => {
 
         <Card class="p-6">
             <div class="mb-4 flex items-center justify-between">
-                <HeadingSmall :title="`Subscriptions (${subscriptions.total})`" />
+                <HeadingSmall :title="`Notification Subscriptions (${subscriptions.total})`" />
             </div>
 
             <div v-if="subscriptions.data.length === 0" class="py-12 text-center">
-                <p class="text-neutral-600">No subscriptions found. Try adjusting your filters or import
-                    subscribers.</p>
+                <p class="text-neutral-600">No notification subscriptions found. Try adjusting your filters or import
+                    notification subscriptions.</p>
             </div>
 
             <div v-else class="overflow-x-auto">
@@ -227,7 +236,7 @@ const getStatusBadgeClass = (status: string): string => {
             <div v-if="subscriptions.last_page > 1" class="mt-4 flex items-center justify-between">
                 <div class="text-sm text-neutral-600">
                     Showing {{ subscriptions.from || 0 }} to {{ subscriptions.to || 0 }} of {{ subscriptions.total
-                    }} subscriptions
+                    }} notification subscriptions
                 </div>
                 <div class="flex gap-2">
                     <Button

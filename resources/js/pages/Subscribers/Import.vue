@@ -47,7 +47,7 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: `/clubs/${props.club.slug}/edit`
     },
     {
-        title: 'Import Subscriptions',
+        title: 'Import Notification Subscriptions',
         href: route('subscribers.import')
     }
 ];
@@ -94,15 +94,15 @@ const removeManualEntry = (index: number) => {
 
 <template>
     <AppLayout :breadcrumbs>
-        <Head :title="`Import Subscriptions - ${club.name}`" />
+        <Head :title="`Import Notification Subscriptions - ${club.name}`" />
         <div class="flex flex-col items-start gap-4">
             <Button as-child>
                 <Link :href="route('subscribers.index')">
                     <ArrowLeft />
-                    Subscribers
+                    Notification Subscriptions
                 </Link>
             </Button>
-            <Heading :title="`Import Subscriptions - ${club.name}`" />
+            <Heading :title="`Import Notification Subscriptions - ${club.name}`" />
 
         </div>
 

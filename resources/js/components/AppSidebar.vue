@@ -48,11 +48,6 @@ const mainNavItems = computed(() => {
             icon: User
         });
         items.push({
-            title: 'Subscribers',
-            href: '/subscribers',
-            icon: User
-        });
-        items.push({
             title: 'Promotions',
             href: '/promotions',
             icon: Gift

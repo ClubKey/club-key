@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { debounce } from '@/lib/utils';
 import { type BreadcrumbItem, type Club, ClubUser, Paginator } from '@/types';
-import { Form, Head, InfiniteScroll, router } from '@inertiajs/vue3';
+import { Form, Head, InfiniteScroll, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Button } from '@/components/ui/button';
 
@@ -50,9 +50,14 @@ const handleSortChange = (value: string) => {
         <Head :title="`${club.name} Members`" />
         <div class="mb-4 flex items-center justify-between">
             <Heading :title="`${club.name} Members`" description="View your club members." />
-            <Button as-child>
-                <Link :href="route('subscribers.import')">Import Members</Link>
-            </Button>
+            <div class="flex gap-2">
+                <Button as-child variant="outline">
+                    <Link :href="route('subscribers.index')">Notification Subscriptions</Link>
+                </Button>
+                <Button as-child>
+                    <Link :href="route('subscribers.import')">Import Members</Link>
+                </Button>
+            </div>
         </div>
         <div class="grid gap-2">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
