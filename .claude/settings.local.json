@@ -3,7 +3,10 @@
     "allow": [
       "mcp__laravel-boost__last-error",
       "Bash(php artisan:*)",
-      "mcp__laravel-boost__tinker"
+      "mcp__laravel-boost__tinker",
+      "Bash(xargs grep:*)",
+      "Bash(grep:*)",
+      "Bash(xargs ls:*)"
     ]
   },
   "enabledMcpjsonServers": [
