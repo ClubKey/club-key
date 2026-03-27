@@ -66,7 +66,8 @@ final class SubscriberImportController extends Controller
         $result = $importSubscriptionsAction->handle(
             $club,
             $subscriptions,
-            $request->input('source', 'import')
+            $request->input('source', 'import'),
+            $request->hasFile('file') ? 1 : 0
         );
 
         $errorsArray = array_map(

@@ -27,20 +27,15 @@ final class VonageWebhookController extends Controller
     ): JsonResponse {
         $data = $request->all();
 
-        // Log webhook for debugging
-        Log::info('Vonage webhook received', $data);
+        // Log webhook receipt without PII
+        Log::debug('Vonage webhook received', ['has_text' => isset($data['text']), 'has_msisdn' => isset($data['msisdn'])]);
 
-        // Check for STOP keywords in the message text
-        $messageText = mb_strtoupper(mb_trim($data['text'] ?? $data['message'] ?? ''));
+        // Normalize message by trimming surrounding whitespace and punctuation so variants like "STOP!" still match
+        $rawMessage = mb_strtoupper(mb_trim($data['text'] ?? $data['message'] ?? ''));
+        $normalizedMessage = preg_replace('/^[\s\p{P}]+|[\s\p{P}]+$/u', '', $rawMessage) ?? $rawMessage;
         $stopKeywords = ['STOP', 'STOPALL', 'UNSUBSCRIBE', 'QUIT', 'END', 'CANCEL'];
 
-        $isStopMessage = false;
-        foreach ($stopKeywords as $keyword) {
-            if (str_contains($messageText, $keyword)) {
-                $isStopMessage = true;
-                break;
-            }
-        }
+        $isStopMessage = in_array($normalizedMessage, $stopKeywords, true);
 
         if (! $isStopMessage) {
             return response()->json(['status' => 'ok']);
@@ -50,7 +45,7 @@ final class VonageWebhookController extends Controller
         $phoneNumber = $data['msisdn'] ?? $data['from'] ?? null;
 
         if (! $phoneNumber) {
-            Log::warning('Vonage webhook missing phone number', $data);
+            Log::warning('Vonage webhook missing phone number');
 
             return response()->json(['status' => 'error', 'message' => 'Missing phone number'], 400);
         }
@@ -68,7 +63,7 @@ final class VonageWebhookController extends Controller
             try {
                 $unsubscribeAction->handle(
                     $subscription,
-                    reason: "STOP keyword via SMS: {$messageText}",
+                    reason: "STOP keyword via SMS: {$normalizedMessage}",
                     source: 'vonage_webhook',
                     providerMessageId: $data['messageId'] ?? $data['message-id'] ?? null,
                     providerPayload: $data
@@ -77,7 +72,6 @@ final class VonageWebhookController extends Controller
                 Log::error('Failed to unsubscribe via webhook', [
                     'subscription_id' => $subscription->id,
                     'error' => $e->getMessage(),
-                    'webhook_data' => $data,
                 ]);
             }
         }

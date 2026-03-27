@@ -34,13 +34,19 @@ final readonly class CreateSubscriptionAction
         return DB::transaction(function () use ($club, $contactType, $contactValue, $topic, $user, $source, $consentProof): CommunicationSubscription {
             $normalizedContactValue = CommunicationSubscription::normalizeContactValue($contactType, $contactValue);
 
+            $matchCriteria = [
+                'contact_type' => $contactType,
+                'contact_value' => $normalizedContactValue,
+                'topic' => $topic,
+                'club_id' => $club->id,
+            ];
+
+            // Capture the existing status before updating so we can detect re-subscription
+            $existing = CommunicationSubscription::where($matchCriteria)->first();
+            $wasUnsubscribed = $existing && $existing->status === SubscriptionStatus::UNSUBSCRIBED;
+
             $subscription = CommunicationSubscription::updateOrCreate(
-                [
-                    'contact_type' => $contactType,
-                    'contact_value' => $normalizedContactValue,
-                    'topic' => $topic,
-                    'club_id' => $club->id,
-                ],
+                $matchCriteria,
                 [
                     'user_id' => $user?->id,
                     'status' => SubscriptionStatus::SUBSCRIBED,
@@ -51,8 +57,9 @@ final readonly class CreateSubscriptionAction
                     'consent_proof' => $consentProof,
                 ]
             );
+
             // Create event if this is a new subscription or was previously unsubscribed
-            if ($subscription->wasRecentlyCreated || $subscription->getOriginal('status') === SubscriptionStatus::UNSUBSCRIBED->value) {
+            if ($subscription->wasRecentlyCreated || $wasUnsubscribed) {
                 CommunicationSubscriptionEvent::create([
                     'subscription_id' => $subscription->id,
                     'event_type' => SubscriptionEventType::SUBSCRIBED,

@@ -19,9 +19,11 @@ Route::get('unsubscribe/email/{subscription}', [UnsubscribeController::class, 'e
     ->name('unsubscribe.email')
     ->middleware('signed');
 Route::get('unsubscribe/email/{subscription}/confirm', [UnsubscribeController::class, 'confirm'])
-    ->name('unsubscribe.confirm');
+    ->name('unsubscribe.confirm')
+    ->middleware('signed');
 Route::post('unsubscribe/{subscription}/resubscribe', [UnsubscribeController::class, 'resubscribe'])
-    ->name('unsubscribe.resubscribe');
+    ->name('unsubscribe.resubscribe')
+    ->middleware('signed');
 
 // Vonage webhook (no auth required, but should verify signature in production)
 Route::post('webhooks/vonage', [VonageWebhookController::class, 'handle'])

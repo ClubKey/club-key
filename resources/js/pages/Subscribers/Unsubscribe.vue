@@ -2,8 +2,7 @@
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
+import PublicLayout from '@/layouts/PublicLayout.vue';
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 
 interface CommunicationSubscription {
@@ -25,21 +24,15 @@ interface CommunicationSubscription {
 
 const props = defineProps<{
     subscription: CommunicationSubscription;
+    resubscribeUrl: string;
 }>();
 
 const page = usePage();
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Unsubscribe',
-        href: '#',
-    },
-];
-
 const resubscribeForm = useForm({});
 
 const resubscribe = () => {
-    resubscribeForm.post(route('unsubscribe.resubscribe', props.subscription.id), {
+    resubscribeForm.post(props.resubscribeUrl, {
         preserveScroll: true,
         onSuccess: () => {
             // Optionally redirect or show success message
@@ -49,9 +42,9 @@ const resubscribe = () => {
 </script>
 
 <template>
-    <AppLayout :breadcrumbs>
+    <PublicLayout>
         <Head title="Unsubscribe Confirmation" />
-        <div class="mx-auto max-w-2xl">
+        <div class="mx-auto w-full max-w-2xl">
             <Card class="p-6">
                 <Heading :title="`Unsubscribed from ${subscription.club.name}`" />
 
@@ -79,5 +72,6 @@ const resubscribe = () => {
                 </div>
             </Card>
         </div>
-    </AppLayout>
+    </PublicLayout>
 </template>
+

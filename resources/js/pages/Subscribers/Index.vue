@@ -51,7 +51,7 @@ const handleFilterChange = (filterName: string, value: string) => {
     }
 
     router.get(
-        route('subscribers.index', props.club),
+        route('subscribers.index'),
         filters,
         {
             preserveScroll: true,

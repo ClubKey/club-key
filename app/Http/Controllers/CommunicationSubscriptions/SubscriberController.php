@@ -25,7 +25,7 @@ final class SubscriberController extends Controller
             abort(404, 'No current club selected.');
         }
 
-        Gate::authorize('viewAny', [CommunicationSubscription::class, $club]);
+        Gate::authorize('viewAny', CommunicationSubscription::class);
 
         $query = $club->communicationSubscriptions()
             ->with(['user'])

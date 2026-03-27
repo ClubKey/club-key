@@ -13,6 +13,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
+use function format_phone_number;
+
 final readonly class ImportSubscriptionsAction
 {
     public function __construct(
@@ -23,13 +25,14 @@ final readonly class ImportSubscriptionsAction
      * Execute the action.
      *
      * @param  array<int, array{contact_type: string, contact_value: string, topic: string, user_id?: int|null}>  $subscriptions
+     * @param  int  $rowOffset  Extra offset added to row numbers in error reports (e.g. 1 for CSV files with a header row)
      *
      * @throws Throwable
      */
-    public function handle(Club $club, array $subscriptions, string $source = 'import'): ImportSubscriptionsResultDto
+    public function handle(Club $club, array $subscriptions, string $source = 'import', int $rowOffset = 0): ImportSubscriptionsResultDto
     {
 
-        return DB::transaction(function () use ($club, $subscriptions, $source): ImportSubscriptionsResultDto {
+        return DB::transaction(function () use ($club, $subscriptions, $source, $rowOffset): ImportSubscriptionsResultDto {
             $success = 0;
             $errors = [];
 
@@ -42,10 +45,12 @@ final readonly class ImportSubscriptionsAction
 
                     $user = $userId ? User::find($userId) : null;
                     if (! $user && $contactType === ContactType::EMAIL) {
-                        $user = User::whereEmail($contactValue)->first();
+                        $normalizedEmail = mb_strtolower(mb_trim($contactValue));
+                        $user = User::whereEmail($normalizedEmail)->first();
                     }
                     if (! $user && $contactType === ContactType::SMS) {
-                        $user = User::wherePhone($contactValue)->first();
+                        $normalizedPhone = format_phone_number($contactValue);
+                        $user = User::wherePhone($normalizedPhone)->first();
                     }
 
                     $this->createSubscriptionAction->handle(
@@ -60,7 +65,7 @@ final readonly class ImportSubscriptionsAction
                     $success++;
                 } catch (Throwable $e) {
                     $errors[] = new ImportSubscriptionErrorDto(
-                        row: $index + 1,
+                        row: $index + 1 + $rowOffset,
                         error: $e->getMessage()
                     );
                 }

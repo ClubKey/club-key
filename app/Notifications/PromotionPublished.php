@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Notifications;
 
 use App\Enums\ContactType;
+use App\Enums\SubscriptionStatus;
 use App\Enums\Topic;
 use App\Models\CommunicationSubscription;
 use App\Models\Promotion;
@@ -41,6 +42,10 @@ final class PromotionPublished extends Notification implements ShouldQueue
     public function via(object $notifiable): array
     {
         if ($this->subscription) {
+            if ($this->subscription->status !== SubscriptionStatus::SUBSCRIBED) {
+                return [];
+            }
+
             return match ($this->subscription->contact_type) {
                 ContactType::EMAIL => ['mail'],
                 ContactType::SMS => is_vonage_available() ? ['vonage'] : [],
@@ -82,7 +87,7 @@ final class PromotionPublished extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $name = $notifiable->userName ?? null;
+        $name = $notifiable->name ?? $notifiable->userName ?? null;
 
         $message = (new MailMessage)
             ->from('contact@promotions.clubkey.site', 'ClubKey Deals')

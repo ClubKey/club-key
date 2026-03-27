@@ -27,8 +27,8 @@ final class ImportSubscriptionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => ['sometimes', 'file', 'mimes:csv,txt', 'max:10240'],
-            'subscriptions' => ['sometimes', 'array'],
+            'file' => ['required_without:subscriptions', 'sometimes', 'file', 'mimes:csv,txt', 'max:10240'],
+            'subscriptions' => ['required_without:file', 'sometimes', 'array'],
             'subscriptions.*.contact_type' => ['required', 'string', 'in:'.implode(',', ContactType::values())],
             'subscriptions.*.contact_value' => ['required', 'string'],
             'subscriptions.*.topic' => ['required', 'string', 'in:'.implode(',', Topic::values())],

@@ -55,7 +55,7 @@ const handleSortChange = (value: string) => {
                     <Link :href="route('subscribers.index')">Notification Subscriptions</Link>
                 </Button>
                 <Button as-child>
-                    <Link :href="route('subscribers.import')">Import Members</Link>
+                    <Link :href="route('subscribers.import')">Import Subscriptions</Link>
                 </Button>
             </div>
         </div>

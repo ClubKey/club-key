@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CommunicationSubscription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -32,7 +33,7 @@ final class UnsubscribeController extends Controller
             source: 'email_link'
         );
 
-        return redirect()->route('unsubscribe.confirm', ['subscription' => $subscription]);
+        return redirect()->to(URL::signedRoute('unsubscribe.confirm', ['subscription' => $subscription]));
     }
 
     /**
@@ -40,8 +41,11 @@ final class UnsubscribeController extends Controller
      */
     public function confirm(CommunicationSubscription $subscription): Response
     {
+        $resubscribeUrl = URL::signedRoute('unsubscribe.resubscribe', ['subscription' => $subscription]);
+
         return Inertia::render('Subscribers/Unsubscribe', [
             'subscription' => $subscription->load(['club', 'user']),
+            'resubscribeUrl' => $resubscribeUrl,
         ]);
     }
 
