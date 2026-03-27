@@ -7,8 +7,10 @@ namespace App\Models;
 use App\Enums\ContactType;
 use App\Enums\SubscriptionStatus;
 use App\Enums\Topic;
+use Carbon\CarbonImmutable;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,15 +24,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $contact_value
  * @property Topic $topic
  * @property SubscriptionStatus $status
- * @property \Carbon\CarbonImmutable|null $subscribed_at
- * @property \Carbon\CarbonImmutable|null $unsubscribed_at
+ * @property CarbonImmutable|null $subscribed_at
+ * @property CarbonImmutable|null $unsubscribed_at
  * @property string|null $unsubscribe_reason
  * @property string|null $source
  * @property string|null $source_message_id
  * @property string|null $provider_message_id
  * @property array|null $consent_proof
- * @property \Carbon\CarbonImmutable $created_at
- * @property \Carbon\CarbonImmutable $updated_at
+ * @property CarbonImmutable $created_at
+ * @property CarbonImmutable $updated_at
  * @property-read User|null $user
  * @property-read Club $club
  * @property-read HasMany<CommunicationSubscriptionEvent> $events
@@ -81,8 +83,8 @@ final class CommunicationSubscription extends Model
     {
         return match ($contactType) {
             ContactType::SMS => format_phone_number($contactValue),
-            ContactType::EMAIL => mb_strtolower(trim($contactValue)),
-            ContactType::PUSH, ContactType::WHATSAPP => trim($contactValue),
+            ContactType::EMAIL => mb_strtolower(mb_trim($contactValue)),
+            ContactType::PUSH, ContactType::WHATSAPP => mb_trim($contactValue),
         };
     }
 
@@ -99,6 +101,13 @@ final class CommunicationSubscription extends Model
     public function events(): HasMany
     {
         return $this->hasMany(CommunicationSubscriptionEvent::class, 'subscription_id');
+    }
+
+    public function userName(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->user?->name ?? null,
+        );
     }
 
     public function scopeSubscribed(Builder $query): Builder

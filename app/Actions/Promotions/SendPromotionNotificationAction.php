@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Promotions;
 
-use App\Jobs\SendMemberPromotionNotification;
+use App\Enums\Topic;
+use App\Jobs\SendSubscriptionPromotionNotification;
+use App\Models\CommunicationSubscription;
 use App\Models\Promotion;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -20,10 +22,15 @@ final readonly class SendPromotionNotificationAction
     public function handle(Promotion $promotion): void
     {
         DB::transaction(function () use ($promotion): void {
-            $members = $promotion->club->members;
-            foreach ($members as $index => $member) {
+            $subscriptions = CommunicationSubscription::query()
+                ->where('club_id', $promotion->club_id)
+                ->subscribed()
+                ->forTopic(Topic::PROMOTIONS)
+                ->get();
+
+            foreach ($subscriptions as $index => $subscription) {
                 try {
-                    SendMemberPromotionNotification::dispatch($member, $promotion)->delay($index);
+                    SendSubscriptionPromotionNotification::dispatch($subscription, $promotion)->delay($index);
                 } catch (Exception $exception) {
                     report($exception);
                 }

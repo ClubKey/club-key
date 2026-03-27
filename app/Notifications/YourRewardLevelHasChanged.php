@@ -7,6 +7,7 @@ namespace App\Notifications;
 use App\Enums\ContactType;
 use App\Enums\Topic;
 use App\Models\ClubUser;
+use App\Models\CommunicationSubscription;
 use App\Models\RewardLevel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,15 +41,28 @@ final class YourRewardLevelHasChanged extends Notification implements ShouldQueu
     {
         $channels = [];
 
-        // Check email subscription
-        if (can_send_notification($notifiable, $this->clubUser->club, ContactType::EMAIL, Topic::NOTIFICATIONS)) {
-            $channels[] = 'mail';
+        if ($notifiable->email ?? null) {
+            $emailSubscription = CommunicationSubscription::query()
+                ->where('club_id', $this->clubUser->club->id)
+                ->forContact(ContactType::EMAIL, $notifiable->email)
+                ->forTopic(Topic::NOTIFICATIONS)
+                ->first();
+
+            if (can_send_notification($emailSubscription)) {
+                $channels[] = 'mail';
+            }
         }
 
-        // Check SMS subscription
-        if (is_vonage_available() && $notifiable->phone &&
-            can_send_notification($notifiable, $this->clubUser->club, ContactType::SMS, Topic::NOTIFICATIONS)) {
-            $channels[] = 'vonage';
+        if (is_vonage_available() && ($notifiable->phone ?? null)) {
+            $smsSubscription = CommunicationSubscription::query()
+                ->where('club_id', $this->clubUser->club->id)
+                ->forContact(ContactType::SMS, $notifiable->phone)
+                ->forTopic(Topic::NOTIFICATIONS)
+                ->first();
+
+            if (can_send_notification($smsSubscription)) {
+                $channels[] = 'vonage';
+            }
         }
 
         return $channels;

@@ -71,22 +71,41 @@ test('notification is not sent when user is unsubscribed', function () {
     Notification::assertNothingSent();
 });
 
-test('notification defaults to sending if no subscription exists', function () {
+test('notification is not sent when club member has no subscription record', function () {
     Notification::fake();
 
     $club = Club::factory()->create();
     $user = User::factory()->create([
-        'email' => 'newuser@example.com',
+        'email' => 'nomatch@example.com',
     ]);
 
     $club->members()->attach($user->id);
 
-    // No subscription created
-
+    // No subscription record — should NOT send
     $promotion = Promotion::factory()->create(['club_id' => $club->id]);
 
     $user->notify(new PromotionPublished($promotion));
 
-    // Should still send for backward compatibility
-    Notification::assertSentTo($user, PromotionPublished::class);
+    Notification::assertNothingSent();
+});
+
+test('notification is sent to unlinked subscriber via on-demand routing', function () {
+    Notification::fake();
+
+    $club = Club::factory()->create();
+    $subscription = CommunicationSubscription::factory()->create([
+        'club_id' => $club->id,
+        'contact_type' => ContactType::EMAIL,
+        'contact_value' => 'unlinked@example.com',
+        'topic' => Topic::PROMOTIONS,
+        'status' => SubscriptionStatus::SUBSCRIBED,
+        'user_id' => null,
+    ]);
+
+    $promotion = Promotion::factory()->create(['club_id' => $club->id]);
+
+    \Illuminate\Support\Facades\Notification::route('mail', $subscription->contact_value)
+        ->notify(new PromotionPublished($promotion, $subscription));
+
+    Notification::assertSentOnDemand(PromotionPublished::class);
 });

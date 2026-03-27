@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\SubscriptionStatus;
+use App\Models\CommunicationSubscription;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
@@ -56,37 +58,10 @@ if (! function_exists('is_vonage_available')) {
 
 if (! function_exists('can_send_notification')) {
     /**
-     * Check if a notification can be sent to a user for a specific club, contact type, and topic.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Club  $club
-     * @param  \App\Enums\ContactType  $contactType
+     * Check if a notification can be sent based on the subscription's status.
      */
-    function can_send_notification($user, $club, $contactType, \App\Enums\Topic $topic): bool
+    function can_send_notification(?CommunicationSubscription $subscription): bool
     {
-        $contactValue = match ($contactType) {
-            \App\Enums\ContactType::EMAIL => $user->email,
-            \App\Enums\ContactType::SMS => $user->phone,
-            default => null,
-        };
-
-        if (! $contactValue) {
-            return false;
-        }
-
-        $normalizedValue = \App\Models\CommunicationSubscription::normalizeContactValue($contactType, $contactValue);
-
-        $subscription = \App\Models\CommunicationSubscription::where('club_id', $club->id)
-            ->where('contact_type', $contactType)
-            ->where('contact_value', $normalizedValue)
-            ->where('topic', $topic)
-            ->first();
-
-        // If no subscription exists, default to allowing (for backward compatibility)
-        if (! $subscription) {
-            return true;
-        }
-
-        return $subscription->status === \App\Enums\SubscriptionStatus::SUBSCRIBED;
+        return $subscription?->status === SubscriptionStatus::SUBSCRIBED;
     }
 }
