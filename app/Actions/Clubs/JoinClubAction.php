@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Clubs;
 
+use App\Actions\CommunicationSubscriptions\LinkSubscriptionsToUserAction;
 use App\Enums\ClubRole;
 use App\Events\UserJoinedClub;
 use App\Models\Club;
@@ -14,6 +15,10 @@ use Throwable;
 
 final readonly class JoinClubAction
 {
+    public function __construct(
+        private LinkSubscriptionsToUserAction $linkSubscriptionsToUserAction,
+    ) {}
+
     /**
      * Returns true if the user is a new club user.
      *
@@ -31,6 +36,8 @@ final readonly class JoinClubAction
                     'club_id' => $club->id,
                     'user_id' => $user->id,
                 ])->first();
+
+                $this->linkSubscriptionsToUserAction->handle($user, $club);
 
                 event(new UserJoinedClub($clubUser));
 

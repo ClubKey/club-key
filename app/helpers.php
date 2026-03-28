@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\SubscriptionStatus;
+use App\Models\CommunicationSubscription;
 use libphonenumber\NumberParseException;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\PhoneNumberUtil;
@@ -51,5 +53,15 @@ if (! function_exists('is_vonage_available')) {
         return config('vonage.api_key') &&
             config('vonage.api_secret') &&
             config('vonage.sms_from');
+    }
+}
+
+if (! function_exists('can_send_notification')) {
+    /**
+     * Check if a notification can be sent based on the subscription's status.
+     */
+    function can_send_notification(?CommunicationSubscription $subscription): bool
+    {
+        return $subscription?->status === SubscriptionStatus::SUBSCRIBED;
     }
 }

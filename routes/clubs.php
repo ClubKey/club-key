@@ -12,6 +12,8 @@ use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use App\Http\Controllers\Clubs\VisitController;
+use App\Http\Controllers\CommunicationSubscriptions\SubscriberController;
+use App\Http\Controllers\CommunicationSubscriptions\SubscriberImportController;
 use App\Http\Controllers\Promotions\PromotionController;
 use App\Http\Controllers\Promotions\PublicPromotionLinkController;
 use App\Http\Controllers\Promotions\ResendPromotionNotification;
@@ -58,6 +60,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('members', ClubUserController::class)->only(['index', 'show']);
     Route::post('members/{member}/visits', [VisitController::class, 'createForMember'])
         ->name('members.visits.create');
+
+    // Subscriptions
+    Route::get('subscribers', [SubscriberController::class, 'index'])
+        ->name('subscribers.index');
+    Route::get('subscribers/import', [SubscriberImportController::class, 'index'])
+        ->name('subscribers.import');
+    Route::post('subscribers/import', [SubscriberImportController::class, 'store'])
+        ->name('subscribers.import.store');
 
     Route::resource('promotions', PromotionController::class);
 

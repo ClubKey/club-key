@@ -146,6 +146,11 @@ final class Club extends Model
         return $this->hasMany(ClubLocation::class);
     }
 
+    public function communicationSubscriptions(): HasMany
+    {
+        return $this->hasMany(CommunicationSubscription::class);
+    }
+
     public function visits(): HasMany
     {
         return $this->hasMany(Visit::class);

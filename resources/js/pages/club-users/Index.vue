@@ -6,8 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import AppLayout from '@/layouts/AppLayout.vue';
 import { debounce } from '@/lib/utils';
 import { type BreadcrumbItem, type Club, ClubUser, Paginator } from '@/types';
-import { Form, Head, InfiniteScroll, router } from '@inertiajs/vue3';
+import { Form, Head, InfiniteScroll, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { Button } from '@/components/ui/button';
 
 const props = defineProps<{
     club: Club;
@@ -19,8 +20,8 @@ const props = defineProps<{
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Members',
-        href: route('members.index'),
-    },
+        href: route('members.index')
+    }
 ];
 
 const formRef = ref();
@@ -34,12 +35,12 @@ const handleSortChange = (value: string) => {
         route('members.index'),
         {
             sort: value === 'default' ? undefined : value,
-            search: props.search || undefined,
+            search: props.search || undefined
         },
         {
             preserveScroll: true,
-            preserveState: true,
-        },
+            preserveState: true
+        }
     );
 };
 </script>
@@ -49,6 +50,14 @@ const handleSortChange = (value: string) => {
         <Head :title="`${club.name} Members`" />
         <div class="mb-4 flex items-center justify-between">
             <Heading :title="`${club.name} Members`" description="View your club members." />
+            <div class="flex gap-2">
+                <Button as-child variant="outline">
+                    <Link :href="route('subscribers.index')">Notification Subscriptions</Link>
+                </Button>
+                <Button as-child>
+                    <Link :href="route('subscribers.import')">Import Subscriptions</Link>
+                </Button>
+            </div>
         </div>
         <div class="grid gap-2">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
@@ -62,8 +71,9 @@ const handleSortChange = (value: string) => {
                     class="flex-1 lg:max-w-md"
                     method="get"
                 >
-                    <Input :default-value="search" name="search" placeholder="Search members..." type="search" @input="handleSubmit" />
-                    <input v-if="sort" name="sort" type="hidden" :value="sort" />
+                    <Input :default-value="search" name="search" placeholder="Search members..." type="search"
+                           @input="handleSubmit" />
+                    <input v-if="sort" :value="sort" name="sort" type="hidden" />
                     <button class="hidden" type="submit">Search</button>
                 </Form>
 
@@ -86,7 +96,8 @@ const handleSortChange = (value: string) => {
                 </div>
             </div>
 
-            <InfiniteScroll :buffer="100" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" data="clubUsers">
+            <InfiniteScroll :buffer="100" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+                            data="clubUsers">
                 <ClubUserCard v-for="clubUser in clubUsers.data" :key="clubUser.id" :club-user />
             </InfiniteScroll>
         </div>

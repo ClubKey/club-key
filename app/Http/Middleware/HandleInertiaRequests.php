@@ -55,6 +55,7 @@ final class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('error'),
                 'warning' => $request->session()->get('warning'),
                 'info' => $request->session()->get('info'),
+                'error_messages' => $request->session()->get('error_messages'),
             ],
             'ziggy' => [
                 ...(new Ziggy)->toArray(),

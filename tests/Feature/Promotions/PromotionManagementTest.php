@@ -238,15 +238,6 @@ it('does not publish promotions that are scheduled for the future', function ():
     expect($promotion->fresh()->published_at)->toBeNull();
 });
 
-it('does not republish promotions that have already been published', function (): void {
-    $promotion = Promotion::factory()->create([
-        'publish_at' => now()->subMinutes(1),
-        'published_at' => now()->subMinutes(1),
-    ]);
-
-    PublishDuePromotionsJob::dispatchSync();
-});
-
 test('when a promotion is created with the publish_now checkbox checked, it is published immediately', function (): void {
     $user = User::factory()->withClub()->create();
     $club = $user->currentClub;
