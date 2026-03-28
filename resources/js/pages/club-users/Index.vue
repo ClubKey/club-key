@@ -48,9 +48,9 @@ const handleSortChange = (value: string) => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`${club.name} Members`" />
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <Heading :title="`${club.name} Members`" description="View your club members." />
-            <div class="flex gap-2">
+            <div class="flex flex-col md:flex-row gap-2">
                 <Button as-child variant="outline">
                     <Link :href="route('subscribers.index')">Notification Subscriptions</Link>
                 </Button>

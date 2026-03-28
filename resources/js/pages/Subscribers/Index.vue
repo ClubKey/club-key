@@ -81,7 +81,7 @@ const getStatusBadgeClass = (status: string): string => {
 <template>
     <AppLayout :breadcrumbs>
         <Head :title="`Notification Subscriptions - ${club.name}`" />
-        <div class="mb-4 flex flex-col items-start gap-4">
+        <div class="flex flex-col items-start gap-4">
             <Button as-child variant="outline">
                 <Link :href="route('members.index')">
                     <ArrowLeft />
@@ -89,11 +89,11 @@ const getStatusBadgeClass = (status: string): string => {
                 </Link>
             </Button>
         </div>
-        <div class="mb-4 flex items-center justify-between">
+        <div class="mb-4 gap-4 flex flex-col md:flex-row  md:items-center justify-between">
             <Heading :title="`Notification Subscriptions - ${club.name}`"
                      description="Manage and view all notification subscriptions for your club." />
             <Button as-child>
-                <Link :href="route('subscribers.import')">Import Notification Subscriptions</Link>
+                <Link :href="route('subscribers.import')">Import</Link>
             </Button>
         </div>
 
