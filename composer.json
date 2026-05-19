@@ -22,6 +22,7 @@
     "league/flysystem-aws-s3-v3": "^3.0",
     "nunomaduro/essentials": "0.1",
     "resend/resend-laravel": "^0.21.0",
+    "square/square": "^45.0",
     "tightenco/ziggy": "^2.4"
   },
   "require-dev": {
