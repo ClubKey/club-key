@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Clubs\SquareIntegrationController;
 use App\Http\Controllers\CommunicationSubscriptions\UnsubscribeController;
 use App\Http\Controllers\CommunicationSubscriptions\VonageWebhookController;
 use App\Http\Controllers\DashboardController;
@@ -13,6 +14,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('square/oauth/callback', [SquareIntegrationController::class, 'callback'])
+        ->name('square.oauth.callback');
+});
 
 // Unsubscribe routes (signed for security)
 Route::get('unsubscribe/email/{subscription}', [UnsubscribeController::class, 'email'])

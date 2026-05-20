@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -164,6 +165,11 @@ final class Club extends Model
     public function promotions(): HasMany
     {
         return $this->hasMany(Promotion::class);
+    }
+
+    public function squareConnection(): HasOne
+    {
+        return $this->hasOne(SquareConnection::class);
     }
 
     public function logoPath(): Attribute

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Console\Commands\RefreshSquareAccessTokens;
 use App\Console\Commands\UpdateClubUsersRewards;
 use App\Jobs\PublishDuePromotionsJob;
 use Illuminate\Foundation\Inspiring;
@@ -13,4 +14,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command(UpdateClubUsersRewards::class)->dailyAt('7:00');
+Schedule::command(RefreshSquareAccessTokens::class)->dailyAt('6:00');
 Schedule::job(PublishDuePromotionsJob::class)->everyThirtyMinutes();

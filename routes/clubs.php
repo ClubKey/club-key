@@ -10,6 +10,7 @@ use App\Http\Controllers\Clubs\ClubUserController;
 use App\Http\Controllers\Clubs\JoinClubController;
 use App\Http\Controllers\Clubs\RewardController;
 use App\Http\Controllers\Clubs\RewardLevelController;
+use App\Http\Controllers\Clubs\SquareIntegrationController;
 use App\Http\Controllers\Clubs\SwitchClubController;
 use App\Http\Controllers\Clubs\VisitController;
 use App\Http\Controllers\CommunicationSubscriptions\SubscriberController;
@@ -29,6 +30,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('clubs/{club}/check-in-code', [ClubController::class, 'checkInCode'])
         ->name('clubs.check-in-code');
+
+    Route::get('clubs/{club}/integrations/square', [SquareIntegrationController::class, 'show'])
+        ->name('clubs.integrations.square');
+    Route::get('clubs/{club}/integrations/square/connect', [SquareIntegrationController::class, 'connect'])
+        ->name('clubs.integrations.square.connect');
+    Route::delete('clubs/{club}/integrations/square', [SquareIntegrationController::class, 'disconnect'])
+        ->name('clubs.integrations.square.disconnect');
 
     Route::get('/visit/clubs/{club}/{clubLocation?}', [VisitController::class, 'store'])
         ->name('clubs.visit')
